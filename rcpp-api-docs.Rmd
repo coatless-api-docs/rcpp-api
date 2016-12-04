@@ -1,6 +1,9 @@
 ---
-title: 'Unofficial Rcpp API Documentation'
-date: '2016-10-21 01:26:59 -0700'
+title: "Unofficial Rcpp API Documentation"
+output:
+  html_document: default
+  pdf_document: default
+date: "`r format(Sys.time(), '%F %T %z')`"
 ---
 
 ```{r setup, include=FALSE}
@@ -41,29 +44,45 @@ for maximum flexibility.
 
 ## Overview
 
-- vector, Matrix, List, DataFrame
-- member functions
-- sugar
-
-- environment, function, language
-- xptr
-- s4 classes / modules
-
-### Vector, Matrix, List, DataFrame
+- Vector, Matrix, List, DataFrame
+- Member functions
+- Sugar
+- Environment, Function, Language
+- XPtr
+- S4 classes / modules
 
 ------
 
-##### Vector<*RTYPE*>
+## Vector, Matrix, List, and DataFrame Classes {#vmld}
 
-- The main class for vectors is the `Vector` class that is derived from
-  `RObjectMethods`, and `VectorBase` with policies established by
-  `StoragePolicy`, `SlotProxyPolicy`,`AttributeProxyPolicy`, and
-  `NamesProxyPolicy`. The `Vector` class is defined as `Vector<RTYPE>`, where
-  the value `RTYPE` is one of valid `SEXP` types: 
-    - `REALSXP`, `INTSXP`, `CPLXSXP`, `LGLSXP`, `STRSXP`, `VECSXP`, `EXPRSXP`
+### Vector
 
-- The following [`typedefs` have been defined](https://github.com/RcppCore/Rcpp/blob/6f81b4684481dbd9bb554dd95e66725fc3b63a8c/inst/include/Rcpp/vector/instantiation.h#L27-L38) 
-for use:
+- The templated `Vector` class is a one dimensional array-like structure 
+  providing storage for homogenous data types, with an 
+  interface similar to that of `std::vector`. Being an implementation of 
+  [policy-based design](https://en.wikipedia.org/wiki/Policy-based_design), 
+  much of the behavior of `Vector` is determined by the policy classes it 
+  inherits from 
+  
+    - `RObjectMethods` 
+    - `StoragePolicy` 
+    - `SlotProxyPolicy` 
+    - `AttributeProxyPolicy` 
+    - `NamesProxyPolicy` 
+    
+    as well as the CRTP base class `VectorBase`. This type is instantiated as 
+    `Vector<RTYPE>`, where `RTYPE` is one of the following valid `SEXPTYPE`s: 
+    
+    - `REALSXP` 
+    - `INTSXP` 
+    - `CPLXSXP` 
+    - `LGLSXP` 
+    - `STRSXP` 
+    - `VECSXP`
+    - `EXPRSXP`
+
+- For convenience, the following [`typedefs` have been defined](https://github.com/RcppCore/Rcpp/blob/6f81b4684481dbd9bb554dd95e66725fc3b63a8c/inst/include/Rcpp/vector/instantiation.h#L27-L38) in the `Rcpp` namespace: 
+
     - `NumericVector`    = `Vector<REALSXP>`
     - `IntegerVector`    = `Vector<INTSXP>`
     - `ComplexVector`    = `Vector<CPLXSXP>`
@@ -135,16 +154,28 @@ NumericVector E = clone(D);
 
 ------
 
-##### Matrix<*RTYPE*>
+### Matrix
 
-- The main class for matrices is the `Matrix` class that is derived from
-`StoragePolicy` and `Vector`. The `Matrix` class is defined as `Matrix<RTYPE>`,
-where the value `RTYPE` is one of valid `SEXP` types: 
-   - `REALSXP`, `INTSXP`, `CPLXSXP`, `LGLSXP`, `STRSXP`, `VECSXP`, `EXPRSXP`
+- The main class for matrices is the templated `Matrix` class, which derives from
+  a combination of both the `Vector` and `MatrixBase` types. Like the `Vector` 
+  class, `Matrix` uses the policy-based design pattern to manage the lifetime of 
+  its undelying `SEXP` via the template parameter `StoragePolicy`, which 
+  uses the `PreserveStorage` policy class by default. Matrices are  
+  instantiated as `Matrix<RTYPE>`, where the value `RTYPE` is one of the 
+  following `SEXPTYPE`s: 
+  
+    - `REALSXP` 
+    - `INTSXP` 
+    - `CPLXSXP` 
+    - `LGLSXP` 
+    - `STRSXP`
+    - `VECSXP` 
+    - `EXPRSXP`
 
-- The following [`typedefs` have been defined](https://github.com/RcppCore/Rcpp/blob/6f81b4684481dbd9bb554dd95e66725fc3b63a8c/inst/include/Rcpp/vector/instantiation.h#L40-L50) 
-for use:
 
+- For convenience, the following [`typedefs` have been defined](https://github.com/RcppCore/Rcpp/blob/6f81b4684481dbd9bb554dd95e66725fc3b63a8c/inst/include/Rcpp/vector/instantiation.h#L40-L50) in the `Rcpp` 
+  namespace: 
+  
     - `NumericMatrix`    = `Matrix<REALSXP>`
     - `IntegerMatrix`    = `Matrix<INTSXP>`
     - `ComplexMatrix`    = `Matrix<CPLXSXP>`
@@ -155,8 +186,9 @@ for use:
     - `ListMatrix`       = `Matrix<VECSXP>` 
     - `ExpressionMatrix` = `Matrix<EXPRSXP>`
 
+
 - Within this documentation, the default type used will be `NumericMatrix` unless
-another data type is required to show a specific feature.
+another data type is required to show a specific feature. 
 
 - Constructors:
     - `Matrix()` 
@@ -239,6 +271,8 @@ NumericMatrix G = clone(F);
 - The `DataFrame` class is special type of a `List`, which are in turn a version of `Vector`.
 
 
+## Vector and Matrix Member Functions
+
 ### Operators
 
 - Operators allow for operations to take place between two different objects. 
@@ -317,9 +351,6 @@ NumericVector res = 3.0 * A - 1.0 / B + A + B + 5.0;
 // Output: 10.50000 15.66667 20.75000 25.80000
 ```
 
-
-## Member Functions
-
 ### Dimensional Information
 
 |               |                                           |
@@ -353,7 +384,7 @@ Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::
 ```
 
 
-### Accessing Element Values 
+### Element Access
 
 - Accesses an individual element within a `Vector` or `Matrix`.
    - `(i)` provides the _i_th element in addition to ensure that the requested
@@ -407,20 +438,207 @@ Y(0, 1) = 4;
 
 ### Subset Views
 
-### Static Members
+### Static Member Functions
 
+## Environment
 
+## Function
 
-### Sugar
+## Language
 
-#### abs( X )
+## XPtr
+
+## S4 Classes
+
+## Sugar
+
+### all( X ) {#all}
+
+- Tests if *all* elements in a `LogicalVector` or `LogicalMatrix` are `true`. 
+
+- The actual return type of `all(X)` is an instance of the 
+  `SingleLogicalResult` template class, but the functions `is_true` 
+  and `is_false` may be used to convert the return value to `bool`.
+  
+- Examples: 
+
+```{Rcpp, all}
+NumericVector x = NumericVector::create(1.0, 2.0, 3.0, 4.0);
+
+Rcout
+    << std::boolalpha
+    << "all(x < 5): " << is_true(all(x < 5)) << "\n"
+    << "all(x < 4): " << is_true(all(x < 4)) << "\n"
+    << "all(!is_na(x)): " << is_true(all(!is_na(x))) 
+    << "\n\n";
+// Output:
+// all(x < 5): true
+// all(x < 4): false
+// all(!is_na(x)): true
+
+NumericMatrix y(2, 2, x.begin());
+
+Rcout
+    << std::boolalpha
+    << "all(y < 5): " << is_true(all(y < 5)) << "\n"
+    << "all(y < 4): " << is_true(all(y < 4)) << "\n"
+    << "all(!is_na(y)): " << is_true(all(!is_na(y))) 
+    << "\n\n";
+// Output:
+// all(y < 5): true
+// all(y < 4): false
+// all(!is_na(y)): true
+
+Rcout
+    << std::boolalpha
+    << "all({true, true, true}): "
+    << is_true(all(LogicalVector::create(true, true, true))) << "\n"
+    << "all({true, true, false}): "
+    << is_true(all(LogicalVector::create(true, true, false))) 
+    << std::endl;
+// Output: 
+// all({true, true, true}): true
+// all({true, true, false}): false
+```
+
+- See also:
+    - [any](#any)
+    - [is_true](#is-true)
+
+### any( X ) {#any}
+
+- Tests if *any* elements in a `LogicalVector` or `LogicalMatrix` are `true`. 
+
+- The actual return type of `any(X)` is an instance of the 
+  `SingleLogicalResult` template class, but the functions `is_true` 
+  and `is_false` may be used to convert the return value to `bool`.
+  
+- Examples: 
+
+```{Rcpp, any}
+NumericVector x = NumericVector::create(1.0, 2.0, 3.0, 4.0);
+
+Rcout
+    << std::boolalpha
+    << "any(x > 3): " << is_true(any(x > 3)) << "\n"
+    << "any(x > 4): " << is_true(any(x > 4)) << "\n"
+    << "any(is_na(x)): " << is_true(any(is_na(x))) 
+    << "\n\n";
+// Output:    
+// any(x > 3): true
+// any(x > 4): false
+// any(is_na(x)): false
+
+NumericMatrix y(2, 2, x.begin());
+y[0] = NumericMatrix::get_na();
+
+Rcout
+    << std::boolalpha
+    << "any(y > 3): " << is_true(any(y > 3)) << "\n"
+    << "any(y > 4): " << is_true(any(y > 4)) << "\n"
+    << "any(is_na(y)): " << is_true(any(is_na(y))) 
+    << "\n\n";
+// Output:    
+// any(y > 3): true
+// any(y > 4): false
+// any(is_na(y)): true
+
+Rcout
+    << std::boolalpha
+    << "any({false, false, false}): "
+    << is_true(any(LogicalVector::create(false, false, false))) << "\n"
+    << "any({true, false, false}): "
+    << is_true(any(LogicalVector::create(true, false, false))) 
+    << std::endl;
+// Output:
+// any({false, false, false}): false
+// any({true, false, false}): true
+```
+
+- See also:
+    - [all](#all)
+    - [is_true](#is-true)
+
+### cbind
+
+**cbind(X, Y)** 
+
+**cbind(X, Y, ...)**
+
+- Creates a `Matrix` by joining objects together in a column-wise manner. 
+
+- *X*, *Y* may be any combination of `Vector`, `Matrix`, or atomic value 
+  of the same underlying type *T*, where *T* is one of 
+    - `int` 
+    - `double`
+    - `std::complex<double> / Rcomplex` 
+    - `bool`
+    
+- `cbind` is defined for any number of arguments between 2 and 50, inclusive. 
+
+- Let *S1* and *S2* be scalar (atomic) values, *V* be a `Vector` with length k,
+  and *M* be a `Matrix` with with m rows and n columns. The `cbind` function 
+  exhibits the following behavior: 
+    - `cbind(S1, S2)` returns a 1 x 2 `Matrix`.
+    - `cbind(S1, V)` and `cbind(V, S1)` return a k x 2 `Matrix`, where *S1* is 
+      recycled k times.
+    - `cbind(S1, M)` and `cbind(M, S1)` return an m x (n + 1) `Matrix`, where 
+      `S1` is recycled m times.
+    - If k and m are equal, `cbind(V, M)` and `cbind(M, V)` return an m x n 
+      `Matrix`.
+    - If k and m are not equal, `cbind(V, M)` and `cbind(M, V)` will throw an 
+      exception at runtime. 
+    - *S1* and *S2* may be consecutive arguments in a `cbind` expression IFF:
+        - they are the *only* arguments used; or
+        - all other arguemnts are also scalars; or
+        - non-scalar, adjacent arguments are vectors of length one, or matrices 
+          with one row.
+    - All other cases involving consecutive arguments *S1* and *S2* will 
+      generate a runtime error.
+      
+- Examples: 
+          
+```{Rcpp, cbind}
+double d = 1.0;
+NumericVector v(3, 2.0);
+NumericMatrix m(3, 2); 
+m.fill(3.0);
+
+Rcout 
+    << std::setprecision(2) 
+    << "cbind(1.5, 2.5):\n" << cbind(1.5, 2.5) << "\n"
+    << "cbind(d, v):\n" << cbind(d, v) << "\n"
+    << "cbind(v, d):\n" << cbind(v, d) << "\n"
+    << "cbind(d, v, m, v, d):\n" << cbind(d, v, m, v, d) 
+    << std::endl;
+// Output:
+// cbind(1.5, 2.5):
+// 1.5 2.5
+// 
+// cbind(d, v):
+// 1.0 2.0
+// 1.0 2.0
+// 1.0 2.0
+// 
+// cbind(v, d):
+// 2.0 1.0
+// 2.0 1.0
+// 2.0 1.0
+// 
+// cbind(d, v, m, v, d):
+// 1.0 2.0 3.0 3.0 2.0 1.0
+// 1.0 2.0 3.0 3.0 2.0 1.0
+// 1.0 2.0 3.0 3.0 2.0 1.0
+```
+
+### abs( X )
 
 - Compute 
 
-#### sqrt( X )
+### sqrt( X )
 
 
-#### trigonometric element-wise functions
+### trigonometric element-wise functions
 
 |              |                |               |
 |:-------------|:---------------|:--------------|
@@ -454,7 +672,7 @@ NumericVector Y3 = cosh(X);
 
 ---
 
-#### Special Functions of Mathematics
+### Special Functions of Mathematics
 
 |               |                |
 |:--------------|:---------------|
@@ -482,7 +700,7 @@ NumericVector Y3 = cosh(X);
 
 --
 
-#### Rounding of Numbers
+### Rounding of Numbers
 
 |                        |                         |
 |:-----------------------|:------------------------|
@@ -492,7 +710,7 @@ NumericVector Y3 = cosh(X);
 
 ---
 
-#### Logarithms and Exponentials
+### Logarithms and Exponentials
 
 |              |                |                |
 |:-------------|:---------------|:---------------|
@@ -573,7 +791,7 @@ double X_median = median(X);
 
 ----
 
-#### sum( X )
+### sum( X )
 
 - Compute the overall sum
 
@@ -589,7 +807,7 @@ double y = sum(x);
 
 ----
 
-#### diff( X )
+### diff( X )
 
 ----
 
@@ -926,7 +1144,7 @@ double pval  = R::pnchisq(0.5, 2, true, false);
 double qval  = R::qnchisq(0.22, 2, true, false);
 ```
 
-## Exponential Distribution
+#### Exponential Distribution
 
 |                                      |
 |:-------------------------------------|
@@ -1094,14 +1312,3 @@ double rdraw = R::rgamma(1.0, 1.0);
 
 **rwilcox()**
 
-
-
-## Environment
-
-## Function
-
-## Language
-
-## XPtr
-
-## S4 Classes
