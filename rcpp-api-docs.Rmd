@@ -1,0 +1,1107 @@
+---
+title: 'Unofficial Rcpp API Documentation'
+date: '2016-10-21 01:26:59 -0700'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+**Warning: This post is a work in progress. It will periodically be updated
+as time permits.**
+
+# Introduction
+
+The following **unofficial** API documentation for [Rcpp](http://rcpp.org) is based off some
+personal notes and teaching materials that I have prepared over the years of
+working with Rcpp. I've attempted to reformat the notes in the form of [Armadillo's API](http://arma.sourceforge.net/docs.html),
+which I think are some of the best documentation out there for a C++ matrix library.
+At some point, when the documentation becomes a bit more stable or if there is 
+larger contributor interest, I will likely attempt to merge this into the Rcpp 
+project so that a docs subdomain could hopefully be added to <http://rcpp.org>.
+
+Please note: The post is written using [RMarkdown](http://rmarkdown.rstudio.com)
+for maximum flexibility.
+
+# API Documentation for Rcpp 0.12.7 
+
+## Preamble
+
+- The goal of the API documentations are to provide a public facing concise 
+  view of Rcpp features. As a result, the documentation will be somewhat long.
+  To help navigate the documentation, it has been split into different section.
+  Furthermore, one should use the built in search functionality to search text
+  for keywords using either `CNTRL` + `F` on Windows and Linux or `CMD` + `F` on
+  macOS. 
+
+- Presently, any contribution to this document may be down by a [pull request
+  (PRs)](https://github.com/coatless/rcpp-api/pulls) on GitHub.
+
+- Please report any bugs to the [Rcpp Core Team](https://github.com/rcppcore/rcpp/issues).
+
+## Overview
+
+- vector, Matrix, List, DataFrame
+- member functions
+- sugar
+
+- environment, function, language
+- xptr
+- s4 classes / modules
+
+### Vector, Matrix, List, DataFrame
+
+------
+
+##### Vector<*RTYPE*>
+
+- The main class for vectors is the `Vector` class that is derived from
+  `RObjectMethods`, and `VectorBase` with policies established by
+  `StoragePolicy`, `SlotProxyPolicy`,`AttributeProxyPolicy`, and
+  `NamesProxyPolicy`. The `Vector` class is defined as `Vector<RTYPE>`, where
+  the value `RTYPE` is one of valid `SEXP` types: 
+    - `REALSXP`, `INTSXP`, `CPLXSXP`, `LGLSXP`, `STRSXP`, `VECSXP`, `EXPRSXP`
+
+- The following [`typedefs` have been defined](https://github.com/RcppCore/Rcpp/blob/6f81b4684481dbd9bb554dd95e66725fc3b63a8c/inst/include/Rcpp/vector/instantiation.h#L27-L38) 
+for use:
+    - `NumericVector`    = `Vector<REALSXP>`
+    - `IntegerVector`    = `Vector<INTSXP>`
+    - `ComplexVector`    = `Vector<CPLXSXP>`
+    - `LogicalVector`    = `Vector<LGLSXP>`
+    - `CharacterVector`  = `Vector<STRSXP>` 
+    - `StringVector`     = `Vector<STRSXP>` 
+    - `GenericVector`    = `Vector<VECSXP>` 
+    - `List`             = `Vector<VECSXP>` 
+    - `ExpressionVector` = `Vector<EXPRSXP>`
+
+- Within this documentation, the default type used will be `NumericVector` unless
+another data type is required to show a specific feature.
+
+- Constructors:
+    - `Vector()`
+    - `Vector(SEXP x)`
+    - `Vector(const int &size, const stored_type &u)`
+    - `Vector(const std::string &st)`
+    - `Vector(const char *st)`
+    - `Vector(const Vector &other)`
+    - `Vector(const int &size)`
+ 	  - `Vector(const Dimension &dims)`
+    - `Vector(const Dimension &dims, const U &u)`
+    - `Vector(const Vector &other)`
+
+- By default, the vectors constructed from dimensions will always be 
+  initialized with all entries being zero (`0`) or an empty string (`""`).
+
+- For the majority of cases, the interface being used is that of the R to C++
+  interface that relies upon the `Vector(SEXP x)` constructor, which establishes
+  a **pointer** to the underlying data. That is, the `Vector` object _points_ to
+  the memory location of the `SEXP` R object in order to avoid copying the data
+  into _C++_. The only exception to this rule is if the data passed is of a
+  different type in which case a deep copy is performed _before_ a pointer is
+  established. For example, if `numeric()` data is passed to `NumericVector`
+  the correct handoff occurs. However, if `integer()` data were to be passed to
+  a `NumericVector` a `clone()` would be made to type `numeric()` which has its
+  pointer then assigned to the `NumericMatrix`.
+
+- Examples:
+
+```{Rcpp rcpp_vector_ctor}
+SEXP A;
+NumericVector B(A); // from a SEXP
+
+// create a vector of length 5 filled with 0
+NumericVector C(5);
+// Output: 0 0 0 0 0
+
+// construct a filled vector of size 3 with 2.0
+NumericVector D = NumericVector(3, 2.0); 
+// Output: 2 2 2
+
+// initialize empty numeric vector of size 5
+NumericVector D2 = no_init(5);
+
+// fill vector with 3.0
+D2.fill(3.0);
+// Output: 3 3 3 3 3
+
+// cloning (deep copy)
+NumericVector E = clone(D);
+// Output: 2 2 2
+```
+
+- See also:
+    - [Vector Class doxygen documentation](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1Vector.html)
+    - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
+
+------
+
+##### Matrix<*RTYPE*>
+
+- The main class for matrices is the `Matrix` class that is derived from
+`StoragePolicy` and `Vector`. The `Matrix` class is defined as `Matrix<RTYPE>`,
+where the value `RTYPE` is one of valid `SEXP` types: 
+   - `REALSXP`, `INTSXP`, `CPLXSXP`, `LGLSXP`, `STRSXP`, `VECSXP`, `EXPRSXP`
+
+- The following [`typedefs` have been defined](https://github.com/RcppCore/Rcpp/blob/6f81b4684481dbd9bb554dd95e66725fc3b63a8c/inst/include/Rcpp/vector/instantiation.h#L40-L50) 
+for use:
+
+    - `NumericMatrix`    = `Matrix<REALSXP>`
+    - `IntegerMatrix`    = `Matrix<INTSXP>`
+    - `ComplexMatrix`    = `Matrix<CPLXSXP>`
+    - `LogicalMatrix`    = `Matrix<LGLSXP>`
+    - `CharacterMatrix`  = `Matrix<STRSXP>` 
+    - `StringMatrix`     = `Matrix<STRSXP>` 
+    - `GenericMatrix`    = `Matrix<VECSXP>` 
+    - `ListMatrix`       = `Matrix<VECSXP>` 
+    - `ExpressionMatrix` = `Matrix<EXPRSXP>`
+
+- Within this documentation, the default type used will be `NumericMatrix` unless
+another data type is required to show a specific feature.
+
+- Constructors:
+    - `Matrix()` 
+    - `Matrix(SEXP x)`
+    - `Matrix(const int& nrows_, const int& ncols)` 
+    - `Matrix(const int& nrows_, const int& ncols, Iterator start)` 
+    - `Matrix(const int& n)`
+    - `Matrix(const Matrix& other)` 
+
+- By default, the matrices constructed from dimensions will always be 
+  initialized with all entries being zero (`0`) or empty strings (`""`)
+
+- For the majority of cases, the interface being used is that of the R to C++
+  interface that relies upon the `Matrix(SEXP x)` constructor, which establishes
+  a **pointer** to the underlying data. That is, the `Vector` object _points_ to
+  the memory location of the `SEXP` R object in order to avoid copying the data
+  into _C++_. The only exception to this rule is if the data passed is of a
+  different type in which case a deep copy is performed _before_ a pointer is
+  established. For example, if `numeric()` data is passed to `NumericMatrix`
+  the correct handoff occurs. However, if `integer()` data were to be passed to
+  a `NumericMatrix` a `clone()` would be made to type `numeric()` which has its
+  pointer then assigned to the `NumericMatrix`.
+
+- Examples:
+
+```{Rcpp rcpp_matrix_ctor}
+SEXP A;
+NumericMatrix B(A); // from a SEXP
+
+// create a square matrix (all elements set to 0.0)
+NumericMatrix C(2);
+// Output:
+// 0 0
+// 0 0
+
+// of a given size (all elements set to 0.0)
+NumericMatrix D(2, 3);
+// Output:
+// 0 0 0
+// 0 0 0
+
+// of a given size with dimensions (all elements set to 0.0)
+NumericMatrix D2(Dimension(3, 2));
+// Output:
+// 0 0
+// 0 0
+// 0 0
+
+// initialize empty numeric matrix
+NumericMatrix D3 = no_init(2, 1);
+
+// fill matrix with 3.0
+D3.fill(3.0);
+// Output:
+// 3.0
+// 3.0
+
+// fill matrix using a vector
+NumericVector E = NumericVector(15, 2.0); 
+NumericMatrix F = NumericMatrix(3, 5, E.begin());
+// Output:
+// 2 2 2 2 2
+// 2 2 2 2 2
+// 2 2 2 2 2
+
+// cloning (explicit deep copy)
+NumericMatrix G = clone(F);
+```
+
+- See also:
+    - [`Matrix` Class doxygen documentation](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1Matrix.html)
+    - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
+
+### List
+
+- Generic Storage that is a `typedef` of `Vector` ...
+
+### DataFrame
+
+- The `DataFrame` class is special type of a `List`, which are in turn a version of `Vector`.
+
+
+### Operators
+
+- Operators allow for operations to take place between two different objects. 
+  The operations are defined to works in an element-wise fashion where applicable.
+
+- Viable mathematical operations that are able to be performed.
+
+| Operation | Definition         | Vector-Vector | Vector-Scalar  | Vector-Matrix | Matrix - Matrix | Matrix - Scalar |
+|:---------:|:------------------:|:-------------:|:--------------:|:-------------:|:---------------:|:---------------:|
+|    +      | Addition           |       Yes     |     Yes        |     No        |       No        |       Yes       |
+|    -      | Subtraction        |       Yes     |     Yes        |     No        |       No        |       Yes       |
+|    /      | Division           |       Yes     |     Yes        |     No        |       No        |       Yes       |
+|    *      | Multiplication     |       Yes     |     Yes        |     No        |       No        |       Yes       |
+
+
+- Logical Operations
+
+| Operation | Definition                | Vector-Vector | Vector-Scalar  |  Vector-Matrix  | Matrix - Matrix | Matrix - Scalar |
+|:---------:|:-------------------------:|:-------------:|:--------------:|:---------------:|:---------------:|:---------------:|
+|   ==      | Equality                  |       Yes     |     Yes        |     No          |       No        |       Yes       |
+|   !=      | Non-equality              |       Yes     |     Yes        |     No          |       No        |       Yes       |
+|   >=      | Greater than or equal to  |       Yes     |     Yes        |     No          |       No        |       Yes       |
+|   <=      | Less than or equal to     |       Yes     |     Yes        |     No          |       No        |       Yes       |
+|   <       | Less than                 |       Yes     |     Yes        |     No          |       No        |       Yes       |
+|   >       | Greater than              |       Yes     |     Yes        |     No          |       No        |       Yes       |
+
+- Examples:
+ 
+```{Rcpp}
+// Sample data
+NumericVector A = NumericVector::create(1, 2, 3, 4);
+NumericVector B = NumericVector::create(2, 3, 4, 5);
+
+// --- Addition
+
+// Add a vector and scalar
+NumericVector H = A + 2.0;
+// Output: 3 4 5 6
+
+// Add a vector and another vector
+NumericVector I = A + B;
+// Output: 3 5 7 9
+
+// --- Subtraction
+
+// Subtract a scalar from a vector
+NumericVector J = 2.0 - A;
+// Output: 1 0 -1 -2
+
+// Subtract vectors
+NumericVector K = A - B;
+// Output: -1 -1 -1 -1
+
+// --- Multiplication
+
+// Multiple by scalar
+NumericVector L = 3 * A;
+// Output: 3 6 9 12
+
+// Multiple Vectors
+NumericVector M = A * B;
+// Output: 2 6 12 20
+
+// --- Division
+
+// Divide by scalar
+NumericVector L = 1 / A;
+// Output: 1.0000000 0.5000000 0.3333333 0.2500000
+
+// Divide Vectors
+NumericVector M = A / B;
+// Output: 0.5000000 0.6666667 0.7500000 0.8000000
+
+// --- All together
+NumericVector res = 3.0 * A - 1.0 / B + A + B + 5.0;
+// Output: 10.50000 15.66667 20.75000 25.80000
+```
+
+
+## Member Functions
+
+### Dimensional Information
+
+|               |                                           |
+|:--------------|:------------------------------------------|
+| `.nrow()`	   	| number of rows in a `Matrix`              |
+| `.ncol()`	   	| number of columns in a `Vector`           |
+| `.size()`   	| number of items in a `Matrix` or `Vector` |
+| `.length()`   | alias of `size()` for `Vector`            |
+
+- Return type is that of an `int`, `unsigned int`, or `R_xlen_t`
+
+- Examples:
+
+```{Rcpp}
+// --- Vector Example
+NumericVector X(3);
+
+int nelem = X.size();   // Output: 3
+int nlens = X.length(); // Output: 3
+
+Rcout << "Vector X has " << nelem << " elements." << std::endl;
+
+// --- Matrix Example
+NumericMatrix X(4,5);
+
+int rows  = X.nrow();   // Output: 4
+int cols  = X.ncols();  // Output: 5
+int elems = X.size();   // Output: 20
+
+Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::endl;
+```
+
+
+### Accessing Element Values 
+
+- Accesses an individual element within a `Vector` or `Matrix`.
+   - `(i)` provides the _i_th element in addition to ensure that the requested
+       indice is within the confines of the array by doing a bounds check
+   - `[i]` similar to the previous case, but does so *without* a bounds check. 
+   - `at(i,j)` provides the _i,j_th element of a `Matrix` with a bounds check.
+   - `(i,j)` provides the _i,j_th element of a `Matrix` *without* a bounds check.
+
+- Using accessors without a bounds check is **not** recommended unless the code
+  has been thoroughly tested as undefined behavior (UB) may emerge. UB 
+  is very problematic.
+  
+- Note: Unlike _R_, there is no `[]` subset operator for matrices with _C++_.
+  Only `()` and `at()` provide subset operations.
+
+- Examples:
+
+```{Rcpp}
+// Create a vector 
+NumericVector Y = NumericVector::create(1, 2, 3, 4);
+
+// Retrieve the first value from Y. (C++ indices start at 0 not 1!)
+double a = Y(0);
+// Output: 1
+
+// Modify the last value using unbound accessor
+// Warning: Make sure the point is valid!
+Y[3] = 5;
+
+// Create matrix with elements in Y
+NumericMatrix Y(2, 2, X.begin());
+
+// Output:
+// 1  3
+// 2  5
+
+// Extract Value at 2, 1
+double b = Y(1, 0);
+// Output: 2
+
+// Modify value at 1, 2
+Y(0, 1) = 4;
+
+// Output:
+// 1  4
+// 2  5
+
+// The following shows a bounds throw error
+// Y.at(1, 2) = 4;
+```
+
+### Subset Views
+
+### Static Members
+
+
+
+### Sugar
+
+#### abs( X )
+
+- Compute 
+
+#### sqrt( X )
+
+
+#### trigonometric element-wise functions
+
+|              |                |               |
+|:-------------|:---------------|:--------------|
+| **sin( X )** | **asin( X )**  | **sinh( X )** |
+| **cos( X )** |  **acos( X )** | **cosh( X )** |
+| **tan( X )** |  **atan( X )** | **tanh( X )** |
+
+- Compute the trigonometric value for each element in a given structure.
+
+- Usage:
+   - `vector_type Y = func(X)`
+   - `matrix_type Y = func(X)`
+   - `X` and `Y` must be of the same `vector_type`/`matrix_type`.
+   - where `func` is one of the following trigonmetric functions:
+       - sin family: `sin(X)`, `asin(X)`, `sinh(X)`
+       - cos family: `cos(X)`, `acos(X)`, `cosh(X)`
+       - tan family: `tan(X)`, `atan(X)`, `tanh(X)`
+
+- Examples:
+
+```{Rcpp rcpp_trig_funcs}
+// Generate Values
+NumericVector X  = rnorm(10);
+
+// Compute trigonometric values
+NumericVector Y  =  cos(X);
+NumericVector Y2 = acos(X);
+NumericVector Y3 = cosh(X);
+```
+
+
+---
+
+#### Special Functions of Mathematics
+
+|               |                |
+|:--------------|:---------------|
+| **beta( X )** | **lbeta( X )** |
+
+---
+
+|               |                  |
+|:--------------|:-----------------|
+| **gamma( X )** | **lgamma( X )** |
+
+|                            |                     |
+|:---------------------------|:--------------------|
+| **psigamma( X , deriv )**  |                     |
+| **digamma( X )**           | **trigamma( X )**   |
+| **tetragamma( X )**        | **pentagamma( X )** |
+
+---
+
+|                 |                  |
+|:----------------|:-----------------|
+| **factorial()** | **lfactorial()** |
+| **choose()**    | **lchoose()**    |
+
+
+--
+
+#### Rounding of Numbers
+
+|                        |                         |
+|:-----------------------|:------------------------|
+| **ceiling( X )**       | **ceil( X )**           | 
+| **trunc( X )**         | **floor( X )**          | 
+| **round( X, digits )** | **signif( X, digits )** |
+
+---
+
+#### Logarithms and Exponentials
+
+|              |                |                |
+|:-------------|:---------------|:---------------|
+| **log( X )** | **log10( X )** | **log1p( X )** | 
+| **exp( X )** | **expm1( X )** |                |
+
+---
+
+### Statistical Summaries
+
+---
+
+|              |              |
+|:-------------|:-------------|
+| **min( X )** | **max( X )** |
+
+- Obtain the extremum value of either a maximum and minimum from within `Vector` 
+  or `Matrix`. 
+
+- Examples:
+
+```{Rcpp}
+// Sample Data
+NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
+
+// Obtain max value for X
+double X_max = max(X);
+// Output: 9
+
+// Obtain min value for X
+double X_min = minx(X);
+// Output: 1
+```
+
+---
+
+**mean( X )**
+
+- Computes the sample mean.
+
+- If _X_ is a `Matrix`, it will lump all values together and then compute the 
+  mean. To obtain means for each row or column use `rowMeans` or `colMeans`.
+
+```{Rcpp}
+// Sample Data
+NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
+
+// Obtain mean value for X
+double X_mean = mean(X);
+// Output: 4
+```
+
+---
+
+**median( X )**
+
+- Computes the sample median.
+
+```{Rcpp}
+// Sample Data
+NumericVector X = NumericVector::create(3,4,9,5,1,2);
+
+// Obtain mean value for X
+double X_median = median(X);
+// Output: 3.5
+```
+
+
+---
+
+|              |             |
+|:-------------|:------------|
+| **var( X )** | **sd( X )** |
+
+---
+
+### Vector Operations
+
+----
+
+#### sum( X )
+
+- Compute the overall sum
+
+- Examples:
+
+```{Rcpp}
+// Sample data
+NumericVector x = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
+
+double y = sum(x);
+// Output: 35.1
+```
+
+----
+
+#### diff( X )
+
+----
+
+|                 |                  |
+|:----------------|:-----------------|
+| **cumsum( X )** | **cumprod( X )** |
+
+
+----
+
+|                 |                  |
+|:----------------|:-----------------|
+| **cummax( X )** | **cummin( X )**  |
+ 
+
+----
+
+|                   |                    |
+|:------------------|:-------------------|
+| **pmax( X, Y )**  | **pmin( X, Y )**   |
+
+- Obtain a parallel extremum value of either maximum and minimum for either 
+  a scalar and a `Vector` or just two `Vector` objects.
+  
+- For instance, the parallel minimum of X = 0, 1 and Y = 2, -3 would be Z = 0, -3.
+
+- Examples
+
+```{Rcpp}
+// Sample Data
+NumericVector x = NumericVector::create(1,3,2,4,6,5);
+NumericVector y = NumericVector::create(2,1,3,5,4,6);
+
+// --- Parallel Maximum
+
+// Scalar and Vector
+NumericVector z = pmax(2, x);
+// Output: 2 3 2 4 6 5
+
+// Two vectors
+NumericVector z2 = pmax(x, y);
+// Output: 2 3 3 5 6 6
+
+// --- Parallel Minimum
+
+// Scalar and Vector
+NumericVector z = pmin(2, x);
+// Output: 1 2 2 2 2 2
+
+// Two vectors
+NumericVector z2 = pmin(x, y);
+// Output: 1 1 2 4 4 5
+```
+
+----
+
+|                     |                    |
+|:--------------------|:-------------------|
+| **which_max( X )**  | **which_min( X )** |
+
+- Provides the position in the vector of the maximum or minimum value of a 
+  `NumericVector`.
+
+- Examples:
+
+```{Rcpp}
+// Sample data
+NumericVector x = NumericVector::create(3.2, 5.2, -9.7, 4.3, 8.8);
+
+// Return index for max value
+int y = which_max(x);
+// Output: 4 (because C++ indices starts at 0!)
+
+// Return index for min value
+int y2 = which_min(x);
+// Output: 2 (because C++ indices starts at 0!)
+```
+
+----
+
+|                     |                     |
+|:--------------------|:--------------------|
+| **match( X )**      | **self_match( X )** |
+
+
+----
+
+|                     |                 |
+|:--------------------|:----------------|
+| **duplicated( X )** | **unique( X )** |
+
+- Determine whether duplicates exist within a `Vector` or what the unique values
+  are.
+  
+- Duplicated values are identified by a `LogicalVector` such that the first,
+  second, and so on replicates are labeled as `TRUE` while unique values are `FALSE`.
+  
+- Unique provides only the first occurrence of a given value. In essence, only
+  the values that appear as `FALSE` within the `duplicate` function.
+
+- Examples:
+
+```{Rcpp}
+// Sample data
+CharacterVector x = CharacterVector::create("a","b","c","a","b","c","a");
+
+// Detect duplicates within a string
+LogicalVector x_dups = duplicated(x);
+// Output: FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE
+
+// Obtain only unique values
+CharacterVector x_unique = unique(x);
+// Output: "a", "b", "c"
+```
+
+----
+
+**table( X )**
+
+- Given a `Vector` of either `NumericVector`, `IntegerVector`, `LogicalVector`,
+  or `CharacterVector`, compute an `IntegerVector` that contains a count of
+  each value.
+
+- Examples:
+
+```{Rcpp}
+// Needs to have a way to extract what value is represented at each position
+// names attribute? 
+
+// Create Numerical Data
+NumericVector w = NumericVector::create(3.2, 1.2, -0.5, NA_REAL, 1.2, 2.0, NA_REAL);
+
+// Tabulate
+IntegerVector w_out = table(x);
+
+// Create Integer Data
+IntegerVector x = IntegerVector::create(2, -2, NA_INTEGER, NA_INTEGER, 200, 2);
+
+// Tabulate the integer data
+IntegerVector x_out = table(y);
+
+// Create Character Data
+CharacterVector y = CharacterVector::create("a", "a", "b", NA_STRING, "c", NA_STRING);
+
+// Tabulate
+IntegerVector y_out = table(z);
+
+// Create Logical Data
+LogicalVector z = LogicalVector::create(true, NA_LOGICAL, false, true, NA_LOGICAL);
+
+// Tabulate
+IntegerVector z_out = table(z);
+```
+
+### Statistical Distributions
+
+- There exists two approaches for working with statistical distribution functions
+  within Rcpp. The approaches differ on how the result is returned. Specifically,
+  statistical distributions within the `Rcpp::` namespace return type
+  `NumericVector` whereas functions within the `R::` namespace return a single 
+  `double` scalar value.
+  
+- For drawing large samples with fixed distribution parameters, sampling under
+  one should sample under the `Rcpp::` namespace to obtain a `NumericVector`.
+  There is an added benefit to working under this scheme of having default
+  parameters for log probability and lower tail sampling akin to traditional R
+  versions.
+
+- For drawing samples with changing distribution parameters, sampling under
+  the `R::` namespace with a `for` loop is perferred as parameters for
+  each draw can be customized.
+  
+#### Beta Distribution
+
+|                                                 |
+|:------------------------------------------------|
+| **dbeta(x, shape1, shape2, log)**               |
+| **pbeta(q, shape1, shape2, lower_tail, log_p)** |
+| **qbeta(p, shape1, shape2, lower_tail, log_p)** |
+| **rbeta(n, shape1, shape2)**                    |
+
+
+```{Rcpp rcpp_beta_dist}
+// Consider X ~ Beta(1,1)
+
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dbeta(xx, 1.0, 1.0, false);
+NumericVector probs     = Rcpp::pbeta(xx, 1.0, 1.0, true, false);
+NumericVector qvals     = Rcpp::qbeta(probs, 1.0, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rbeta(5, 1.0, 1.0);
+
+// Scalar Returns
+double dval  = R::dbeta(0.5, 1.0, 1.0, false);
+double pval  = R::pbeta(0.5, 1.0, 1.0, true, false);
+double qval  = R::qbeta(0.85, 1.0, 1.0, true, false);
+double rdraw = R::rbeta(1.0, 1.0);
+```
+
+
+#### Binomial Distribution
+
+
+|                                                 |
+|:------------------------------------------------|
+| **dbinomial(x, size, prob, log)**               |
+| **pbinomial(q, size, prob, lower_tail, log_p)** |
+| **qbinomial(p, size, prob, lower_tail, log_p)** |
+| **rbinomial(n, size, prob)**                    |
+
+
+```{Rcpp rcpp_bin_dist}
+// Consider X ~ Bin(n = 100, p = 0.5)
+
+IntegerVector xx = IntegerVector::create(46, 47, 48, 49, 50, 51, 52, 53, 54);
+
+// Vector returns
+NumericVector densities = Rcpp::dbinom(xx, 100, .5, false)
+NumericVector probs     = Rcpp::pbinom(xx, 100, .5, true, false);
+NumericVector qvals     = Rcpp::qbinom(probs, 100, .5, true, false);
+NumericVector rsamples  = Rcpp::rbinom(20, 100, .5); 
+
+// Scalar Returns
+double dval  = R::dbinom(46, 100, .5, false);
+double pval  = R::pbinom(46, 100, .5, true, false);
+double qval  = R::qbinom(0.242, 100, .5, true, false);
+double rdraw = R::rbinom(46, 100);
+```
+
+
+
+#### Cauchy Distribution
+
+|                                                    |
+|:---------------------------------------------------|
+| **dcauchy(x, location, scale, log)**               |
+| **pcauchy(q, location, scale, lower_tail, log_p)** |
+| **qcauchy(p, location, scale, lower_tail, log_p)** |
+| **rcauchy(n, location, scale)**                    |
+
+
+```{Rcpp rcpp_cauchy_dist}
+// Consider X ~ Cauchy(loc = 0, scale = 1)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dcauchy(xx, 0.0, 1.0, false)
+NumericVector probs     = Rcpp::pcauchy(xx, 0.0, 1.0, true, false);
+NumericVector qvals     = Rcpp::qcauchy(probs, 0.0, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rcauchy(20, 0.0, 1.0); 
+
+// Scalar Returns
+double dval  = R::dcauchy(0.25, 0.0, 1.0, false);
+double pval  = R::pcauchy(0.25, 0.0, 1.0, true, false);
+double qval  = R::qcauchy(0.578, 0.0, 1.0, true, false);
+double rdraw = R::rcauchy(0.0, 1.0);
+```
+
+
+#### Chi-square Distribution
+
+|                                      |
+|:-------------------------------------|
+| **dchisq(x, df, log)**               |
+| **pchisq(q, df, lower_tail, log_p)** |
+| **qchisq(p, df, lower_tail, log_p)** |
+| **rchisq(n, df)**                    |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from an Chi-squared distribution.
+  
+- When simulating a vector or scalar from a Chi-squared distribution,
+  the value returned is within [0, infty).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `log_p = FALSE`, probabilities, densities are returned as log(p).
+    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+
+- Examples:
+
+```{Rcpp rcpp_chisq_dist}
+// Consider X ~ X^2(df = 2)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dchisq(xx, 2, false)
+NumericVector probs     = Rcpp::pchisq(xx, 2, true, false);
+NumericVector qvals     = Rcpp::qchisq(probs, 2, true, false);
+NumericVector rsamples  = Rcpp::rchisq(20, 2); 
+
+// Scalar Returns
+double dval  = R::dchisq(0.25, 2, false);
+double pval  = R::pchisq(0.5, 2, true, false);
+double qval  = R::qchisq(0.22, 2, true, false);
+double rdraw = R::rchisq(2);
+```
+
+#### Non-central Chi-square Distribution
+
+|                                            |
+|:-------------------------------------------|
+| **dnchisq(x, df, ncp, log_p)**             |
+| **pnchisq(q, df, ncp, lower_tail, log_p)** |
+| **qnchisq(p, df, ncp, lower_tail, log_p)** |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from an Non-central Chi-squared
+  distribution.
+  
+- When simulating a vector or scalar from a Non-central Chi-squared distribution,
+  the value returned is within [0, infty).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `log_p = FALSE`, probabilities, densities are returned as log(p).
+    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+
+- Examples:
+
+```{Rcpp rcpp_nchisq_dist}
+// Consider X ~ X^2(df = 2, ncp = 2.5)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dchisq(xx, 2, 2.5, false)
+NumericVector probs     = Rcpp::pchisq(xx, 2, 2.5, true, false);
+NumericVector qvals     = Rcpp::qchisq(probs, 2, 2.5, true, false);
+
+// Scalar Returns
+double dval  = R::dnchisq(0.25, 2, false);
+double pval  = R::pnchisq(0.5, 2, true, false);
+double qval  = R::qnchisq(0.22, 2, true, false);
+```
+
+## Exponential Distribution
+
+|                                      |
+|:-------------------------------------|
+| **dexp(x, rate, log)**               |
+| **pexp(q, rate, lower_tail, log_p)** |
+| **qexp(p, rate, lower_tail, log_p)** |
+| **rexp(n, rate)**                    |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from an Exponential distribution under
+  the lambda parameterization: f(v) = lambda x exp(-lambda x v)
+  
+- When simulating a vector or scalar from an Exponential distribution, the value returned
+  is within [0, infty).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `rate = 1`, rate refers to the lambda parameter within an exponential
+    - `log_p = FALSE`, probabilities, densities are returned as log(p).
+    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+
+- Examples:
+
+```{Rcpp rcpp_exp_dist}
+// Consider X ~ Exp(Rate = 1)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dexp(xx, 1.0, false)
+NumericVector probs     = Rcpp::pexp(xx, 1.0, true, false);
+NumericVector qvals     = Rcpp::qexp(probs, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rexp(20, 1.0); 
+
+// Scalar Returns
+double dval  = R::dexp(0.25, 2, false);
+double pval  = R::pexp(0.5, 2, true, false);
+double qval  = R::qexp(0.22, 2, true, false);
+double rdraw = R::rexp(2);
+```
+
+
+#### F Distribution
+
+|                                        |
+|:---------------------------------------|
+| **df(x, df1, df2, log_p)**             |
+| **pf(q, df1, df2, lower_tail, log_p)** |
+| **qf(p, df1, df2, lower_tail, log_p)** |
+| **rf(n, df1, df2)**                    |
+
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from an F distribution.
+  
+- When simulating a vector or scalar from an F distribution, the value returned
+  is within [0, infty).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `log_p = FALSE` probabilities, densities are returned as log(p).
+    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+
+- Examples:
+
+```{Rcpp rcpp_f_dist}
+// Consider X ~ F(1, 5)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::df(xx, 1.0, 5.0, false);
+NumericVector probs     = Rcpp::pf(xx, 1.0, 5.0 true, false);
+NumericVector qvals     = Rcpp::qf(probs, 1.0, 5.0, true, false);
+NumericVector rsamples  = Rcpp::rf(20, 1.0, 5.0); 
+
+// Scalar Returns
+double dval  = R::df(0.25, 1.0, 5.0, false);
+double pval  = R::pf(0.5, 1.0, 5.0, true, false);
+double qval  = R::qf(0.49, 1.0, 5.0, true, false);
+double rdraw = R::rf(1.0, 5.0);
+```
+
+
+#### Gamma Distribution 
+
+|                                               |
+|:----------------------------------------------|
+| **dgamma(x, shape, rate, log_p)**             |
+| **pgamma(q, shape, rate, lower_tail, log_p)** |
+| **qgamma(p, shape, rate, lower_tail, log_p)** |
+| **rgamma(n, shape, rate)**                    |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Gamma distribution.
+  
+- When simulating a vector or scalar from a Gamma distribution, the value returned
+  is within [0,infty).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `rate = 1`,
+    - `log_p = FALSE`, probabilities, densities are returned as log(p).
+    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+
+- Examples:
+ 
+```{Rcpp rcpp_gamma_dist}
+// Consider X ~ Gamma(1, 1)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dgamma(xx, 1.0, 1.0, false);
+NumericVector probs     = Rcpp::pgamma(xx, 1.0, 1.0, true, false);
+NumericVector qvals     = Rcpp::qgamma(probs, 1.0, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rgamma(20, 1.0, 1.0); 
+
+// Scalar Returns
+double dval  = R::dgamma(0.25, 1.0, 1.0, false);
+double pval  = R::pgamma(0.5, 1.0, 1.0, true, false);
+double qval  = R::qgamma(0.393, 1.0, 1.0, true, false);
+double rdraw = R::rgamma(1.0, 1.0);
+```
+
+
+#### Geometric Distribution
+
+**rgeom()**
+
+#### Hypergeometric Distribution
+
+**rhyper()**
+
+#### Logistic Normal Distribution
+
+**rlnorm()**
+
+#### Negative Binomial Distribution
+
+**rnbinom()**
+
+#### Normal Distribution
+
+**rnorm()**
+
+#### Poisson Distribution
+
+**rpois()**
+
+#### Wilcoxon Signed Rank Distribution
+
+**rsignrank()**
+
+#### Student's T Distribution
+
+**rt()**
+
+#### Uniform Distribution (Continuous)
+
+**runif()**
+
+#### Weibull Distribution
+
+**rweibull()**
+
+#### Wilcox Distribution
+
+**rwilcox()**
+
+
+
+## Environment
+
+## Function
+
+## Language
+
+## XPtr
+
+## S4 Classes
