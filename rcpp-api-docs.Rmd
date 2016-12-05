@@ -26,7 +26,7 @@ project so that a docs subdomain could hopefully be added to <http://rcpp.org>.
 Please note: The post is written using [RMarkdown](http://rmarkdown.rstudio.com)
 for maximum flexibility.
 
-# API Documentation for Rcpp 0.12.7 
+# API Documentation for Rcpp 0.12.8
 
 ## Preamble
 
@@ -41,7 +41,7 @@ for maximum flexibility.
   (PRs)](https://github.com/coatless/rcpp-api/pulls) on GitHub.
 
 - Please report any bugs to the [Rcpp Core Team](https://github.com/rcppcore/rcpp/issues).
-
+ 
 ## Overview
 
 - Vector, Matrix, List, DataFrame
@@ -153,7 +153,7 @@ NumericVector E = clone(D);
     - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
 
 ------
-
+ 
 ### Matrix
 
 - The main class for matrices is the templated `Matrix` class, which derives from
@@ -452,7 +452,11 @@ Y(0, 1) = 4;
 
 ## Sugar
 
-### all( X ) {#all}
+### Logical Operations {#sugarlogic}
+
+#### ifelse( CONDITION, TRUE, FALSE) {#ifelse}
+
+#### all( X ) {#all}
 
 - Tests if *all* elements in a `LogicalVector` or `LogicalMatrix` are `true`. 
 
@@ -505,7 +509,7 @@ Rcout
     - [any](#any)
     - [is_true](#is-true)
 
-### any( X ) {#any}
+#### any( X ) {#any}
 
 - Tests if *any* elements in a `LogicalVector` or `LogicalMatrix` are `true`. 
 
@@ -559,9 +563,460 @@ Rcout
     - [all](#all)
     - [is_true](#is-true)
 
-### cbind
+### Complex Operators
 
-**cbind(X, Y)** 
+#### Re( X ) {#realnums}
+
+#### Im( X ) {#imaginarynums}
+
+#### Mod( X ) {#complexmodulus}
+
+#### Conj( X ) {#complexconjugate}
+
+
+### Data Operations
+
+
+#### Preview Data
+
+|                   |                   |
+|:------------------|:------------------|
+| **head( X , N )** | **tail( X , N )** |
+
+----
+
+#### abs( X )
+
+- Compute the absolute value of all elements in a Vector or Matrix. 
+
+- Example:
+
+```{Rcpp}
+// Sample data
+NumericVector x = NumericVector::create(-2.8, 5.3, 7, -4, 0);
+
+NumericVector y = abs(x);
+// Output: 2.8, 5.3, 7, 4, 0
+```
+
+----
+
+#### sqrt( X ) {#sqrt}
+
+----
+
+#### sum( X ) {#sum}
+
+- Compute the overall summation of all elements in a Vector or Matrix. 
+
+- Examples:
+
+```{Rcpp}
+// Sample data
+NumericVector x = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
+
+double y = sum(x);
+// Output: 35.1
+```
+
+- See also:
+    - [rowSums](#rowSums)
+    - [colSums](#colSums)
+
+----
+
+#### diff( X ) {#diff}
+
+----
+
+#### Cumulative Arithmetic {#carth}
+
+|                 |                  |
+|:----------------|:-----------------|
+| **cumsum( X )** | **cumprod( X )** |
+
+
+----
+
+#### Cumulative Extremum {#cext}
+
+|                 |                  |
+|:----------------|:-----------------|
+| **cummax( X )** | **cummin( X )**  |
+
+
+----
+
+
+#### trigonometric element-wise functions
+
+|              |                |               |
+|:-------------|:---------------|:--------------|
+| **sin( X )** | **asin( X )**  | **sinh( X )** |
+| **cos( X )** |  **acos( X )** | **cosh( X )** |
+| **tan( X )** |  **atan( X )** | **tanh( X )** |
+
+- Compute the trigonometric value for each element in a given structure.
+
+- Usage:
+   - `vector_type Y = func(X)`
+   - `matrix_type Y = func(X)`
+   - `X` and `Y` must be of the same `vector_type`/`matrix_type`.
+   - where `func` is one of the following trigonmetric functions:
+       - sin family: `sin(X)`, `asin(X)`, `sinh(X)`
+       - cos family: `cos(X)`, `acos(X)`, `cosh(X)`
+       - tan family: `tan(X)`, `atan(X)`, `tanh(X)`
+
+- Examples:
+
+```{Rcpp rcpp_trig_funcs}
+// Generate Values
+NumericVector X  = rnorm(10);
+
+// Compute trigonometric values
+NumericVector Y  =  cos(X);
+NumericVector Y2 = acos(X);
+NumericVector Y3 = cosh(X);
+```
+
+
+---
+
+### Finite, Infinite and NaN Detection
+
+Include [Kevin Ushey's Truth Table from SO](http://stackoverflow.com/a/26262984/1345455)
+
+---
+
+#### Finiteness {#finite} 
+
+|                    |                      |
+|:-------------------|:---------------------|
+| **is_finite( X )** | **is_infinite( X )** |
+
+---
+
+#### is_na( X ) {#is_na}
+
+---
+
+#### is_nan( X ) {#is_nan}
+
+---
+
+#### na_omit( X ) {#na_omit}
+
+---
+
+### The Apply Family
+
+#### lapply
+
+---
+
+#### mapply
+
+---
+
+#### sapply
+
+---
+
+### Special Functions of Mathematics
+
+#### Beta {#beta}
+
+|               |                |
+|:--------------|:---------------|
+| **beta( X )** | **lbeta( X )** |
+
+---
+
+#### Gamma {#gamma}
+
+|               |                  |
+|:--------------|:-----------------|
+| **gamma( X )** | **lgamma( X )** |
+
+|                            |                     |
+|:---------------------------|:--------------------|
+| **psigamma( X , deriv )**  |                     |
+| **digamma( X )**           | **trigamma( X )**   |
+| **tetragamma( X )**        | **pentagamma( X )** |
+
+---
+
+### Combinatorics {#combs}
+
+|                 |                  |
+|:----------------|:-----------------|
+| **factorial()** | **lfactorial()** |
+| **choose()**    | **lchoose()**    |
+
+
+--
+
+#### Rounding of Numbers {#rounding}
+
+|                        |                         |
+|:-----------------------|:------------------------|
+| **ceiling( X )**       | **ceil( X )**           | 
+| **trunc( X )**         | **floor( X )**          | 
+| **round( X, digits )** | **signif( X, digits )** |
+
+---
+
+#### Logarithms and Exponentials {#logexp}
+
+|              |                |                |
+|:-------------|:---------------|:---------------|
+| **log( X )** | **log10( X )** | **log1p( X )** | 
+| **exp( X )** | **expm1( X )** |                |
+
+---
+
+### Statistical Summaries
+
+#### Minimum and Maximum {#minmax}
+
+|              |              |
+|:-------------|:-------------|
+| **min( X )** | **max( X )** |
+
+- Obtain the extremum value of either a maximum and minimum from within `Vector` 
+  or `Matrix`. 
+
+- Examples:
+
+```{Rcpp}
+// Sample Data
+NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
+
+// Obtain max value for X
+double X_max = max(X);
+// Output: 9
+
+// Obtain min value for X
+double X_min = minx(X);
+// Output: 1
+```
+
+---
+
+#### mean( X ) {#mean}
+
+- Computes the sample mean.
+
+- If _X_ is a `Matrix`, it will lump all values together and then compute the 
+  mean. To obtain means for each row or column use `rowMeans` or `colMeans`.
+
+```{Rcpp}
+// Sample Data
+NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
+
+// Obtain mean value for X
+double X_mean = mean(X);
+// Output: 4
+```
+
+---
+
+#### median( X ) {#median}
+
+- Computes the sample median.
+
+```{Rcpp}
+// Sample Data
+NumericVector X = NumericVector::create(3,4,9,5,1,2);
+
+// Obtain mean value for X
+double X_median = median(X);
+// Output: 3.5
+```
+
+
+---
+
+#### Variance {#var}
+
+|              |             |
+|:-------------|:------------|
+| **var( X )** | **sd( X )** |
+
+---
+
+### Special Operations
+
+#### rev( X ) {#rev}
+
+----
+
+
+#### Parallel Extremum {#pext}
+|                   |                    |
+|:------------------|:-------------------|
+| **pmax( X, Y )**  | **pmin( X, Y )**   |
+
+- Obtain a parallel extremum value of either maximum and minimum for either 
+  a scalar and a `Vector` or just two `Vector` objects.
+  
+- For instance, the parallel minimum of X = 0, 1 and Y = 2, -3 would be Z = 0, -3.
+
+- Examples
+
+```{Rcpp}
+// Sample Data
+NumericVector x = NumericVector::create(1,3,2,4,6,5);
+NumericVector y = NumericVector::create(2,1,3,5,4,6);
+
+// --- Parallel Maximum
+
+// Scalar and Vector
+NumericVector z = pmax(2, x);
+// Output: 2 3 2 4 6 5
+
+// Two vectors
+NumericVector z2 = pmax(x, y);
+// Output: 2 3 3 5 6 6
+
+// --- Parallel Minimum
+
+// Scalar and Vector
+NumericVector z = pmin(2, x);
+// Output: 1 2 2 2 2 2
+
+// Two vectors
+NumericVector z2 = pmin(x, y);
+// Output: 1 1 2 4 4 5
+```
+
+#### clamp( X , A , B ) {#clamp}
+
+
+----
+
+#### Extremum Indice {#which}
+
+|                     |                    |
+|:--------------------|:-------------------|
+| **which_max( X )**  | **which_min( X )** |
+
+- Provides the position in the vector of the maximum or minimum value of a 
+  `NumericVector`.
+
+- Examples:
+
+```{Rcpp}
+// Sample data
+NumericVector x = NumericVector::create(3.2, 5.2, -9.7, 4.3, 8.8);
+
+// Return index for max value
+int y = which_max(x);
+// Output: 4 (because C++ indices starts at 0!)
+
+// Return index for min value
+int y2 = which_min(x);
+// Output: 2 (because C++ indices starts at 0!)
+```
+
+----
+
+### Uniqueness Operators
+
+#### Match {#match}
+
+|                     |                     |
+|:--------------------|:--------------------|
+| **match( X )**      | **self_match( X )** |
+
+
+----
+
+#### Unique {#unique}
+
+|                     |                 |
+|:--------------------|:----------------|
+| **duplicated( X )** | **unique( X )** |
+
+- Determine whether duplicates exist within a `Vector` or what the unique values
+  are.
+  
+- Duplicated values are identified by a `LogicalVector` such that the first,
+  second, and so on replicates are labeled as `TRUE` while unique values are `FALSE`.
+  
+- Unique provides only the first occurrence of a given value. In essence, only
+  the values that appear as `FALSE` within the `duplicate` function.
+
+- Examples:
+
+```{Rcpp}
+// Sample data
+CharacterVector x = CharacterVector::create("a","b","c","a","b","c","a");
+
+// Detect duplicates within a string
+LogicalVector x_dups = duplicated(x);
+// Output: FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE
+
+// Obtain only unique values
+CharacterVector x_unique = unique(x);
+// Output: "a", "b", "c"
+```
+
+----
+
+### table( X ) {#table}
+
+- Given a `Vector` of either `NumericVector`, `IntegerVector`, `LogicalVector`,
+  or `CharacterVector`, compute an `IntegerVector` that contains a count of
+  each value.
+
+- Examples:
+
+```{Rcpp}
+// Needs to have a way to extract what value is represented at each position
+// names attribute? 
+
+// Create Numerical Data
+NumericVector w = NumericVector::create(3.2, 1.2, -0.5, NA_REAL, 1.2, 2.0, NA_REAL);
+
+// Tabulate
+IntegerVector w_out = table(x);
+
+// Create Integer Data
+IntegerVector x = IntegerVector::create(2, -2, NA_INTEGER, NA_INTEGER, 200, 2);
+
+// Tabulate the integer data
+IntegerVector x_out = table(y);
+
+// Create Character Data
+CharacterVector y = CharacterVector::create("a", "a", "b", NA_STRING, "c", NA_STRING);
+
+// Tabulate
+IntegerVector y_out = table(z);
+
+// Create Logical Data
+LogicalVector z = LogicalVector::create(true, NA_LOGICAL, false, true, NA_LOGICAL);
+
+// Tabulate
+IntegerVector z_out = table(z);
+```
+
+----
+
+#### setdiff(X, Y) {#setdiff}
+
+
+----
+
+### Object Creation
+
+#### cbind
+
+|                      |
+|:---------------------|
+| **cbind(X, Y)**      |
+| **cbind(X, Y, ...)** |
+
 
 **cbind(X, Y, ...)**
 
@@ -631,338 +1086,23 @@ Rcout
 // 1.0 2.0 3.0 3.0 2.0 1.0
 ```
 
-### abs( X )
-
-- Compute 
-
-### sqrt( X )
-
-
-### trigonometric element-wise functions
-
-|              |                |               |
-|:-------------|:---------------|:--------------|
-| **sin( X )** | **asin( X )**  | **sinh( X )** |
-| **cos( X )** |  **acos( X )** | **cosh( X )** |
-| **tan( X )** |  **atan( X )** | **tanh( X )** |
-
-- Compute the trigonometric value for each element in a given structure.
-
-- Usage:
-   - `vector_type Y = func(X)`
-   - `matrix_type Y = func(X)`
-   - `X` and `Y` must be of the same `vector_type`/`matrix_type`.
-   - where `func` is one of the following trigonmetric functions:
-       - sin family: `sin(X)`, `asin(X)`, `sinh(X)`
-       - cos family: `cos(X)`, `acos(X)`, `cosh(X)`
-       - tan family: `tan(X)`, `atan(X)`, `tanh(X)`
-
-- Examples:
-
-```{Rcpp rcpp_trig_funcs}
-// Generate Values
-NumericVector X  = rnorm(10);
-
-// Compute trigonometric values
-NumericVector Y  =  cos(X);
-NumericVector Y2 = acos(X);
-NumericVector Y3 = cosh(X);
-```
-
-
----
-
-### Special Functions of Mathematics
-
-|               |                |
-|:--------------|:---------------|
-| **beta( X )** | **lbeta( X )** |
-
----
-
-|               |                  |
-|:--------------|:-----------------|
-| **gamma( X )** | **lgamma( X )** |
-
-|                            |                     |
-|:---------------------------|:--------------------|
-| **psigamma( X , deriv )**  |                     |
-| **digamma( X )**           | **trigamma( X )**   |
-| **tetragamma( X )**        | **pentagamma( X )** |
-
----
-
-|                 |                  |
-|:----------------|:-----------------|
-| **factorial()** | **lfactorial()** |
-| **choose()**    | **lchoose()**    |
-
-
---
-
-### Rounding of Numbers
-
-|                        |                         |
-|:-----------------------|:------------------------|
-| **ceiling( X )**       | **ceil( X )**           | 
-| **trunc( X )**         | **floor( X )**          | 
-| **round( X, digits )** | **signif( X, digits )** |
-
----
-
-### Logarithms and Exponentials
-
-|              |                |                |
-|:-------------|:---------------|:---------------|
-| **log( X )** | **log10( X )** | **log1p( X )** | 
-| **exp( X )** | **expm1( X )** |                |
-
----
-
-### Statistical Summaries
-
----
-
-|              |              |
-|:-------------|:-------------|
-| **min( X )** | **max( X )** |
-
-- Obtain the extremum value of either a maximum and minimum from within `Vector` 
-  or `Matrix`. 
-
-- Examples:
-
-```{Rcpp}
-// Sample Data
-NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
-
-// Obtain max value for X
-double X_max = max(X);
-// Output: 9
-
-// Obtain min value for X
-double X_min = minx(X);
-// Output: 1
-```
-
----
-
-**mean( X )**
-
-- Computes the sample mean.
-
-- If _X_ is a `Matrix`, it will lump all values together and then compute the 
-  mean. To obtain means for each row or column use `rowMeans` or `colMeans`.
-
-```{Rcpp}
-// Sample Data
-NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
-
-// Obtain mean value for X
-double X_mean = mean(X);
-// Output: 4
-```
-
----
-
-**median( X )**
-
-- Computes the sample median.
-
-```{Rcpp}
-// Sample Data
-NumericVector X = NumericVector::create(3,4,9,5,1,2);
-
-// Obtain mean value for X
-double X_median = median(X);
-// Output: 3.5
-```
-
-
----
-
-|              |             |
-|:-------------|:------------|
-| **var( X )** | **sd( X )** |
-
----
-
-### Vector Operations
+#### seq_along( X ) {#seq_along}
 
 ----
 
-### sum( X )
-
-- Compute the overall sum
-
-- Examples:
-
-```{Rcpp}
-// Sample data
-NumericVector x = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
-
-double y = sum(x);
-// Output: 35.1
-```
+#### rep( X, N ) {#rep}
 
 ----
 
-### diff( X )
+#### rep_each( X, N ) {#rep_each}
 
 ----
 
-|                 |                  |
-|:----------------|:-----------------|
-| **cumsum( X )** | **cumprod( X )** |
-
+#### rep_len( X, N ) {#rep_len}
 
 ----
 
-|                 |                  |
-|:----------------|:-----------------|
-| **cummax( X )** | **cummin( X )**  |
- 
-
-----
-
-|                   |                    |
-|:------------------|:-------------------|
-| **pmax( X, Y )**  | **pmin( X, Y )**   |
-
-- Obtain a parallel extremum value of either maximum and minimum for either 
-  a scalar and a `Vector` or just two `Vector` objects.
-  
-- For instance, the parallel minimum of X = 0, 1 and Y = 2, -3 would be Z = 0, -3.
-
-- Examples
-
-```{Rcpp}
-// Sample Data
-NumericVector x = NumericVector::create(1,3,2,4,6,5);
-NumericVector y = NumericVector::create(2,1,3,5,4,6);
-
-// --- Parallel Maximum
-
-// Scalar and Vector
-NumericVector z = pmax(2, x);
-// Output: 2 3 2 4 6 5
-
-// Two vectors
-NumericVector z2 = pmax(x, y);
-// Output: 2 3 3 5 6 6
-
-// --- Parallel Minimum
-
-// Scalar and Vector
-NumericVector z = pmin(2, x);
-// Output: 1 2 2 2 2 2
-
-// Two vectors
-NumericVector z2 = pmin(x, y);
-// Output: 1 1 2 4 4 5
-```
-
-----
-
-|                     |                    |
-|:--------------------|:-------------------|
-| **which_max( X )**  | **which_min( X )** |
-
-- Provides the position in the vector of the maximum or minimum value of a 
-  `NumericVector`.
-
-- Examples:
-
-```{Rcpp}
-// Sample data
-NumericVector x = NumericVector::create(3.2, 5.2, -9.7, 4.3, 8.8);
-
-// Return index for max value
-int y = which_max(x);
-// Output: 4 (because C++ indices starts at 0!)
-
-// Return index for min value
-int y2 = which_min(x);
-// Output: 2 (because C++ indices starts at 0!)
-```
-
-----
-
-|                     |                     |
-|:--------------------|:--------------------|
-| **match( X )**      | **self_match( X )** |
-
-
-----
-
-|                     |                 |
-|:--------------------|:----------------|
-| **duplicated( X )** | **unique( X )** |
-
-- Determine whether duplicates exist within a `Vector` or what the unique values
-  are.
-  
-- Duplicated values are identified by a `LogicalVector` such that the first,
-  second, and so on replicates are labeled as `TRUE` while unique values are `FALSE`.
-  
-- Unique provides only the first occurrence of a given value. In essence, only
-  the values that appear as `FALSE` within the `duplicate` function.
-
-- Examples:
-
-```{Rcpp}
-// Sample data
-CharacterVector x = CharacterVector::create("a","b","c","a","b","c","a");
-
-// Detect duplicates within a string
-LogicalVector x_dups = duplicated(x);
-// Output: FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE
-
-// Obtain only unique values
-CharacterVector x_unique = unique(x);
-// Output: "a", "b", "c"
-```
-
-----
-
-**table( X )**
-
-- Given a `Vector` of either `NumericVector`, `IntegerVector`, `LogicalVector`,
-  or `CharacterVector`, compute an `IntegerVector` that contains a count of
-  each value.
-
-- Examples:
-
-```{Rcpp}
-// Needs to have a way to extract what value is represented at each position
-// names attribute? 
-
-// Create Numerical Data
-NumericVector w = NumericVector::create(3.2, 1.2, -0.5, NA_REAL, 1.2, 2.0, NA_REAL);
-
-// Tabulate
-IntegerVector w_out = table(x);
-
-// Create Integer Data
-IntegerVector x = IntegerVector::create(2, -2, NA_INTEGER, NA_INTEGER, 200, 2);
-
-// Tabulate the integer data
-IntegerVector x_out = table(y);
-
-// Create Character Data
-CharacterVector y = CharacterVector::create("a", "a", "b", NA_STRING, "c", NA_STRING);
-
-// Tabulate
-IntegerVector y_out = table(z);
-
-// Create Logical Data
-LogicalVector z = LogicalVector::create(true, NA_LOGICAL, false, true, NA_LOGICAL);
-
-// Tabulate
-IntegerVector z_out = table(z);
-```
-
-### Statistical Distributions
+## Statistical Distributions
 
 - There exists two approaches for working with statistical distribution functions
   within Rcpp. The approaches differ on how the result is returned. Specifically,
@@ -980,7 +1120,7 @@ IntegerVector z_out = table(z);
   the `R::` namespace with a `for` loop is perferred as parameters for
   each draw can be customized.
   
-#### Beta Distribution
+### Beta Distribution
 
 |                                                 |
 |:------------------------------------------------|
@@ -1009,7 +1149,7 @@ double rdraw = R::rbeta(1.0, 1.0);
 ```
 
 
-#### Binomial Distribution
+### Binomial Distribution
 
 
 |                                                 |
@@ -1068,7 +1208,7 @@ double rdraw = R::rcauchy(0.0, 1.0);
 ```
 
 
-#### Chi-square Distribution
+### Chi-square Distribution
 
 |                                      |
 |:-------------------------------------|
@@ -1107,7 +1247,7 @@ double qval  = R::qchisq(0.22, 2, true, false);
 double rdraw = R::rchisq(2);
 ```
 
-#### Non-central Chi-square Distribution
+### Non-central Chi-square Distribution
 
 |                                            |
 |:-------------------------------------------|
@@ -1144,7 +1284,7 @@ double pval  = R::pnchisq(0.5, 2, true, false);
 double qval  = R::qnchisq(0.22, 2, true, false);
 ```
 
-#### Exponential Distribution
+### Exponential Distribution
 
 |                                      |
 |:-------------------------------------|
@@ -1186,7 +1326,7 @@ double rdraw = R::rexp(2);
 ```
 
 
-#### F Distribution
+### F Distribution
 
 |                                        |
 |:---------------------------------------|
@@ -1227,7 +1367,7 @@ double rdraw = R::rf(1.0, 5.0);
 ```
 
 
-#### Gamma Distribution 
+### Gamma Distribution 
 
 |                                               |
 |:----------------------------------------------|
@@ -1268,47 +1408,47 @@ double rdraw = R::rgamma(1.0, 1.0);
 ```
 
 
-#### Geometric Distribution
+### Geometric Distribution
 
 **rgeom()**
 
-#### Hypergeometric Distribution
+### Hypergeometric Distribution
 
 **rhyper()**
 
-#### Logistic Normal Distribution
+### Logistic Normal Distribution
 
 **rlnorm()**
 
-#### Negative Binomial Distribution
+### Negative Binomial Distribution
 
 **rnbinom()**
 
-#### Normal Distribution
+### Normal Distribution
 
 **rnorm()**
 
-#### Poisson Distribution
+### Poisson Distribution
 
 **rpois()**
 
-#### Wilcoxon Signed Rank Distribution
+### Wilcoxon Signed Rank Distribution
 
 **rsignrank()**
 
-#### Student's T Distribution
+### Student's T Distribution
 
 **rt()**
 
-#### Uniform Distribution (Continuous)
+### Uniform Distribution (Continuous)
 
 **runif()**
 
-#### Weibull Distribution
+### Weibull Distribution
 
 **rweibull()**
 
-#### Wilcox Distribution
+### Wilcox Distribution
 
 **rwilcox()**
 
