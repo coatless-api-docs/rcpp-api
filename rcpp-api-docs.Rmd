@@ -702,7 +702,7 @@ NumericVector cs = cumsum(y);   // OK, calls copy *constructor*, not
                                 // copy assignment operator
 
 // cs = cumsum(y);      compiler error: no viable conversion from 
-//                      'const Rcpp::sugar::Cumprod<14, true, Rcpp::Vector<14, PreserveStorage> >' 
+//                      'const Rcpp::sugar::Cumsum<14, true, Rcpp::Vector<14, PreserveStorage> >' 
 //                      to 'SEXP' (aka 'SEXPREC *')
 
 cs = cumsum(y).get();           // OK, `get()` returns a VectorBase, which is 
