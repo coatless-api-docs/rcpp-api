@@ -635,6 +635,82 @@ double y = sum(x);
 |:----------------|:-----------------|
 | **cumsum( X )** | **cumprod( X )** |
 
+- Calculates the cumulative sum (`cumsum`) or cumulative product (`cumprod`) 
+  of a `Vector` or `Matrix` *X*. 
+  
+- If an `NA` value is encountered, it will be propagated throughout the 
+  remaining elements in the result vector. 
+
+- For `cumsum`, *X* should be an `Integer` or `Numeric` `Vector` or `Matrix`. 
+
+- For `cumprod`, *X* should be an `Integer`, `Numeric`, or `Complex` `Vector` 
+  or `Matrix`. 
+  
+- In either case, the return type is a `Vector` of the same underlying `SEXPTYPE` 
+  as the input. 
+  
+- Caveat: at the time of writing (Rcpp version 0.12.8.2), not all Sugar expressions 
+  are directly compatible with `Vector::operator=`, as many of these functions 
+  return intermediate template classes which require an explicit conversion to   
+  `Vector`, rather than directly returning a `Vector`. In such cases the user 
+  may need to "help" the compiler with the conversion by 
+  
+    - Constructing a `Vector` from the result, and assigning that to the 
+      target `Vector`; or
+    - Calling an explicit conversion member function of the Sugar class, if 
+      such a function exists.
+      
+    See the examples below for a demonstration. 
+  
+- Examples: 
+
+```{Rcpp}
+NumericVector x = NumericVector::create(1, 2, 3, 4, 5);
+NumericVector cs = cumsum(x), cp = cumprod(x);
+
+Rcout
+    << "cumsum(x): \n" << cs << "\n\n"
+    << "cumprod(x): \n" << cp << "\n\n";
+// Output:
+// cumsum(x): 
+// 1 3 6 10 15
+// 
+// cumprod(x): 
+// 1 2 6 24 120
+
+x[3] = NumericVector::get_na();
+
+cs = cumsum(x).get();
+cp = cumprod(x).get();
+
+// These print as `nan`, but are actually `NA` values
+Rcout
+    << "cumsum(x): \n" << cs << "\n\n"
+    << "cumprod(x): \n" << cp 
+    << std::endl;
+// Output: 
+// cumsum(x): 
+// 1 3 6 nan nan
+// 
+// cumprod(x): 
+// 1 2 6 nan nan
+
+// As noted above: 
+NumericVector y = NumericVector::create(1, 2, 3, 4, 5);
+
+NumericVector cs = cumsum(y);   // OK, calls copy *constructor*, not 
+                                // copy assignment operator
+
+// cs = cumsum(y);      compiler error: no viable conversion from 
+//                      'const Rcpp::sugar::Cumprod<14, true, Rcpp::Vector<14, PreserveStorage> >' 
+//                      to 'SEXP' (aka 'SEXPREC *')
+
+cs = cumsum(y).get();           // OK, `get()` returns a VectorBase, which is 
+                                // assignable to Vector
+                                
+cs = NumericVector(cumsum(y));  // OK, but requires an additional Vector 
+                                // to be created
+```
 
 ----
 
