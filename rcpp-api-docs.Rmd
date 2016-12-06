@@ -1,9 +1,9 @@
 ---
 title: "Unofficial Rcpp API Documentation"
 output:
-  html_document: default
   pdf_document: default
-date: "`r format(Sys.time(), '%F %T %z')`"
+  html_document: default
+date: '`r format(Sys.time(), "%F %T %z")`'
 ---
 
 ```{r setup, include=FALSE}
