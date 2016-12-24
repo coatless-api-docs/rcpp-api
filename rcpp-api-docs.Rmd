@@ -47,15 +47,204 @@ for maximum flexibility.
 - Vector, Matrix, List, DataFrame
 - Member functions
 - Sugar
+    - Statistical Distributions
 - Environment, Function, Language
 - XPtr
 - S4 classes / modules
 
 ------
 
+## Vector, Matrix, List, and DataFrame Classes
+
+|                                                                 |                    |
+|-----------------------------------------------------------------|--------------------|
+|  [Vector<*RTYPE*>, NumericVector, IntegerVector, ...](#vector)  | vector class       |
+|  [Matrix<*RTYPE*>, NumericMatrix, IntegerMatrix, ...](#matrix)  | matrix class       |
+|  [List](#list)                                                  | list class         |
+|  [DataFrame](#dataframe)                                        | data frame class   |
+
+## Member functions
+
+|                                       |                                                                    |
+|---------------------------------------|--------------------------------------------------------------------|
+|  [Operators](#ops)                    | Mathematical (add, subtract, etc) and logical (inequalities)       |
+|  [Dimensional Information](#diminfo)  | Size attribute information                                         |
+|  [Object Access](#elemaccess)         | Retrieving element values with and without bounds check            |
+|  [Subset Views](#subview)             | Subset data structures                                             |
+
+## Sugar
+
+**[Logical Operations](#sugarlogic)**
+
+|                              |                            |
+|:-----------------------------|:---------------------------|
+| [`ifelse`](#ifelse)          | Vectorized If-else         |
+| [`is_false`](#isbool)        | Is Value False?            |
+| [`is_true`](#isbool)         | Is Value True?             |
+| [`any`](#any)                | At Least One Value is True |
+| [`all`](#all)                | All Values Must be True    |
+
+**[Complex Operators](#sugarcomplex)**
+
+|                              |                                    |
+|:-----------------------------|:-----------------------------------|
+| [`Re`](#realnums)            | Real Values of Complex Number      |
+| [`Im`](#imaginarynums)       | Imaginary Values of Complex Number |
+| [`Mod`](#complexmodulus)     | Modulus (r)                        |
+| [`Conj`](#complexconjugate)  | Complex Conjugate                  |
+
+**[Data Operations](#sugardata)**
+
+|                         |                                               |
+|:------------------------|:----------------------------------------------|
+| [`abs`](#abs)           | Absolute Value                                |
+| [`sqrt`](#sqrt)         | Square Root                                   |
+| [`sum`](#sum)           | Summation                                     |
+| [`diff`](#diff)         | Lagged Difference                             |
+| [`cumsum`](#carth)      | Cumulative Sum                                |
+| [`cumprod`](#carth)     | Cumulative Product                            |
+| [`cummin`](#cext)       | Cumulative Minimum                            |
+| [`cummax`](#cext)       | Cumulative Maximum                            |
+| [`sin`](#trig)          | Sine                                          |
+| [`cos`](#trig)          | Cosine                                        |
+| [`tan`](#trig)          | Tangent                                       |
+| [`asin`](#trig)         | Arc Sine                                      |
+| [`acos`](#trig)         | Arc Cosine                                    |
+| [`atan`](#trig)         | Arc Tangent                                   |
+| [`sinh`](#trig)         | Hyperbolic Sine                               |
+| [`cosh`](#trig)         | Hyperbolic Cosine                             |
+| [`tanh`](#trig)         | Hyperbolic Tangent                            |
+| [`ceiling`](#rounding)  | Smallest integer greater than or equal to x   |
+| [`ceil`](#rounding)     | Smallest integer greater than or equal to x   |
+| [`trunc`](#rounding)    | Truncates the values in x toward 0            |
+| [`floor`](#rounding)    | Largest integer less than or equal to x       | 
+| [`round`](#rounding)    | Round values to specified decimal place       |
+| [`signif`](#rounding)   | Rounds values to number of significant digits |
+| [`log`](#logexp)        | Natural Logarithms                            |
+| [`exp`](#logexp)        | Expoential                                    |
+| [`log10`](#logexp)      | Base 10 Logarithm                             |
+| [`log1p`](#logexp)      | Natural Logarithm $log(1+x)$                  |
+| [`expm1`](#logexp)      | $\exp(x) - 1$                                 |
+
+**[Finite, Infinite and NaN Detection](#sugarfinite)**
+
+|                             |                            |
+|:----------------------------|:---------------------------|
+| [`factorial`](#combs)       | Factorial                  |
+| [`lfactorial`](#combs)      | Factorial Logarithm        |
+| [`choose`](#combs)          | Combination                |
+| [`lchoose`](#combs)         | Combination Logarithm      |
+| [`gamma`](#gamma)           | Gamma Function             |
+| [`lgamma`](#gamma)          | Natural Log Gamma Function |
+| [`psigamma`](#gammaderiv)   | General Gamma Derivative   |
+| [`digamma`](#gammaderiv)    | Second Gamma Derivative    |
+| [`trigamma`](#gammaderiv)   | Third Gamma Derivative     |
+| [`tetragamma`](#gammaderiv) | Fourth Gamma Derivative    |
+| [`pentagamma`](#gammaderiv) | Fifth Gamma Derivative     |
+
+**[Special Functions of Mathematics](#sugarmath)**
+
+|                             |                            |
+|:----------------------------|:---------------------------|
+| [`factorial`](#combs)       | Factorial                  |
+| [`lfactorial`](#combs)      | Factorial Logarithm        |
+| [`choose`](#combs)          | Combination                |
+| [`lchoose`](#combs)         | Combination Logarithm      |
+| [`gamma`](#gamma)           | Gamma Function             |
+| [`lgamma`](#gamma)          | Natural Log Gamma Function |
+| [`psigamma`](#gammaderiv)   | General Gamma Derivative   |
+| [`digamma`](#gammaderiv)    | Second Gamma Derivative    |
+| [`trigamma`](#gammaderiv)   | Third Gamma Derivative     |
+| [`tetragamma`](#gammaderiv) | Fourth Gamma Derivative    |
+| [`pentagamma`](#gammaderiv) | Fifth Gamma Derivative     |
+
+**[Statistical Summaries](#sugarstats)**
+
+|                      |                      |
+|:---------------------|:---------------------|
+| [`min`](#minmax)     | Minimum Value        |
+| [`max`](#minmax)     | Maximum Value        |
+| [`range`](#range)    | Range                |
+| [`mean`](#mean)      | Mean Value           |
+| [`median`](#median)  | Median Value         |
+| [`var`](#median)     | Variance             |
+| [`sd`](#var)         | Standard Deviation   |
+
+**[Special Operators](#sugarspecops)**
+
+|                        |                                      |
+|:-----------------------|:-------------------------------------|
+| [`rev`](#rev)          | Reverse ordering of a vector         |
+| [`pmax`](#pext)        | Parallel maximum value               |
+| [`pmin`](#pext)        | Parallel minimum value               |
+| [`clamp`](#clamp)      | Values between a minimum and maximum |
+| [`which_max`](#which)  | Index of the maximum value           |
+| [`which_min`](#which)  | Index of the minimum value           |
+
+
+**[Uniqueness Operators](#sugarunique)**
+
+|                              |                                                                |
+|:-----------------------------|:---------------------------------------------------------------|
+| [`match`](#match)            | Find indices of the first value in a separate vector           |
+| [`self_match`](#match)       | Find indices of the first occurrence of each value in a vector |
+| [`unique`](#unique)          | Obtain the unique values                                       |
+| [`duplicated`](#unique)      | Obtain a logical vector indicating the duplicate values        |
+| [`table( X, N )`](#table)    | Create a frequency table of occurrences                        |
+| [`setdiff( X, N )`](#setdiff)| Asymmetric Difference of Set Values                            |
+
+
+
+**[Object Creation](#sugarobject)**
+
+|                     |                                                |
+|:--------------------|:-----------------------------------------------|
+| [`cbind`](#cbind)   | Create matrix by combing column vectors        |
+| [`seq_along`](#seq) | Generate an R index sequence given a vector    |
+| [`seq_len`](#seq)   | Generate an R index sequence given an integer  |
+| [`rep`](#rep)       | Replicate vector $N$ times                     |
+| [`rep_each`](#rep)  | Replicate each element in line $N$ times       |
+| [`rep_len`](#rep)   | Replicate values until vector is of length $N$ |
+
+
+**[Statistical Distributions](#statdist)**
+
+
+**[Discrete Distributions](#discretedist)**
+
+|                                |                        |
+|--------------------------------|------------------------|
+|  [p/d/q/rbinom](#bindist)      | Binomial               |
+|  [p/d/q/rgeom](#geodist)       | Geometric              |
+|  [p/d/q/rhyper](#hypergeodist) | Hypergeometric         |
+|  [p/d/q/rnbinom](#negbindist)  | Negative Binomial      |
+|  [p/d/q/rpois](#poisdist)      | Poisson                |
+|  [p/d/q/rwilcox](#wilcoxdist)  | Wilcoxon               |
+|  [p/d/q/rsignrank](#signeddist)| Wilcoxon Signed Rank   |
+
+
+**[Continuous Distributions](#contdist)**
+
+|                                 |                              |
+|---------------------------------|------------------------------|
+|  [p/d/q/rbeta](#betadist)       | Beta                         |
+|  [p/d/q/rcauchy](#cauchydist)   | Cauchy                       |
+|  [p/d/q/rchisq](#chisquaredist) | Chi-square                   |
+|  [p/d/qnchisq](#nchisquaredist) | Non-central Chi-square       |
+|  [p/d/q/rexp](#expdist)         | Exponential                  |
+|  [p/d/q/rf](#fdist)             | F                            |
+|  [p/d/q/rgamma](#gammadist)     | Gamma                        |
+|  [p/d/q/rnorm](#normaldist)     | Normal                       |
+|  [p/d/q/rlnorm](#lognormaldist) | Log Normal                   |
+|  [p/d/q/rlogis](#logisticdist)  | Logistic                     |
+|  [p/d/q/rt](#tdist)             | Student's T                  |
+|  [p/d/q/runif](#unifdist)       | Uniform                      |
+|  [p/d/q/rweibull](#weibulldist) | Weibull                      |
+
+
 ## Vector, Matrix, List, and DataFrame Classes {#vmld}
 
-### Vector
+### Vector {#vector}
 
 - The templated `Vector` class is a one dimensional array-like structure 
   providing storage for homogenous data types, with an 
@@ -154,7 +343,7 @@ NumericVector E = clone(D);
 
 ------
  
-### Matrix
+### Matrix {#matrix}
 
 - The main class for matrices is the templated `Matrix` class, which derives from
   a combination of both the `Vector` and `MatrixBase` types. Like the `Vector` 
@@ -262,18 +451,18 @@ NumericMatrix G = clone(F);
     - [`Matrix` Class doxygen documentation](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1Matrix.html)
     - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
 
-### List
+### List {#list}
 
 - Generic Storage that is a `typedef` of `Vector` ...
 
-### DataFrame
+### DataFrame {#dataframe}
 
 - The `DataFrame` class is special type of a `List`, which are in turn a version of `Vector`.
 
 
 ## Vector and Matrix Member Functions
 
-### Operators
+### Operators {#ops}
 
 - Operators allow for operations to take place between two different objects. 
   The operations are defined to works in an element-wise fashion where applicable.
@@ -351,7 +540,7 @@ NumericVector res = 3.0 * A - 1.0 / B + A + B + 5.0;
 // Output: 10.50000 15.66667 20.75000 25.80000
 ```
 
-### Dimensional Information
+### Dimensional Information {#diminfo}
 
 |               |                                           |
 |:--------------|:------------------------------------------|
@@ -384,21 +573,29 @@ Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::
 ```
 
 
-### Element Access
+### Element Access {#elemaccess}
 
 - Accesses an individual element within a `Vector` or `Matrix`.
-   - `(i)` provides the _i_th element in addition to ensure that the requested
+   - `(i)` provides the *i*th element in addition to ensure that the requested
        indice is within the confines of the array by doing a bounds check
    - `[i]` similar to the previous case, but does so *without* a bounds check. 
-   - `at(i,j)` provides the _i,j_th element of a `Matrix` with a bounds check.
-   - `(i,j)` provides the _i,j_th element of a `Matrix` *without* a bounds check.
+   - `at(i,j)` provides the *i,j*th element of a `Matrix` with a bounds check.
+   - `(i,j)` provides the *i,j*th element of a `Matrix` *without* a bounds check.
 
 - Using accessors without a bounds check is **not** recommended unless the code
   has been thoroughly tested as undefined behavior (UB) may emerge. UB 
   is very problematic.
   
 - Note: Unlike _R_, there is no `[]` subset operator for matrices with _C++_.
-  Only `()` and `at()` provide subset operations.
+  The reason for the lack of `operator[]` relates to a fundamental design choice 
+  made by the creators of C++ related to the presence of the 
+  [`operator,`](http://en.cppreference.com/w/cpp/language/operator_other#Built-in_comma_operator).
+  In essence, after the complete evaluation of the first coordinate `x` and disposal
+  of the results, only then is the second coordinate `y` able to be evaluated.
+  Unfortunately, this yields the following `-Wall` issue: 
+  > left operand of comma operator has no effect.
+  
+  Therefore, the only viable matrix subset operators within C++ are `operator()` and `operator at()` provide subset operations.
 
 - Examples:
 
@@ -436,9 +633,9 @@ Y(0, 1) = 4;
 // Y.at(1, 2) = 4;
 ```
 
-### Subset Views
+### Subset Views {#subview}
 
-### Static Member Functions
+### Static Member Functions {#staticfunc}
 
 ## Environment
 
@@ -563,7 +760,7 @@ Rcout
     - [all](#all)
     - [is_true](#is-true)
 
-### Complex Operators
+### Complex Operators {#sugarcomplex}
 
 #### Re( X ) {#realnums}
 
@@ -574,10 +771,10 @@ Rcout
 #### Conj( X ) {#complexconjugate}
 
 
-### Data Operations
+### Data Operations {#sugardata}
 
 
-#### Preview Data
+#### Preview Data {#prevdata}
 
 |                   |                   |
 |:------------------|:------------------|
@@ -585,7 +782,7 @@ Rcout
 
 ----
 
-#### abs( X )
+#### abs( X ) {#abs}
 
 - Compute the absolute value of all elements in a Vector or Matrix. 
 
@@ -724,7 +921,7 @@ cs = NumericVector(cumsum(y));  // OK, but requires an additional Vector
 ----
 
 
-#### trigonometric element-wise functions
+#### trigonometric element-wise functions {#trig}
 
 |              |                |               |
 |:-------------|:---------------|:--------------|
@@ -755,12 +952,111 @@ NumericVector Y2 = acos(X);
 NumericVector Y3 = cosh(X);
 ```
 
+---
+
+#### Rounding of Numbers {#rounding}
+
+|                        |                         |
+|:-----------------------|:------------------------|
+| **ceiling( X )**       | **ceil( X )**           | 
+| **trunc( X )**         | **floor( X )**          | 
+| **round( X, digits )** | **signif( X, digits )** |
 
 ---
 
-### Finite, Infinite and NaN Detection
+#### Logarithms and Exponentials {#logexp}
 
-Include [Kevin Ushey's Truth Table from SO](http://stackoverflow.com/a/26262984/1345455)
+|              |                |                |
+|:-------------|:---------------|:---------------|
+| **log( X )** | **log10( X )** | **log1p( X )** | 
+| **exp( X )** | **expm1( X )** |                |
+
+
+---
+
+### Finite, Infinite, Missingness, and NaN Detection {#sugarnan}
+
+- Finite numerical representations take the form of base 10 numbers like 1, 2,
+  ..., 42, and so on. These values are able to be operated upon such that
+  a collection of numerical values can provide a statistical summary.
+  However, when working with values that hold special meanings the representation,
+  is not necessarily ideal. Therefore, a set of tools exists to detect when 
+  values with special meanings exist.
+
+- From [Kevin Ushey's post on StackOverflow](http://stackoverflow.com/questions/26241085/rcpp-function-check-if-missing-value/26262984#26262984),
+  we have a set of truth tables or an indicator of whether the value is detected
+  by a given function, which covers the R interpreter, Rcpp, and R/C API. Note,
+  Rcpp by default follows how R interpreter has crafted the methods.
+
+- R interpreter:
+
+| Function   | `NaN` | `NA` |
+|:-----------|:-----:|:----:|
+| `is.na`    |  `T`  | `T`  |
+| `is.nan`   |  `T`  | `F`  |
+
+- Rcpp:
+
+| Function       | `NaN` | `NA` |
+|:---------------|:-----:|:----:|
+| `Rcpp::is_na`  |  `T`  | `T`  |
+| `Rcpp::is_nan` |  `T`  | `F`  |
+
+- R/C API:
+
+| Function   | `NaN` | `NA`|
+|:-----------|:-----:|:---:|
+| `ISNAN`    |  `T`  | `T` |
+| `R_IsNaN`  |  `T`  | `F` |
+| `ISNA`     |  `F`  | `T` |
+| `R_IsNA`   |  `F`  | `T` |
+
+- Note: The R/C API is highly inconsistent when detecting values.
+
+
+#### Setting Infinite, Missingness, and NaN Values {#sugarnanvalues}
+
+- To indicate missingness or `NA` values, the following pre-defined constants 
+  have been made available for specific Rcpp data types:
+
+|     Rcpp Data Type       |     Rcpp Value    | Description              |
+|:------------------------:|:-----------------:|:------------------------:|
+| Numeric<Vector/Matrix>   | `NA_REAL`         | Numeric Missing Value    |
+| Integer<Vector/Matrix>   | `NA_INTEGER`      | Integer Missing Value    |
+| Logical<Vector/Matrix>   | `NA_LOGICAL`      | Logical Missing Value    |
+| Character<Vector/Matrix> | `NA_STRING`       | String Missing Value     |
+
+
+- To set a missing value type for any type of `Vector` or `Matrix` regardless of
+  whether a pre-defined exists, one can use the static member `::get_na()`, e.g.
+  `ComplexVector::get_na()` creates an `NA` value for a complex vector.
+
+- The `Numeric` and `double` data types also support the following special 
+  constant values:
+
+|     Rcpp Value  |   Value    | Description        |
+|:---------------:|:----------:|:------------------:|
+|    `R_PosInf`   | `Inf`      | Positive Infinity  |
+|    `R_NegInf`   | `-Inf`     | Negative Infinity  |
+|    `R_NaN`      | `NaN`      | Not a Number       |
+
+- Note: Understanding the breakdown of the values is important as it relates to 
+  detecting whether an element is [finite](#finite), 
+  [missing or computationally problematic](#missingness).
+
+- Examples 
+
+```{Rcpp}
+// Create an NA value for each type
+NumericVector A   = NumericVector::create(NA_REAL);
+IntegerVector B   = IntegerVector::create(NA_INTEGER);
+LogicalVector C   = LogicalVector::create(NA_LOGICAL);
+CharacterVector D = CharacterVector::create(NA_STRING);
+// Output: NA
+
+// Group all of the above together
+List E = List::create(A, B, C, D);
+```
 
 ---
 
@@ -772,29 +1068,52 @@ Include [Kevin Ushey's Truth Table from SO](http://stackoverflow.com/a/26262984/
 
 ---
 
-#### is_na( X ) {#is_na}
+#### Missing Values and NaN Detection {#missingness}
+
+|                    |                      |
+|:-------------------|:---------------------|
+|    **is_na( X )**  |    **is_nan( X )**   |
+
+
+- Determines the missing values (`is_na`) or not a number (`is_nan`) 
+  of a `Vector` or `Matrix` *X*. 
+
+
+- Note: The difference between the two functions is explained by in the truth
+  table
+  
+
+| Function       | `NaN` | `NA` |
+|:---------------|:-----:|:----:|
+| `Rcpp::is_na`  |  `T`  | `T`  |
+| `Rcpp::is_nan` |  `T`  | `F`  |
+
+
+- Examples:
+
+```{Rcpp}
+NumericVector X = NumericVector::create(R_NaN, 1, NA_REAL, 3 ) ;
+
+LogicalVector result_na = is_na( X );
+// Output: TRUE, FALSE, TRUE, FALSE
+
+LogicalVector result_nan = is_nan( X );
+// Output: TRUE, FALSE, FALSE, FALSE
+```
 
 ---
 
-#### is_nan( X ) {#is_nan}
+### The Apply Family {#apply}
+
+#### lapply {#lapply}
 
 ---
 
-#### na_omit( X ) {#na_omit}
+#### mapply {#mapply}
 
 ---
 
-### The Apply Family
-
-#### lapply
-
----
-
-#### mapply
-
----
-
-#### sapply
+#### sapply {#sapply}
 
 ---
 
@@ -830,25 +1149,6 @@ Include [Kevin Ushey's Truth Table from SO](http://stackoverflow.com/a/26262984/
 | **choose()**    | **lchoose()**    |
 
 
---
-
-#### Rounding of Numbers {#rounding}
-
-|                        |                         |
-|:-----------------------|:------------------------|
-| **ceiling( X )**       | **ceil( X )**           | 
-| **trunc( X )**         | **floor( X )**          | 
-| **round( X, digits )** | **signif( X, digits )** |
-
----
-
-#### Logarithms and Exponentials {#logexp}
-
-|              |                |                |
-|:-------------|:---------------|:---------------|
-| **log( X )** | **log10( X )** | **log1p( X )** | 
-| **exp( X )** | **expm1( X )** |                |
-
 ---
 
 ### Statistical Summaries
@@ -879,6 +1179,23 @@ double X_min = minx(X);
 
 ---
 
+#### range( X ) {#range}
+
+- Computes the range or the minimum and maximum values of the sample.
+
+- If _X_ is a `Matrix`, then the values will be vectorized and the range computed.
+  
+```{Rcpp}
+// Sample Data
+NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
+
+// Obtain range value for X
+NumericVector X_range = range(X);
+// Output: 1 9
+```
+
+---
+
 #### mean( X ) {#mean}
 
 - Computes the sample mean.
@@ -897,17 +1214,22 @@ double X_mean = mean(X);
 
 ---
 
-#### median( X ) {#median}
+#### median( X , NA_RM) {#median}
 
-- Computes the sample median.
+- Computes the sample median of an `Numeric`, `Integer`, or `Logical` `Vector` 
+  or `Matrix`
 
 ```{Rcpp}
 // Sample Data
-NumericVector X = NumericVector::create(3,4,9,5,1,2);
+NumericVector X = NumericVector::create(3,4,9,5,NA_REAL,1,2);
 
-// Obtain mean value for X
-double X_median = median(X);
+// Obtain the median value for X by removing NAs
+double X_median = median(X, true);
 // Output: 3.5
+
+// By default, NA is not removed
+double X_median_na = median(X);
+// Output: NaN
 ```
 
 
@@ -997,7 +1319,7 @@ int y2 = which_min(x);
 
 ----
 
-### Uniqueness Operators
+### Uniqueness Operators {#sugarunique}
 
 #### Match {#match}
 
@@ -1084,9 +1406,9 @@ IntegerVector z_out = table(z);
 
 ----
 
-### Object Creation
+### Object Creation {#sugarobject}
 
-#### cbind
+#### cbind {#cbind}
 
 |                      |
 |:---------------------|
@@ -1162,23 +1484,53 @@ Rcout
 // 1.0 2.0 3.0 3.0 2.0 1.0
 ```
 
-#### seq_along( X ) {#seq_along}
+#### Sequence Generation {#seq}
+
+|                     |                      |
+|:--------------------|:---------------------|
+| **seq_along( X )**  | **seq_len( N )**     |
+
+
+```{Rcpp}
+NumericVector A = NumericVector::create(-1, 0, 1);
+
+// By default, seq_along returns R indices
+IntegerVector B = seq_along(A);
+// Output: 1 2 3
+
+// Generates a vector of specified length
+IntegerVector C = seq_len(5);
+// Output: 1 2 3 4 5
+
+```
+
 
 ----
 
-#### rep( X, N ) {#rep}
+#### Replicate Elements {#rep}
+
+|                     |                      |                      |
+|:--------------------|:---------------------|:---------------------|
+| **rep( X, N )**     | **rep_each( X, N )** | **rep_len( X, N )**  |
+
+
+```{Rcpp}
+NumericVector A = NumericVector::create(-1, 0, 1);
+
+NumericVector B = rep(A, 3);
+// Output: -1 0 1 -1 0 1 -1 0 1
+
+NumericVector C = rep_each(A, 3);
+// Output: -1 -1 -1 0 0 0 1 1 1
+
+NumericVector D = rep_len(A, 5);
+// Output: -1 0 1 -1 0
+```
+
 
 ----
 
-#### rep_each( X, N ) {#rep_each}
-
-----
-
-#### rep_len( X, N ) {#rep_len}
-
-----
-
-## Statistical Distributions
+## Statistical Distributions {#statdist}
 
 - There exists two approaches for working with statistical distribution functions
   within Rcpp. The approaches differ on how the result is returned. Specifically,
@@ -1195,45 +1547,18 @@ Rcout
 - For drawing samples with changing distribution parameters, sampling under
   the `R::` namespace with a `for` loop is perferred as parameters for
   each draw can be customized.
-  
-### Beta Distribution
+
+
+### Discrete Distributions {#discretedist}
+
+#### Binomial Distribution {#bindist}
 
 |                                                 |
 |:------------------------------------------------|
-| **dbeta(x, shape1, shape2, log)**               |
-| **pbeta(q, shape1, shape2, lower_tail, log_p)** |
-| **qbeta(p, shape1, shape2, lower_tail, log_p)** |
-| **rbeta(n, shape1, shape2)**                    |
-
-
-```{Rcpp rcpp_beta_dist}
-// Consider X ~ Beta(1,1)
-
-NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
-
-// Vector returns
-NumericVector densities = Rcpp::dbeta(xx, 1.0, 1.0, false);
-NumericVector probs     = Rcpp::pbeta(xx, 1.0, 1.0, true, false);
-NumericVector qvals     = Rcpp::qbeta(probs, 1.0, 1.0, true, false);
-NumericVector rsamples  = Rcpp::rbeta(5, 1.0, 1.0);
-
-// Scalar Returns
-double dval  = R::dbeta(0.5, 1.0, 1.0, false);
-double pval  = R::pbeta(0.5, 1.0, 1.0, true, false);
-double qval  = R::qbeta(0.85, 1.0, 1.0, true, false);
-double rdraw = R::rbeta(1.0, 1.0);
-```
-
-
-### Binomial Distribution
-
-
-|                                                 |
-|:------------------------------------------------|
-| **dbinomial(x, size, prob, log)**               |
-| **pbinomial(q, size, prob, lower_tail, log_p)** |
-| **qbinomial(p, size, prob, lower_tail, log_p)** |
-| **rbinomial(n, size, prob)**                    |
+| **dbinomial(X, SIZE, PROB, LOG_P)**             |
+| **pbinomial(Q, SIZE, PROB, LOWER_TAIL, LOG_P)** |
+| **qbinomial(P, SIZE, PROB, LOWER_TAIL, LOG_P)** |
+| **rbinomial(N, SIZE, PROB)**                    |
 
 
 ```{Rcpp rcpp_bin_dist}
@@ -1251,23 +1576,229 @@ NumericVector rsamples  = Rcpp::rbinom(20, 100, .5);
 double dval  = R::dbinom(46, 100, .5, false);
 double pval  = R::pbinom(46, 100, .5, true, false);
 double qval  = R::qbinom(0.242, 100, .5, true, false);
-double rdraw = R::rbinom(46, 100);
+int rdraw = R::rbinom(46, 100);
 ```
 
 
+#### Geometric Distribution {#geodist}
 
-#### Cauchy Distribution
+|                                       |
+|:--------------------------------------|
+| **dgeom(X, PROB, LOG_P)**             |
+| **pgeom(Q, PROB, LOWER_TAIL, LOG_P)** |
+| **qgeom(P, PROB, LOWER_TAIL, LOG_P)** |
+| **rgeom(N, PROB)**                    |
+
+
+```{Rcpp rcpp_geo_dist}
+// Consider X ~ Geom(p = 0.25)
+IntegerVector xx = seq_len(5);
+
+// Vector returns
+NumericVector densities = Rcpp::dgeom(xx, .25, false)
+NumericVector probs     = Rcpp::pgeom(xx, .25, true, false);
+IntegerVector qvals     = Rcpp::qgeom(probs, .25, true, false);
+IntegerVector rsamples  = Rcpp::rgeom(20, .25); 
+
+// Scalar Returns
+double dval  = R::dgeom(2, .25, false);
+double pval  = R::pgeom(2, .25, true, false);
+int qval     = R::qgeom(0.578125, .25, true, false);
+int rdraw    = R::rgeom(.25);
+```
+
+#### Hypergeometric Distribution {#hypergeodist}
+
+|                                            |
+|:-------------------------------------------|
+| **dhyper( X, M, N, K, LOG_P)**             |
+| **phyper( Q, M, N, K, LOWER_TAIL, LOG_P)** |
+| **qhyper( P, M, N, K, LOWER_TAIL, LOG_P)** |
+| **rhyper(NN, M, N, K)**                    |
+
+
+```{Rcpp rcpp_hypergeo_dist}
+// Consider X ~ Hypergeo(m = 10, n = 7, k = 8)
+IntegerVector xx = IntegerVector::create(3, 4, 5, 6, 7);
+
+// Vector returns
+NumericVector densities = Rcpp::dhyper(xx, 10, 7, 8, false)
+NumericVector probs     = Rcpp::phyper(xx, 10, 7, 8, true, false);
+NumericVector qvals     = Rcpp::qhyper(probs, 10, 7, 8, true, false);
+NumericVector rsamples  = Rcpp::rhyper(20, 10, 7, 8); 
+
+// Scalar Returns
+double dval  = R::dhyper(46, 10, 7, 8, false);
+double pval  = R::phyper(46, 10, 7, 8, true, false);
+int qval     = R::qhyper(0.4193747, 10, 7, 8, true, false);
+int rdraw    = R::rhyper(10, 7, 8);
+```
+
+#### Negative Binomial Distribution {#negbindist}
+
+|                                                  |
+|:-------------------------------------------------|
+| **dnbinomial(X, SIZE, PROB, LOG_P)**             |
+| **pnbinomial(Q, SIZE, PROB, LOWER_TAIL, LOG_P)** |
+| **qnbinomial(P, SIZE, PROB, LOWER_TAIL, LOG_P)** |
+| **rnbinomial(N, SIZE, PROB)**                    |
+
+
+```{Rcpp rcpp_nbin_dist}
+// Consider X ~ NegBin(n = 100, p = 0.5)
+IntegerVector xx = IntegerVector::create(46, 47, 48, 49, 50, 51, 52, 53, 54);
+
+// Vector returns
+NumericVector densities = Rcpp::dnbinom(xx, 100, .5, false)
+NumericVector probs     = Rcpp::pnbinom(xx, 100, .5, true, false);
+NumericVector qvals     = Rcpp::qnbinom(probs, 100, .5, true, false);
+NumericVector rsamples  = Rcpp::rnbinom(20, 100, .5); 
+
+// Scalar Returns
+double dval  = R::dnbinom(46, 100, .5, false);
+double pval  = R::pnbinom(46, 100, .5, true, false);
+double qval  = R::qnbinom(0.242, 100, .5, true, false);
+int rdraw    = R::rnbinom(46, 100);
+```
+
+#### Poisson Distribution {#poisdist}
+
+|                                         |
+|:----------------------------------------|
+| **dpois(X, LAMBDA, LOG_P)**             |
+| **ppois(Q, LAMBDA, LOWER_TAIL, LOG_P)** |
+| **qpois(P, LAMBDA, LOWER_TAIL, LOG_P)** |
+| **rpois(N, LAMBDA)**                    |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Poisson distribution.
+  
+- When simulating a vector or scalar from a Poisson distribution,
+  the value returned is within the natural numbers (e.g. $0, 1, 2, \ldots , 42, \ldots , \mathbb{N}$).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+
+- Examples:
+
+```{Rcpp rcpp_pois_dist}
+// Consider X ~ Pois(4)
+IntegerVector xx = seq_len(10);
+
+// Vector returns
+NumericVector densities = Rcpp::dpois(xx, 4, false)
+NumericVector probs     = Rcpp::ppois(xx, 4, true, false);
+NumericVector qvals     = Rcpp::qpois(probs, 4, true, false);
+NumericVector rsamples  = Rcpp::rpois(20, 4); 
+
+// Scalar Returns
+double dval  = R::dpois(46, 4, false);
+double pval  = R::ppois(46, 4, true, false);
+double qval  = R::qpois(0.242, 4, true, false);
+int rdraw    = R::rpois(46);
+```
+
+### Wilcox Distribution {#wilcoxdist}
+
+|                                          |
+|:-----------------------------------------|
+| **dwilcox( X, M, N, LOG_P)**             |
+| **pwilcox( Q, M, N, LOWER_TAIL, LOG_P)** |
+| **qwilcox( P, M, N, LOWER_TAIL, LOG_P)** |
+| **rwilcox(NN, M, N)**                    |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Wilcox distribution.
+  
+- When simulating a vector or scalar from a Wilcox distribution,
+  the value returned is within the natural numbers (e.g. $0, 1, 2, \ldots , 42, \ldots , \mathbb{N}$).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+
+- Examples:
+
+
+### Wilcoxon Signed Rank Distribution {#signeddist}
+
+|                                         |
+|:----------------------------------------|
+| **dsignrank( X, N, LOG_P)**             |
+| **psignrank( Q, N, LOWER_TAIL, LOG_P)** |
+| **qsignrank( P, N, LOWER_TAIL, LOG_P)** |
+| **rsignrank(NN, N)**                    |
+
+
+### Continuous Distributions {#contdist}
+
+#### Beta Distribution {#betadist}
+
+|                                                 |
+|:------------------------------------------------|
+| **dbeta(X, SHAPE1, SHAPE2, LOG_P)**             |
+| **pbeta(Q, SHAPE1, SHAPE2, LOWER_TAIL, LOG_P)** |
+| **qbeta(P, SHAPE1, SHAPE2, LOWER_TAIL, LOG_P)** |
+| **rbeta(N, SHAPE1, SHAPE2)**                    |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Beta distribution.
+  
+- When simulating a vector or scalar from a Beta distribution,
+  the value returned is within [0, 1].
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+
+- Examples:
+
+```{Rcpp rcpp_beta_dist}
+// Consider X ~ Beta(1,1)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dbeta(xx, 1.0, 1.0, false);
+NumericVector probs     = Rcpp::pbeta(xx, 1.0, 1.0, true, false);
+NumericVector qvals     = Rcpp::qbeta(probs, 1.0, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rbeta(5, 1.0, 1.0);
+
+// Scalar Returns
+double dval  = R::dbeta(0.5, 1.0, 1.0, false);
+double pval  = R::pbeta(0.5, 1.0, 1.0, true, false);
+double qval  = R::qbeta(0.85, 1.0, 1.0, true, false);
+double rdraw = R::rbeta(1.0, 1.0);
+```
+
+
+#### Cauchy Distribution {#cauchydist}
 
 |                                                    |
 |:---------------------------------------------------|
-| **dcauchy(x, location, scale, log)**               |
-| **pcauchy(q, location, scale, lower_tail, log_p)** |
-| **qcauchy(p, location, scale, lower_tail, log_p)** |
-| **rcauchy(n, location, scale)**                    |
+| **dcauchy(X, LOCATION, SCALE, LOG_P)**             |
+| **pcauchy(Q, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
+| **qcauchy(P, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
+| **rcauchy(N, LOCATION, SCALE)**                    |
 
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Cauchy distribution.
+  
+- When simulating a vector or scalar from a Cauchy distribution,
+  the value returned is within (-infty, infty).
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+
+- Examples:
 
 ```{Rcpp rcpp_cauchy_dist}
-// Consider X ~ Cauchy(loc = 0, scale = 1)
+// Consider X ~ Cauchy(loc = 0, SCALE = 1)
 NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
 
 // Vector returns
@@ -1284,25 +1815,25 @@ double rdraw = R::rcauchy(0.0, 1.0);
 ```
 
 
-### Chi-square Distribution
+#### Chi-square Distribution {#chisquaredist}
 
 |                                      |
 |:-------------------------------------|
-| **dchisq(x, df, log)**               |
-| **pchisq(q, df, lower_tail, log_p)** |
-| **qchisq(p, df, lower_tail, log_p)** |
-| **rchisq(n, df)**                    |
+| **dchisq(X, DF, LOG)**               |
+| **pchisq(Q, DF, LOWER_TAIL, LOG_P)** |
+| **qchisq(P, DF, LOWER_TAIL, LOG_P)** |
+| **rchisq(N, DF)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
-  a random (r) sample of a vector or scalar from an Chi-squared distribution.
+  a random (r) sample of a vector or scalar from a Chi-squared distribution.
   
 - When simulating a vector or scalar from a Chi-squared distribution,
   the value returned is within [0, infty).
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `log_p = FALSE`, probabilities, densities are returned as log(p).
-    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+    - `LOG_P = FALSE`, probabilities, densities are returned as log(p).
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
 
 - Examples:
 
@@ -1323,25 +1854,25 @@ double qval  = R::qchisq(0.22, 2, true, false);
 double rdraw = R::rchisq(2);
 ```
 
-### Non-central Chi-square Distribution
+#### Non-central Chi-square Distribution {#nchisquaredist}
 
 |                                            |
 |:-------------------------------------------|
-| **dnchisq(x, df, ncp, log_p)**             |
-| **pnchisq(q, df, ncp, lower_tail, log_p)** |
-| **qnchisq(p, df, ncp, lower_tail, log_p)** |
+| **dnchisq(X, DF, NCP, LOG_P)**             |
+| **pnchisq(Q, DF, NCP, LOWER_TAIL, LOG_P)** |
+| **qnchisq(P, DF, NCP, LOWER_TAIL, LOG_P)** |
 
 - Computes either the density (d), probability (p), quantile (q), or
-  a random (r) sample of a vector or scalar from an Non-central Chi-squared
+  a random (r) sample of a vector or scalar from a Non-central Chi-squared
   distribution.
   
 - When simulating a vector or scalar from a Non-central Chi-squared distribution,
-  the value returned is within [0, infty).
+  the value returned is within $\left[0, \infty\right)$.
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `log_p = FALSE`, probabilities, densities are returned as log(p).
-    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -1360,27 +1891,27 @@ double pval  = R::pnchisq(0.5, 2, true, false);
 double qval  = R::qnchisq(0.22, 2, true, false);
 ```
 
-### Exponential Distribution
+#### Exponential Distribution {#expdist}
 
 |                                      |
 |:-------------------------------------|
-| **dexp(x, rate, log)**               |
-| **pexp(q, rate, lower_tail, log_p)** |
-| **qexp(p, rate, lower_tail, log_p)** |
-| **rexp(n, rate)**                    |
+| **dexp(X, RATE, LOG_P)**             |
+| **pexp(Q, RATE, LOWER_TAIL, LOG_P)** |
+| **qexp(P, RATE, LOWER_TAIL, LOG_P)** |
+| **rexp(N, RATE)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from an Exponential distribution under
   the lambda parameterization: f(v) = lambda x exp(-lambda x v)
   
 - When simulating a vector or scalar from an Exponential distribution, the value returned
-  is within [0, infty).
+  is within $\left[0, \infty\right)$.
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `rate = 1`, rate refers to the lambda parameter within an exponential
-    - `log_p = FALSE`, probabilities, densities are returned as log(p).
-    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+    - `RATE = 1`, rate refers to the lambda parameter within an exponential
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -1402,14 +1933,14 @@ double rdraw = R::rexp(2);
 ```
 
 
-### F Distribution
+#### F Distribution {#fdist}
 
 |                                        |
 |:---------------------------------------|
-| **df(x, df1, df2, log_p)**             |
-| **pf(q, df1, df2, lower_tail, log_p)** |
-| **qf(p, df1, df2, lower_tail, log_p)** |
-| **rf(n, df1, df2)**                    |
+| **df(X, DF1, DF2, LOG_P)**             |
+| **pf(Q, DF1, DF2, LOWER_TAIL, LOG_P)** |
+| **qf(P, DF1, DF2, LOWER_TAIL, LOG_P)** |
+| **rf(N, DF1, DF2)**                    |
 
 
 - Computes either the density (d), probability (p), quantile (q), or
@@ -1420,8 +1951,8 @@ double rdraw = R::rexp(2);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `log_p = FALSE` probabilities, densities are returned as log(p).
-    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -1443,26 +1974,26 @@ double rdraw = R::rf(1.0, 5.0);
 ```
 
 
-### Gamma Distribution 
+#### Gamma Distribution {#gammadist}
 
 |                                               |
 |:----------------------------------------------|
-| **dgamma(x, shape, rate, log_p)**             |
-| **pgamma(q, shape, rate, lower_tail, log_p)** |
-| **qgamma(p, shape, rate, lower_tail, log_p)** |
-| **rgamma(n, shape, rate)**                    |
+| **dgamma(X, SHAPE, RATE, LOG_P)**             |
+| **pgamma(Q, SHAPE, RATE, LOWER_TAIL, LOG_P)** |
+| **qgamma(P, SHAPE, RATE, LOWER_TAIL, LOG_P)** |
+| **rgamma(N, SHAPE, RATE)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Gamma distribution.
   
 - When simulating a vector or scalar from a Gamma distribution, the value returned
-  is within [0,infty).
+  is within $\left[0, \infty\right)$.
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `rate = 1`,
-    - `log_p = FALSE`, probabilities, densities are returned as log(p).
-    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+    - `RATE = 1`,
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
  
@@ -1483,48 +2014,141 @@ double qval  = R::qgamma(0.393, 1.0, 1.0, true, false);
 double rdraw = R::rgamma(1.0, 1.0);
 ```
 
+### Normal Distribution {#normaldist}
 
-### Geometric Distribution
+|                                           |
+|:------------------------------------------|
+| **dnorm(X, MEAN, SD, LOG_P)**             |
+| **pnorm(Q, MEAN, SD, LOWER_TAIL, LOG_P)** |
+| **qnorm(P, MEAN, SD, LOWER_TAIL, LOG_P)** |
+| **rnorm(N, MEAN, SD)**                    |
 
-**rgeom()**
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Normal distribution.
+  
+- When simulating a vector or scalar from a Normal distribution, the value returned
+  is within $\left(-\infty, \infty\right)$.
 
-### Hypergeometric Distribution
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `MEAN = 0`, the mean of the distribution
+    - `SD = 1`, the standard derivation of the distribution
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
-**rhyper()**
+- Examples:
+ 
+```{Rcpp rcpp_normal_dist}
+// Consider X ~ Norm(0, 1)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
 
-### Logistic Normal Distribution
+// Vector returns
+NumericVector densities = Rcpp::dnorm(xx, 0.0, 1.0, false);
+NumericVector probs     = Rcpp::pnorm(xx, 0.0, 1.0, true, false);
+NumericVector qvals     = Rcpp::qnorm(probs, 0.0, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rnorm(20, 0.0, 1.0); 
 
-**rlnorm()**
+// Scalar Returns
+double dval  = R::dnorm(0.25, 0.0, 1.0, false);
+double pval  = R::pnorm(0.95, 0.0, 1.0, true, false);
+double qval  = R::qnorm(1.96, 0.0, 1.0, true, false);
+double rdraw = R::rnorm(0.0, 1.0);
+```
 
-### Negative Binomial Distribution
 
-**rnbinom()**
+### Log Normal Distribution {#lognormaldist}
 
-### Normal Distribution
+|                                                  |
+|:-------------------------------------------------|
+| **dlnorm(X, MEANLOG, SDLOG, LOG_P)**             |
+| **plnorm(Q, MEANLOG, SDLOG, LOWER_TAIL, LOG_P)** |
+| **qlnorm(P, MEANLOG, SDLOG, LOWER_TAIL, LOG_P)** |
+| **rlnorm(N, MEANLOG, SDLOG)**                    |
 
-**rnorm()**
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Log Normal distribution.
+  
+- When simulating a vector or scalar from a Log Normal distribution, the value returned
+  is within $\left[0,\infty\right)$.
 
-### Poisson Distribution
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `MEANLOG = 0`, the log mean of the distribution
+    - `SDLOG = 1`, the log standard derivation of the distribution
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
-**rpois()**
+- Examples:
+ 
+```{Rcpp rcpp_lnorm_dist}
+// Consider X ~ LogNorm(0, 1)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
 
-### Wilcoxon Signed Rank Distribution
+// Vector returns
+NumericVector densities = Rcpp::dlnorm(xx, 0.0, 1.0, false);
+NumericVector probs     = Rcpp::plnorm(xx, 0.0, 1.0, true, false);
+NumericVector qvals     = Rcpp::qlnorm(probs, 0.0, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rlnorm(20, 0.0, 1.0); 
 
-**rsignrank()**
+// Scalar Returns
+double dval  = R::dlnorm(0.25, 0.0, 1.0, false);
+double pval  = R::plnorm(0.5, 0.0, 1.0, true, false);
+double qval  = R::qlnorm(0.0452, 0.0, 1.0, true, false);
+double rdraw = R::rlnorm(0.0, 1.0);
+```
 
-### Student's T Distribution
+### Logistic Distribution {#logisticdist}
+
+|                                                   |
+|:--------------------------------------------------|
+| **dlogis(X, LOCATION, SCALE, LOG_P)**             |
+| **plogis(Q, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
+| **qlogis(P, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
+| **rlogis(N, LOCATION, SCALE)**                    |
+
+- Computes either the density (d), probability (p), quantile (q), or
+  a random (r) sample of a vector or scalar from a Logistic distribution.
+  
+- When simulating a vector or scalar from a Logistic distribution, the value returned
+  is within $\left(-\infty,\infty\right)$.
+
+- Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
+  as follows:
+    - `LOCATION = 0`, the shift component of the distribution
+    - `SCALE = 1`, the dispersion parameter of the distribution that changes the spread e.g. if the SCALE is small, then the distribution is concentrated.
+    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+
+- Examples:
+ 
+```{Rcpp rcpp_logis_dist}
+// Consider X ~ Logis(0, 1)
+NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
+
+// Vector returns
+NumericVector densities = Rcpp::dlogis(xx, 0.0, 1.0, false);
+NumericVector probs     = Rcpp::plogis(xx, 0.0, 1.0, true, false);
+NumericVector qvals     = Rcpp::qlogis(probs, 0.0, 1.0, true, false);
+NumericVector rsamples  = Rcpp::rlogis(20, 0.0, 1.0); 
+
+// Scalar Returns
+double dval  = R::dlogis(0.25, 0.0, 1.0, false);
+double pval  = R::plogis(0.5, 0.0, 1.0, true, false);
+double qval  = R::qlogis(0.0452, 0.0, 1.0, true, false);
+double rdraw = R::rlogis(0.0, 1.0);
+```
+
+
+### Student's T Distribution {#tdist}
 
 **rt()**
 
-### Uniform Distribution (Continuous)
+### Uniform Distribution {#unifdist}
 
 **runif()**
 
-### Weibull Distribution
+### Weibull Distribution {#weibulldist}
 
 **rweibull()**
 
-### Wilcox Distribution
-
-**rwilcox()**
 
