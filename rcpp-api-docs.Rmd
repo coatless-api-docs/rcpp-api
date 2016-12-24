@@ -128,19 +128,24 @@ for maximum flexibility.
 
 **[Finite, Infinite and NaN Detection](#sugarfinite)**
 
-|                             |                            |
-|:----------------------------|:---------------------------|
-| [`factorial`](#combs)       | Factorial                  |
-| [`lfactorial`](#combs)      | Factorial Logarithm        |
-| [`choose`](#combs)          | Combination                |
-| [`lchoose`](#combs)         | Combination Logarithm      |
-| [`gamma`](#gamma)           | Gamma Function             |
-| [`lgamma`](#gamma)          | Natural Log Gamma Function |
-| [`psigamma`](#gammaderiv)   | General Gamma Derivative   |
-| [`digamma`](#gammaderiv)    | Second Gamma Derivative    |
-| [`trigamma`](#gammaderiv)   | Third Gamma Derivative     |
-| [`tetragamma`](#gammaderiv) | Fourth Gamma Derivative    |
-| [`pentagamma`](#gammaderiv) | Fifth Gamma Derivative     |
+|                                    |                                          |
+|:-----------------------------------|:-----------------------------------------|
+| [`pre-defined`](#sugarnanvalues)   | Pre-defined NA/NaN/Inf Constants         |
+| [`is_na`](#missingness)            | Detects if values are missing            |
+| [`is_nan`](#missingness)           | Detects if values are not a number (NaN) |
+| [`is_finite`](#finite)             | Detects if value is finite               |
+| [`is_infinite`](#finite)           | Detects if value is infinite             |
+
+
+
+**[The Apply Family](#apply)**
+
+|                       |                                                               |
+|:----------------------|:--------------------------------------------------------------|
+| [`sapply`](#sapply)   | Apply a function to one input and store results in vector     |
+| [`lapply`](#lapply)   | Apply a function to one input and store results in list       |
+| [`mapply`](#mapply)   | Apply a function to multiple inputs and store results in list |
+
 
 **[Special Functions of Mathematics](#sugarmath)**
 
