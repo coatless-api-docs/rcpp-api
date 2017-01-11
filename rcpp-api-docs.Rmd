@@ -84,14 +84,15 @@ for maximum flexibility.
 | [`any`](#any)                | At Least One Value is True |
 | [`all`](#all)                | All Values Must be True    |
 
-**[Complex Operators](#sugarcomplex)**
+**[Complex Operators](#sugar-complex)**
 
-|                              |                                    |
-|:-----------------------------|:-----------------------------------|
-| [`Re`](#realnums)            | Real Values of Complex Number      |
-| [`Im`](#imaginarynums)       | Imaginary Values of Complex Number |
-| [`Mod`](#complexmodulus)     | Modulus (r)                        |
-| [`Conj`](#complexconjugate)  | Complex Conjugate                  |
+|                               |                                    |
+|:------------------------------|:-----------------------------------|
+| [`Re`](#complex-number)       | Real Values of Complex Number      |
+| [`Im`](#complex-number)       | Imaginary Values of Complex Number |
+| [`Mod`](#complex-modulus)     | Modulus (r)                        |
+| [`Arg`](#complex-argument)    | Arg (theta)                        |
+| [`Conj`](#complex-conjugate)  | Complex Conjugate                  |
 
 **[Data Operations](#sugardata)**
 
@@ -136,8 +137,6 @@ for maximum flexibility.
 | [`is_finite`](#finite)             | Detects if value is finite               |
 | [`is_infinite`](#finite)           | Detects if value is infinite             |
 
-
-
 **[The Apply Family](#apply)**
 
 |                       |                                                               |
@@ -145,7 +144,6 @@ for maximum flexibility.
 | [`sapply`](#sapply)   | Apply a function to one input and store results in vector     |
 | [`lapply`](#lapply)   | Apply a function to one input and store results in list       |
 | [`mapply`](#mapply)   | Apply a function to multiple inputs and store results in list |
-
 
 **[Special Functions of Mathematics](#sugarmath)**
 
@@ -198,8 +196,6 @@ for maximum flexibility.
 | [`table( X, N )`](#table)    | Create a frequency table of occurrences                        |
 | [`setdiff( X, N )`](#setdiff)| Asymmetric Difference of Set Values                            |
 
-
-
 **[Object Creation](#sugarobject)**
 
 |                     |                                                |
@@ -214,38 +210,35 @@ for maximum flexibility.
 
 **[Statistical Distributions](#statdist)**
 
-
 **[Discrete Distributions](#discretedist)**
 
-|                                |                        |
-|--------------------------------|------------------------|
-|  [p/d/q/rbinom](#bindist)      | Binomial               |
-|  [p/d/q/rgeom](#geodist)       | Geometric              |
-|  [p/d/q/rhyper](#hypergeodist) | Hypergeometric         |
-|  [p/d/q/rnbinom](#negbindist)  | Negative Binomial      |
-|  [p/d/q/rpois](#poisdist)      | Poisson                |
-|  [p/d/q/rwilcox](#wilcoxdist)  | Wilcoxon               |
-|  [p/d/q/rsignrank](#signeddist)| Wilcoxon Signed Rank   |
-
+|                                  |                        |
+|----------------------------------|------------------------|
+|  [`p/d/q/rbinom`](#bindist)      | Binomial               |
+|  [`p/d/q/rgeom`](#geodist)       | Geometric              |
+|  [`p/d/q/rhyper`](#hypergeodist) | Hypergeometric         |
+|  [`p/d/q/rnbinom`](#negbindist)  | Negative Binomial      |
+|  [`p/d/q/rpois`](#poisdist)      | Poisson                |
+|  [`p/d/q/rwilcox`](#wilcoxdist)  | Wilcoxon               |
+|  [`p/d/q/rsignrank`](#signeddist)| Wilcoxon Signed Rank   |
 
 **[Continuous Distributions](#contdist)**
 
-|                                 |                              |
-|---------------------------------|------------------------------|
-|  [p/d/q/rbeta](#betadist)       | Beta                         |
-|  [p/d/q/rcauchy](#cauchydist)   | Cauchy                       |
-|  [p/d/q/rchisq](#chisquaredist) | Chi-square                   |
-|  [p/d/qnchisq](#nchisquaredist) | Non-central Chi-square       |
-|  [p/d/q/rexp](#expdist)         | Exponential                  |
-|  [p/d/q/rf](#fdist)             | F                            |
-|  [p/d/q/rgamma](#gammadist)     | Gamma                        |
-|  [p/d/q/rnorm](#normaldist)     | Normal                       |
-|  [p/d/q/rlnorm](#lognormaldist) | Log Normal                   |
-|  [p/d/q/rlogis](#logisticdist)  | Logistic                     |
-|  [p/d/q/rt](#tdist)             | Student's T                  |
-|  [p/d/q/runif](#unifdist)       | Uniform                      |
-|  [p/d/q/rweibull](#weibulldist) | Weibull                      |
-
+|                                   |                              |
+|-----------------------------------|------------------------------|
+|  [`p/d/q/rbeta`](#betadist)       | Beta                         |
+|  [`p/d/q/rcauchy`](#cauchydist)   | Cauchy                       |
+|  [`p/d/q/rchisq`](#chisquaredist) | Chi-square                   |
+|  [`p/d/qnchisq`](#nchisquaredist) | Non-central Chi-square       |
+|  [`p/d/q/rexp`](#expdist)         | Exponential                  |
+|  [`p/d/q/rf`](#fdist)             | F                            |
+|  [`p/d/q/rgamma`](#gammadist)     | Gamma                        |
+|  [`p/d/q/rnorm`](#normaldist)     | Normal                       |
+|  [`p/d/q/rlnorm`](#lognormaldist) | Log Normal                   |
+|  [`p/d/q/rlogis`](#logisticdist)  | Logistic                     |
+|  [`p/d/q/rt`](#tdist)             | Student's T                  |
+|  [`p/d/q/runif`](#unifdist)       | Uniform                      |
+|  [`p/d/q/rweibull`](#weibulldist) | Weibull                      |
 
 ## Vector, Matrix, List, and DataFrame Classes {#vmld}
 
@@ -298,7 +291,7 @@ another data type is required to show a specific feature.
     - `Vector(const char *st)`
     - `Vector(const Vector &other)`
     - `Vector(const int &size)`
- 	  - `Vector(const Dimension &dims)`
+ 	- `Vector(const Dimension &dims)`
     - `Vector(const Dimension &dims, const U &u)`
     - `Vector(const Vector &other)`
 
@@ -465,11 +458,11 @@ NumericMatrix G = clone(F);
 - The `DataFrame` class is special type of a `List`, which are in turn a version of `Vector`.
 
 
-## Vector and Matrix Member Functions
+## Member Functions
 
 ### Operators {#ops}
 
-- Operators allow for operations to take place between two different objects. 
+- Operators allow for operations to take place between two different `Vector` or `Matrix` objects. 
   The operations are defined to works in an element-wise fashion where applicable.
 
 - Viable mathematical operations that are able to be performed.
@@ -492,6 +485,7 @@ NumericMatrix G = clone(F);
 |   <=      | Less than or equal to     |       Yes     |     Yes        |     No          |       No        |       Yes       |
 |   <       | Less than                 |       Yes     |     Yes        |     No          |       No        |       Yes       |
 |   >       | Greater than              |       Yes     |     Yes        |     No          |       No        |       Yes       |
+|   !       | Negate                    |       Yes     |     Yes        |     No          |       No        |       Yes       |
 
 - Examples:
  
@@ -547,12 +541,11 @@ NumericVector res = 3.0 * A - 1.0 / B + A + B + 5.0;
 
 ### Dimensional Information {#diminfo}
 
-|               |                                           |
-|:--------------|:------------------------------------------|
-| `.nrow()`	   	| number of rows in a `Matrix`              |
-| `.ncol()`	   	| number of columns in a `Vector`           |
-| `.size()`   	| number of items in a `Matrix` or `Vector` |
-| `.length()`   | alias of `size()` for `Vector`            |
+|                       |                                           |
+|:----------------------|:------------------------------------------|
+| `.nrow()`,`.rows()`   | number of rows in a `Matrix`              |
+| `.ncol()`,`.cols()`   | number of columns in a `Matrix`           |
+| `.size()`,`.length()` | number of items in a `Matrix`, `Vector`   |
 
 - Return type is that of an `int`, `unsigned int`, or `R_xlen_t`
 
@@ -580,17 +573,39 @@ Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::
 
 ### Element Access {#elemaccess}
 
-- Accesses an individual element within a `Vector` or `Matrix`.
-   - `(i)` provides the *i*th element in addition to ensure that the requested
-       indice is within the confines of the array by doing a bounds check
-   - `[i]` similar to the previous case, but does so *without* a bounds check. 
+- Described within this section is the ability to access elements using 
+  the position, categorical, and logical indexing systems.
+
+- The access system provides two retrieval methods for all classes
+  that differ in computational time to obtain values from objects. 
+    - The preferred method to access elements is `()`, which that takes slightly
+    longer due to a bounds check being performed that verifies whether the 
+    requested element is within the access scope. Furthermore, if the 
+    requested element is out of bounds, an exception is raised and the program
+    stops.
+    - The other method uses `[]`, which does _not_ perform a bounds check and
+    assumes that the access scope is valid. If an element is out of bounds,
+    the behavior exhibited will be undefined and may cause havoc with later
+    parts of a procedure. Only use this form of accessor if the procedure has
+    been thoroughly tested and debugged.
+  
+- Note: Using accessors without a bounds check is **not** recommended unless 
+  the code has been thoroughly tested as undefined behavior (UB) may emerge. UB 
+  is very problematic.
+  
+#### Position Access
+
+- Access a single element or object using a positional index.
+   - `(i)` provides the *i*th element or object in addition to performing a 
+   bounds check that ensures the requested index is a valid location.
+   - `[i]` similar to the previous case, but does so *without* a bounds check.
    - `at(i,j)` provides the *i,j*th element of a `Matrix` with a bounds check.
    - `(i,j)` provides the *i,j*th element of a `Matrix` *without* a bounds check.
 
-- Using accessors without a bounds check is **not** recommended unless the code
-  has been thoroughly tested as undefined behavior (UB) may emerge. UB 
-  is very problematic.
-  
+- **Caveat:** Using either `[i]` or `(i)` on `List` and `DataFrame`,
+  provides the object (e.g. `Vector`) at position *i* whereas the use on 
+  `Vector` or `Matrix` will provide a scalar element (e.g. `double`).
+ 
 - Note: Unlike _R_, there is no `[]` subset operator for matrices with _C++_.
   The reason for the lack of `operator[]` relates to a fundamental design choice 
   made by the creators of C++ related to the presence of the 
@@ -598,51 +613,266 @@ Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::
   In essence, after the complete evaluation of the first coordinate `x` and disposal
   of the results, only then is the second coordinate `y` able to be evaluated.
   Unfortunately, this yields the following `-Wall` issue: 
+  
   > left operand of comma operator has no effect.
   
   Therefore, the only viable matrix subset operators within C++ are `operator()` and `operator at()` provide subset operations.
-
+  
 - Examples:
 
 ```{Rcpp}
-// Create a vector 
-NumericVector Y = NumericVector::create(1, 2, 3, 4);
+// Create data 
+NumericVector A = NumericVector::create(1, 2, 3, 4);
+CharacterVector C = CharacterVector::create("B", "D", "E", "F");
 
-// Retrieve the first value from Y. (C++ indices start at 0 not 1!)
-double a = Y(0);
+// --- Vector 
+
+// Retrieve the first value from A. (C++ indices start at 0 not 1!)
+double a = A(0);
 // Output: 1
 
 // Modify the last value using unbound accessor
 // Warning: Make sure the point is valid!
-Y[3] = 5;
+A[3] = 5;
 
-// Create matrix with elements in Y
-NumericMatrix Y(2, 2, X.begin());
+// --- Matrix
+
+// Create matrix with elements in A
+NumericMatrix B(2, 2, A.begin());
 
 // Output:
 // 1  3
 // 2  5
 
 // Extract Value at 2, 1
-double b = Y(1, 0);
+double val_r1c0 = B(1, 0);
 // Output: 2
 
 // Modify value at 1, 2
-Y(0, 1) = 4;
+B(0, 1) = 4;
 
 // Output:
 // 1  4
 // 2  5
 
 // The following shows a bounds throw error
-// Y.at(1, 2) = 4;
+// B.at(1, 2) = 4;
+
+// --- List
+
+// Create a List
+List D = List::create(Named("A") = A,
+                          _["C"] = C); // shorthand for Named("C")
+
+// Extract A from List
+NumericVector E = D[0];
+
+double val2 = E[1];
+// Output: 2
+
+// Extract B from List
+CharacterVector F = D[1];
+
+// --- Data Frame
+
+// Create a DataFrame
+DataFrame G = DataFrame::create(Named("A") = A,
+                                    _["C"] = C); // shorthand for Named("C")
+
+// Extract A from DataFrame
+NumericVector E = DF[0];
+```
+
+#### Categorical Access
+
+- Access element by name within a `Vector`, `List`, or `DataFrame`.
+   - `(NAME)` provides the element associated with the `NAME` in addition to 
+       performing a bounds check that ensures the requested `NAME` exists.
+   - `[NAME]` similar to the previous case, but does so *without* a bounds check. 
+
+- Examples:
+
+```{Rcpp}
+// Create sample data
+NumericVector A = NumericVector::create(Named("Go") = 3,
+                                        Named("To") = 4,
+                                            _["My"] = 5, // shorthand Named("C")
+                                            _["Pi"] = 1);
+// Output: (names only printed in R!) 
+// Go To My Pi 
+//  3  4  5  1
+
+NumericVector B = NumericVector::create(2, 5, 8, 9, 3, 7);
+
+// Alternative way to set name values
+B.names() = CharacterVector::create("Bears","Lions","and","Tigers", "Oh", "My");
+// Output: (names only printed in R!) 
+// Bears  Lions    and Tigers     Oh     My 
+//     2      5      8      9      3      7 
+
+// --- Vector
+
+double val_num = A["To"];
+// Output: 
+// To
+//  4
+
+// Subset by vector
+CharacterVector C = CharacterVector::create("My", "Pi");
+
+NumericVector D = A[C];
+// Output: (names only printed in R!) 
+// My Pi 
+//  5  1
+
+// Modify values in vector
+NumericVector E = NumericVector::create(1, 2);
+A[C] = E;
+// Output:
+// Go To My Pi 
+//  3  4  1  2
+
+// --- List
+
+// Create a List
+List F = List::create(Named("A") = A,
+                          _["B"] = B); // shorthand for Named("B")
+
+// Extract A from List
+NumericVector G = F["A"];
+
+double val_go = G["Go"];
+// Output: 3
+
+// --- Data Frame
+
+// Create a DataFrame
+DataFrame H = DataFrame::create(Named("A") = A,
+                                    _["B"] = B); // shorthand for Named("B")
+
+// Extract B vector from DataFrame
+NumericVector I = H["B"];
+
+double val_lions = I["Lions"];
+// Output: 5
+```
+
+#### Logical Access
+
+- Access element by boolean values within a `Vector`, `List`, or `DataFrame`.
+   - `(BOOL)` provides only the elements associated `true` logical
+       condition in addition to performing a bounds check that ensures the 
+       requested element at the `BOOL` location exists.
+   - `[BOOL]` similar to the previous case, but does so *without* a bounds check. 
+
+- **Caveat:** The `BOOL` must be a `LogicalVector` of equal size to the object
+  being subset.
+
+- Examples: 
+
+```{Rcpp}
+// Sample data
+NumericVector A = NumericVector::create(4, 3, 1, 2);
+// Output: 4 3 1 2
+
+// Logical Subset
+LogicalVector B = LogicalVector::create(true, false, false, true);
+// Output: TRUE FALSE FALSE TRUE
+
+NumericVector C = A[B];
+// Output: 4 2
+
+// Replace Values
+NumericVector D = NumericVector::create(8, 6);
+
+// Logical Replacement
+A[B] = D;
+// Output: 4 8 6 2
 ```
 
 ### Subset Views {#subview}
 
 ### Static Member Functions {#staticfunc}
 
+#### create {#create}
+
+|                       |
+|:----------------------|
+| **create(X, Y)**      |
+| **create(X, Y, ...)** |
+
+
+**create(X, Y, ...)**
+
+- Initializes a `Vector`, `List`, or `DataFrame` by combining objects together
+  sequentially in a manner similar to `c(1, 2)` in *R*.
+
+- In the case of a `Vector`, the values *X* and *Y* must be an atomic value of 
+  the same underlying type *T*,  where *T* is one of the following:
+    - `int` 
+    - `double`
+    - `std::complex<double> / Rcomplex` 
+    - `bool`
+
+- For either a `DataFrame` or `List`, *X*, *Y* are allowed to be any combination
+  of `Vector`, `Matrix`, and the previously mentioned supported atomic types.
+
+- `create` is defined for any number of arguments between 1 and 20, inclusive. 
+
+- When constructing examples, it is often preferable to use `create` method
+  to build a vector.
+
+- Examples: 
+          
+```{Rcpp, cbind}
+// Construct a vector
+NumericVector A = NumericVector::create(4.2, 1.9, 2, 3.5);
+// Output: 4.2 1.9 2.0 3.5
+
+IntegerVector B = IntegerVector::create(1, 2);
+// Output: 1 2
+
+CharacterVector C = CharacterVector::create("a", "b", "c", "d");
+// Output: "a" "b" "c" "d"
+
+
+// Unnammed list creation
+List D = List::create(1.5, 2.3, 4.5);
+// Must be returned into R for output!
+// Output:
+// [[1]]
+// [1] 1.5
+// [[2]]
+// [1] 2.3
+// [[3]]
+// [1] 4.5
+
+// Named list creation
+List E = List::create(Named("B") = B,           
+                       _["nval"] = 2.5);         // shorthand for Named("nval")
+// Must be returned into R for output!
+// $B
+// [1] 1 2
+// 
+// $val
+// [1] 2.5
+
+// DataFrame creation
+// The number of elements in vectors must _match_
+DataFrame F = DataFrame::create(Named("A") = A,  
+                                    _["C"] = C); // shorthand for Named("C")
+// Must be returned into R for output!
+// Output:
+//   A C
+// 4.2 a
+// 1.9 b
+// 2.0 c
+// 3.5 d
+```
+
+
 ## Environment
+
 
 ## Function
 
@@ -654,9 +884,87 @@ Y(0, 1) = 4;
 
 ## Sugar
 
-### Logical Operations {#sugarlogic}
+- The objective behind _Rcpp sugar_ is to provide a subset of the
+  high-level _R_ syntax in _C++_. For instance, part of the functionality 
+  behind the [`table( X )`](#table) function can be 
 
-#### ifelse( CONDITION, TRUE, FALSE) {#ifelse}
+- Unless otherwise noted, if a `Matrix` is supplied, then the `Matrix` is 
+  corcered into column-form vectors before having the sugar functional procedure
+  performed. For example, given a 2x2 matrix the results of the function call
+  will go R1C1, R2C1, R1C2, and R2C2 where _R_ stands for Row and
+  _C_ for column.
+
+### Logical Operations {#sugar-logic}
+
+- Boolean functions that provide a way to analyze the data are provided within.
+
+#### ifelse( CONDITION, TRUEVAL, FALSEVAL) {#if-else}
+
+- Vectorized `if-else` assignment of elements dependent on the `CONDITION`
+  being `true` (`TRUEVAL`) or `false` (`FALSEVAL`). 
+
+- To use the vectorized `if-else` the following criteria must be met:
+    - `CONDITION`: A `LogicalVector` or a sugar expression that evalutes to a `LogicalVector`
+    - `TRUE`/`FALSE`: either
+        1. two compatible sugar expression (same *RTYPE*, same length), OR
+        2. one sugar expression and one compatible primitive (same *RTYPE*)
+
+- **Caveat:** Unlike the _R_ equivalent, there is no recycling the occurs if
+  the vectors are of different lengths. In said cases, an error will be raised
+  at runtime indicating the length difference.
+
+```{Rcpp}
+// Create data
+NumericVector A = NumericVector::create(5, 1, 8, 3);
+NumericVector B = NumericVector::create(2, 4, 6, 11);
+
+// a.) Vectors of the same length and type
+NumericVector C = ifelse(A < B, A, (A + B)*B);
+// Output: 14 1 84 3
+
+// b.) One vector and one constant
+NumericVector D = ifelse(A > B, A, 2);
+// Output: 5 2 8 2
+```
+
+#### Single Logical Result {#single-logical}
+
+|                   |                   |
+|:------------------|:------------------|
+| **is_true( X )**  | **is_false( X )** |
+
+- Convert the result state of `any( Y )` and `all( Y )` from the
+  `SingleLogicalResult` template class to an atomic value `bool` evaluated
+  as either `true` or `false` dependent on whether the call to `is_true( X )` or
+  `is_false( X )` is matched. 
+  
+- For example, if `any( Y )` evaluates to `false` than `is_true( X )` will return
+  `false` but `is_false( X )` will return `true`.
+
+- Examples:
+
+```{Rcpp}
+IntegerVector A = seq_len(3);
+// Output: 1 2 3
+IntegerVector B = clone(A) - 1;
+// Output: 0 1 2
+
+bool check_state_true  = is_true( any(A > B) );
+// Output: true
+
+bool check_state_false = is_false( any(A > B) );
+// Output: false
+
+// Without using the above functions, a compile time error will trigger
+// on assignment to bool.
+// bool check_state_error = any( A > B );
+// Error: invalid use of incomplete type 'class Rcpp::sugar::forbidden_conversion<false>'
+// class conversion_to_bool_is_forbidden
+```
+
+- See also:
+    - [any](#any)
+    - [all](#all)
 
 #### all( X ) {#all}
 
@@ -709,7 +1017,9 @@ Rcout
 
 - See also:
     - [any](#any)
-    - [is_true](#is-true)
+    - [is_true](#single-logical)
+    - [is_false](#single-logical)
+    - [is_na](#is-na)
 
 #### any( X ) {#any}
 
@@ -763,17 +1073,146 @@ Rcout
 
 - See also:
     - [all](#all)
-    - [is_true](#is-true)
+    - [is_true](#single-logical)
+    - [is_false](#single-logical)
+    - [is_na](#is-na)
 
-### Complex Operators {#sugarcomplex}
+### Complex Operators {#sugar-complex}
 
-#### Re( X ) {#realnums}
+#### Complex Components {#complex-number}
 
-#### Im( X ) {#imaginarynums}
+|             |             |
+|:------------|:------------|
+| **Re( X )** | **Im( X )** |
 
-#### Mod( X ) {#complexmodulus}
+- Extract the real or imaginary component of a complex number.
 
-#### Conj( X ) {#complexconjugate}
+- Definition: $$z = x + i y$$, where $x, y \in \mathbb{R}$.
+
+- *X* must be stored within a `Vector` or `Matrix` of type `Complex`. The 
+  return type is a `NumericVector` regardless of whether a `Vector` or `Matrix`
+  is supplied. 
+
+- Example:
+
+```{Rcpp}
+// Create complex numbers
+Rcomplex x, y;
+
+// Assign real, imaginary values
+x.r = 5.0; x.i = 12.0;
+y.r = 9.2; y.i = -4.0;
+
+// Make a complex vector
+ComplexVector A = ComplexVector::create(x, y);
+// Output: 5+12i 9.2+-4i
+
+NumericVector B = Re(A);
+// Output: 5 9.2
+
+NumericVector C = Im(A);
+// Output: 12 -4
+```
+
+
+- See also:
+    - [Conj](#complex-conjugate)
+
+#### Mod( X ) {#complex-modulus}
+
+- Compute the modulus of a complex number or the length from the origin to the
+  point represented in the complex plane (radius in polar coordinates).
+  
+- Definition: $$r = \operatorname{Mod}(z) = \sqrt{x^2 + y^2}$$
+
+- *X* must be stored within a `Vector` or `Matrix` of type `Complex`. The 
+  return type is a `NumericVector` regardless of whether a `Vector` or `Matrix`
+  is supplied. 
+
+- Example:
+
+```{Rcpp}
+// Create complex numbers
+Rcomplex x, y;
+
+// Assign real, imaginary values
+x.r = 5.0; x.i = 12.0;
+y.r = 9.2; y.i = -4.0;
+
+// Make a complex vector
+ComplexVector A = ComplexVector::create(x, y);
+// Output: 5+12i 9.2+-4i
+
+NumericVector B = Mod(A);
+// Output: 13.00000 10.031949
+```
+
+- See also:
+    - [Arg](#complex-arg)
+
+#### Arg( X ) {#complex-arg}
+
+- Compute the argument of a complex number or the angle from the positive side
+  of the real axis to the line segment connecting the origin and the point in 
+  the complex plane (theta in polar coordinates).
+
+- Definition: $$\theta = \arctan\left({\frac{y}{x}}\right)$$
+
+- *X* must be stored within a `Vector` or `Matrix` of type `Complex`. The 
+  return type is a `NumericVector` regardless of whether a `Vector` or `Matrix`
+  is supplied. 
+
+- Example:
+
+```{Rcpp}
+// Create complex numbers
+Rcomplex x, y;
+
+// Assign real, imaginary values
+x.r = 5.0; x.i = 12.0;
+y.r = 9.2; y.i = -4.0;
+
+// Make a complex vector
+ComplexVector A = ComplexVector::create(x, y);
+// Output: 5+12i 9.2+-4i
+
+NumericVector B = Arg(A);
+// Output: 1.1760052 -0.4101273
+```
+
+- See also:
+    - [Mod](#complex-modulus)
+
+#### Conj( X ) {#complex-conjugate}
+
+- Compute the complex conjugate of a complex number or a number with an equivalent
+  real component by negated imaginary component.
+
+- *X* must be stored within a `Vector` or `Matrix` of type `Complex`. The 
+  return type is a `ComplexVector` regardless of whether a `Vector` or `Matrix`
+  is supplied. 
+
+- Example:
+
+```{Rcpp}
+// Create complex numbers
+Rcomplex x, y;
+
+// Assign real, imaginary values
+x.r = 5.0; x.i = 12.0;
+y.r = 9.2; y.i = -4.0;
+
+// Make a complex vector
+ComplexVector A = ComplexVector::create(x, y);
+// Output: 5+12i 9.2+-4i
+
+ComplexVector B = Conj(A);
+// Output: 5-12i 9.2+ 4i
+```
+
+- See also:
+    - [Re](#complex-number)
+    - [Im](#complex-number)
 
 
 ### Data Operations {#sugardata}
@@ -809,7 +1248,7 @@ NumericVector y = abs(x);
 
 #### sum( X ) {#sum}
 
-- Compute the overall summation of all elements in a Vector or Matrix. 
+- Compute the overall summation of all elements in a `Vector` or `Matrix`. 
 
 - Examples:
 
