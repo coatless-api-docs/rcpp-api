@@ -8,8 +8,8 @@ popular ways to augment _R_ with _C++_.
 
 Provide documentation that lists, describes, and provides an example of each 
 known Rcpp data type and function alongside best practices. The documentation 
-should be ready for inclusion within Rcpp 0.12.9 scheduled for release in 
-January 2017.
+should be ready for inclusion within Rcpp 0.13.0 scheduled for release in 
+Feburary 2017.
 
 ## Style
 
@@ -28,9 +28,11 @@ Each section should contain:
 The following sample echoes the above tenets 
 
 ```
-## sum( X )
+## sum( X ) {#sum}
 
-- Compute the overall summation of all elements in a Vector or Matrix. 
+- Compute the overall summation of all elements.
+
+- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
 
 - Examples:
 
