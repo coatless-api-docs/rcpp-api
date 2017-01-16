@@ -26,7 +26,7 @@ project so that a docs subdomain could hopefully be added to <http://rcpp.org>.
 Please note: The post is written using [RMarkdown](http://rmarkdown.rstudio.com)
 for maximum flexibility.
 
-# API Documentation for Rcpp 0.12.8
+# API Documentation for Rcpp 0.12.9
 
 ## Preamble
 
@@ -44,10 +44,20 @@ for maximum flexibility.
  
 ## Overview
 
-- Vector, Matrix, List, DataFrame
-- Member functions
-- Sugar
-    - Statistical Distributions
+- [Vector, Matrix, List, DataFrame](#vmld)
+- [Member functions](#member-functions)
+    - [Operators](#ops)
+    - [Dimensional Information](#dim-info)
+    - [Element Access](#elem-access)
+        - [Position Access](#position-access)
+        - [Categorical Access](#categorical-access)
+        - [Logical Access](#logical-access)
+    - [Subset Views](#subview)
+    - [Iterators](#iterators)
+    - [STL-style container functions](#stl-functions)
+    - [Static Member Functions](#static-members)
+- [Sugar](#sugar)
+    - [Statistical Distributions](#stat-dist)
 - Environment, Function, Language
 - XPtr
 - S4 classes / modules
@@ -57,24 +67,27 @@ for maximum flexibility.
 ## Vector, Matrix, List, and DataFrame Classes
 
 |                                                                 |                    |
-|-----------------------------------------------------------------|--------------------|
-|  [Vector<*RTYPE*>, NumericVector, IntegerVector, ...](#vector)  | vector class       |
-|  [Matrix<*RTYPE*>, NumericMatrix, IntegerMatrix, ...](#matrix)  | matrix class       |
-|  [List](#list)                                                  | list class         |
-|  [DataFrame](#dataframe)                                        | data frame class   |
+|:----------------------------------------------------------------|:-------------------|
+|  [Vector<*RTYPE*>, NumericVector, IntegerVector, ...](#vector)  | Vector class       |
+|  [Matrix<*RTYPE*>, NumericMatrix, IntegerMatrix, ...](#matrix)  | Matrix class       |
+|  [List](#list)                                                  | List typedef       |
+|  [DataFrame](#dataframe)                                        | Data frame class   |
 
 ## Member functions
 
-|                                       |                                                                    |
-|---------------------------------------|--------------------------------------------------------------------|
-|  [Operators](#ops)                    | Mathematical (add, subtract, etc) and logical (inequalities)       |
-|  [Dimensional Information](#diminfo)  | Size attribute information                                         |
-|  [Object Access](#elemaccess)         | Retrieving element values with and without bounds check            |
-|  [Subset Views](#subview)             | Subset data structures                                             |
+|                                                  |                                                                    |
+|:-------------------------------------------------|:-------------------------------------------------------------------|
+|  [Operators](#ops)                               | Mathematical (add, subtract, etc) and logical (inequalities)       |
+|  [Dimensional Information](#dim-info)            | Size attribute information                                         |
+|  [Element Access](#elem-access)                  | Retrieving element values with and without bounds check            |
+|  [Subset Views](#subview)                        | Subset data structures                                             |
+|  [Iterators](#iterators)                         | Random access iterators                                            |
+|  [STL-style Container Functions](#stl-functions) | Standard Library styled functions                                  |
+|  [Static Member Functions](#static-members)      | Set of member functions persistant across instances                |
 
 ## Sugar
 
-**[Logical Operations](#sugarlogic)**
+**[Logical Operations](#sugar-logic-ops)**
 
 |                              |                            |
 |:-----------------------------|:---------------------------|
@@ -84,7 +97,7 @@ for maximum flexibility.
 | [`any`](#any)                | At Least One Value is True |
 | [`all`](#all)                | All Values Must be True    |
 
-**[Complex Operators](#sugar-complex)**
+**[Complex Operators](#sugar-complex-ops)**
 
 |                               |                                    |
 |:------------------------------|:-----------------------------------|
@@ -94,50 +107,58 @@ for maximum flexibility.
 | [`Arg`](#complex-argument)    | Arg (theta)                        |
 | [`Conj`](#complex-conjugate)  | Complex Conjugate                  |
 
-**[Data Operations](#sugardata)**
+**[Data Operations](#sugar-data-ops)**
 
-|                         |                                               |
-|:------------------------|:----------------------------------------------|
-| [`abs`](#abs)           | Absolute Value                                |
-| [`sqrt`](#sqrt)         | Square Root                                   |
-| [`sum`](#sum)           | Summation                                     |
-| [`diff`](#diff)         | Lagged Difference                             |
-| [`cumsum`](#carth)      | Cumulative Sum                                |
-| [`cumprod`](#carth)     | Cumulative Product                            |
-| [`cummin`](#cext)       | Cumulative Minimum                            |
-| [`cummax`](#cext)       | Cumulative Maximum                            |
-| [`sin`](#trig)          | Sine                                          |
-| [`cos`](#trig)          | Cosine                                        |
-| [`tan`](#trig)          | Tangent                                       |
-| [`asin`](#trig)         | Arc Sine                                      |
-| [`acos`](#trig)         | Arc Cosine                                    |
-| [`atan`](#trig)         | Arc Tangent                                   |
-| [`sinh`](#trig)         | Hyperbolic Sine                               |
-| [`cosh`](#trig)         | Hyperbolic Cosine                             |
-| [`tanh`](#trig)         | Hyperbolic Tangent                            |
-| [`ceiling`](#rounding)  | Smallest integer greater than or equal to x   |
-| [`ceil`](#rounding)     | Smallest integer greater than or equal to x   |
-| [`trunc`](#rounding)    | Truncates the values in x toward 0            |
-| [`floor`](#rounding)    | Largest integer less than or equal to x       | 
-| [`round`](#rounding)    | Round values to specified decimal place       |
-| [`signif`](#rounding)   | Rounds values to number of significant digits |
-| [`log`](#logexp)        | Natural Logarithms                            |
-| [`exp`](#logexp)        | Expoential                                    |
-| [`log10`](#logexp)      | Base 10 Logarithm                             |
-| [`log1p`](#logexp)      | Natural Logarithm $log(1+x)$                  |
-| [`expm1`](#logexp)      | $\exp(x) - 1$                                 |
+|                       |                               |
+|:----------------------|:------------------------------|
+| [`head`](#prev-data)  | View the first _n_ values     |
+| [`tail`](#prev-data)  | View the last _n_ values      |
+| [`abs`](#abs)         | Absolute Value                |
+| [`sqrt`](#sqrt)       | Square Root                   |
+| [`sum`](#sum)         | Summation                     |
+| [`diff`](#diff)       | Lagged Difference             |
+| [`cumsum`](#carth)    | Cumulative Sum                |
+| [`cumprod`](#carth)   | Cumulative Product            |
+| [`cummin`](#cext)     | Cumulative Minimum            |
+| [`cummax`](#cext)     | Cumulative Maximum            |
+| [`sin`](#trig)        | Sine                          |
+| [`cos`](#trig)        | Cosine                        |
+| [`tan`](#trig)        | Tangent                       |
+| [`asin`](#trig)       | Arc Sine                      |
+| [`acos`](#trig)       | Arc Cosine                    |
+| [`atan`](#trig)       | Arc Tangent                   |
+| [`sinh`](#trig)       | Hyperbolic Sine               |
+| [`cosh`](#trig)       | Hyperbolic Cosine             |
+| [`tanh`](#trig)       | Hyperbolic Tangent            |
+| [`log`](#logexp)      | Natural Logarithms            |
+| [`exp`](#logexp)      | Expoential                    |
+| [`log10`](#logexp)    | Base 10 Logarithm             |
+| [`log1p`](#logexp)    | Natural Logarithm $log(1+x)$  |
+| [`expm1`](#logexp)    | $\exp(x) - 1$                 |
 
-**[Finite, Infinite and NaN Detection](#sugarfinite)**
+
+**[Rounding of Numbers](#sugar-rounding)**
+
+|                                    |                                               |
+|:-----------------------------------|:----------------------------------------------|
+| [`ceiling`](#ceil),[`ceil`](#ceil) | Smallest integer greater than or equal to x   |
+| [`trunc`](#trunc)                  | Truncates the values in x toward 0            |
+| [`floor`](#floor)                  | Largest integer less than or equal to x       | 
+| [`round`](#round)                  | Round values to specified decimal place       |
+| [`signif`](#signif)                | Rounds values to number of significant digits |
+
+
+**[Finite, Infinite and NaN Detection](#sugar-nan)**
 
 |                                    |                                          |
 |:-----------------------------------|:-----------------------------------------|
-| [`pre-defined`](#sugarnanvalues)   | Pre-defined NA/NaN/Inf Constants         |
+| [`pre-defined`](#nanconstants)     | Pre-defined NA/NaN/Inf Constants         |
 | [`is_na`](#missingness)            | Detects if values are missing            |
 | [`is_nan`](#missingness)           | Detects if values are not a number (NaN) |
 | [`is_finite`](#finite)             | Detects if value is finite               |
 | [`is_infinite`](#finite)           | Detects if value is infinite             |
 
-**[The Apply Family](#apply)**
+**[The Apply Family](#sugar-apply)**
 
 |                       |                                                               |
 |:----------------------|:--------------------------------------------------------------|
@@ -145,23 +166,25 @@ for maximum flexibility.
 | [`lapply`](#lapply)   | Apply a function to one input and store results in list       |
 | [`mapply`](#mapply)   | Apply a function to multiple inputs and store results in list |
 
-**[Special Functions of Mathematics](#sugarmath)**
+**[Special Functions of Mathematics](#sugar-special-math)**
 
-|                             |                            |
-|:----------------------------|:---------------------------|
-| [`factorial`](#combs)       | Factorial                  |
-| [`lfactorial`](#combs)      | Factorial Logarithm        |
-| [`choose`](#combs)          | Combination                |
-| [`lchoose`](#combs)         | Combination Logarithm      |
-| [`gamma`](#gamma)           | Gamma Function             |
-| [`lgamma`](#gamma)          | Natural Log Gamma Function |
-| [`psigamma`](#gammaderiv)   | General Gamma Derivative   |
-| [`digamma`](#gammaderiv)    | Second Gamma Derivative    |
-| [`trigamma`](#gammaderiv)   | Third Gamma Derivative     |
-| [`tetragamma`](#gammaderiv) | Fourth Gamma Derivative    |
-| [`pentagamma`](#gammaderiv) | Fifth Gamma Derivative     |
+|                              |                            |
+|:-----------------------------|:---------------------------|
+| [`factorial`](#factorials)   | Factorial                  |
+| [`lfactorial`](#factorials)  | Factorial Logarithm        |
+| [`choose`](#combinatorics)   | Combination                |
+| [`lchoose`](#combinatorics)  | Combination Logarithm      |
+| [`beta`](#beta)              | Beta Function              |
+| [`lbeta`](#beta)             | Natural Log Beta Function  |
+| [`gamma`](#gamma)            | Gamma Function             |
+| [`lgamma`](#gamma)           | Natural Log Gamma Function |
+| [`psigamma`](#gamma-deriv)   | General Gamma Derivative   |
+| [`digamma`](#gamma-deriv)    | Second Gamma Derivative    |
+| [`trigamma`](#gamma-deriv)   | Third Gamma Derivative     |
+| [`tetragamma`](#gamma-deriv) | Fourth Gamma Derivative    |
+| [`pentagamma`](#gamma-deriv) | Fifth Gamma Derivative     |
 
-**[Statistical Summaries](#sugarstats)**
+**[Statistical Summaries](#sugar-stats)**
 
 |                      |                      |
 |:---------------------|:---------------------|
@@ -170,10 +193,10 @@ for maximum flexibility.
 | [`range`](#range)    | Range                |
 | [`mean`](#mean)      | Mean Value           |
 | [`median`](#median)  | Median Value         |
-| [`var`](#median)     | Variance             |
+| [`var`](#var)        | Variance             |
 | [`sd`](#var)         | Standard Deviation   |
 
-**[Special Operators](#sugarspecops)**
+**[Special Operators](#sugar-special-ops)**
 
 |                        |                                      |
 |:-----------------------|:-------------------------------------|
@@ -185,18 +208,44 @@ for maximum flexibility.
 | [`which_min`](#which)  | Index of the minimum value           |
 
 
-**[Uniqueness Operators](#sugarunique)**
+**[Uniqueness Operators](#sugar-unique-ops)**
 
-|                              |                                                                |
-|:-----------------------------|:---------------------------------------------------------------|
-| [`match`](#match)            | Find indices of the first value in a separate vector           |
-| [`self_match`](#match)       | Find indices of the first occurrence of each value in a vector |
-| [`unique`](#unique)          | Obtain the unique values                                       |
-| [`duplicated`](#unique)      | Obtain a logical vector indicating the duplicate values        |
-| [`table( X, N )`](#table)    | Create a frequency table of occurrences                        |
-| [`setdiff( X, N )`](#setdiff)| Asymmetric Difference of Set Values                            |
+|                          |                                                                |
+|:-------------------------|:---------------------------------------------------------------|
+| [`match`](#match)        | Find indices of the first value in a separate vector           |
+| [`self_match`](#match)   | Find indices of the first occurrence of each value in a vector |
+| [`unique`](#unique)      | Obtain the unique values                                       |
+| [`duplicated`](#unique)  | Obtain a logical vector indicating the duplicate values        |
+| [`table`](#table)        | Create a frequency table of occurrences                        |
 
-**[Object Creation](#sugarobject)**
+
+**[Set Operations](#sugar-set-ops)
+
+|                           |                                          |
+|:--------------------------|:-----------------------------------------|
+| [`setequal`](#setequal)   | Equality of Set Values                   |
+| [`intersect`](#intersect) | Intersection of Set Values               |
+| [`union_`](#union)        | Union of Set Values                      |
+| [`setdiff`](#setdiff)     | Asymmetric Difference of Set Values      |
+
+
+**[Matrix Operations](#sugar-matrix-ops)
+
+|                            |                                                |
+|:---------------------------|:-----------------------------------------------|
+| [`colSums`](#matrix-sum)   | Column Sums of a Matrix                        |
+| [`rowSums`](#matrix-sum)   | Row Sums of a Matrix                           |
+| [`colMeans`](#matrix-mean) | Column Means of a Matrix                       |
+| [`rowMeans`](#matrix-mean) | Row Means of a Matrix                          |
+| [`outer`](#outer)          | Outer Product of Arrays on a Function          |
+| [`lower_tri`](#tri-mat)    | Extract the _Lower_ Triangle Part of a Matrix  |
+| [`upper_tri`](#tri-mat)    | Extract the _Upper_ Triangle Part of a Matrix  |
+| [`diag`](#diag)            | Extract the Diagonal Portion of a Matrix       |
+| [`row`](#idx-mat)          | Create a matrix of Row Indexes                 |
+| [`col`](#idx-mat)          | Create a matrix of Column Indexes              |
+
+
+**[Object Creation](#sugar-object-creation)**
 
 |                     |                                                |
 |:--------------------|:-----------------------------------------------|
@@ -208,37 +257,38 @@ for maximum flexibility.
 | [`rep_len`](#rep)   | Replicate values until vector is of length $N$ |
 
 
-**[Statistical Distributions](#statdist)**
+**[Statistical Distributions](#stat-dist)**
 
-**[Discrete Distributions](#discretedist)**
+**[Discrete Distributions](#discrete-dist)**
 
-|                                  |                        |
-|----------------------------------|------------------------|
-|  [`p/d/q/rbinom`](#bindist)      | Binomial               |
-|  [`p/d/q/rgeom`](#geodist)       | Geometric              |
-|  [`p/d/q/rhyper`](#hypergeodist) | Hypergeometric         |
-|  [`p/d/q/rnbinom`](#negbindist)  | Negative Binomial      |
-|  [`p/d/q/rpois`](#poisdist)      | Poisson                |
-|  [`p/d/q/rwilcox`](#wilcoxdist)  | Wilcoxon               |
-|  [`p/d/q/rsignrank`](#signeddist)| Wilcoxon Signed Rank   |
+|                                   |                        |
+|-----------------------------------|------------------------|
+|  [`p/d/q/rbinom`](#bin-dist)      | Binomial               |
+|  [`p/d/q/rgeom`](#geo-dist)       | Geometric              |
+|  [`p/d/q/rhyper`](#hypergeo-dist) | Hypergeometric         |
+|  [`p/d/q/rnbinom`](#negbin-dist)  | Negative Binomial      |
+|  [`p/d/q/rpois`](#pois-dist)      | Poisson                |
+|  [`p/d/q/rwilcox`](#wilcox-dist)  | Wilcoxon               |
+|  [`p/d/q/rsignrank`](#signed-dist)| Wilcoxon Signed Rank   |
 
-**[Continuous Distributions](#contdist)**
+**[Continuous Distributions](#continuous-dist)**
 
-|                                   |                              |
-|-----------------------------------|------------------------------|
-|  [`p/d/q/rbeta`](#betadist)       | Beta                         |
-|  [`p/d/q/rcauchy`](#cauchydist)   | Cauchy                       |
-|  [`p/d/q/rchisq`](#chisquaredist) | Chi-square                   |
-|  [`p/d/qnchisq`](#nchisquaredist) | Non-central Chi-square       |
-|  [`p/d/q/rexp`](#expdist)         | Exponential                  |
-|  [`p/d/q/rf`](#fdist)             | F                            |
-|  [`p/d/q/rgamma`](#gammadist)     | Gamma                        |
-|  [`p/d/q/rnorm`](#normaldist)     | Normal                       |
-|  [`p/d/q/rlnorm`](#lognormaldist) | Log Normal                   |
-|  [`p/d/q/rlogis`](#logisticdist)  | Logistic                     |
-|  [`p/d/q/rt`](#tdist)             | Student's T                  |
-|  [`p/d/q/runif`](#unifdist)       | Uniform                      |
-|  [`p/d/q/rweibull`](#weibulldist) | Weibull                      |
+|                                    |                              |
+|------------------------------------|------------------------------|
+|  [`p/d/q/rbeta`](#beta-dist)       | Beta                         |
+|  [`p/d/q/rcauchy`](#cauchy-dist)   | Cauchy                       |
+|  [`p/d/q/rchisq`](#chisquare-dist) | Chi-square                   |
+|  [`p/d/qnchisq`](#nchisquare-dist) | Non-central Chi-square       |
+|  [`p/d/q/rexp`](#exp-dist)         | Exponential                  |
+|  [`p/d/q/rf`](#f-dist)             | F                            |
+|  [`p/d/qnf`](#nf-dist)             | Non-central F                |
+|  [`p/d/q/rgamma`](#gamma-dist)     | Gamma                        |
+|  [`p/d/q/rnorm`](#normal-dist)     | Normal                       |
+|  [`p/d/q/rlnorm`](#lognormal-dist) | Log Normal                   |
+|  [`p/d/q/rlogis`](#logistic-dist)  | Logistic                     |
+|  [`p/d/q/rt`](#t-dist)             | Student's T                  |
+|  [`p/d/q/runif`](#unif-dist)       | Uniform                      |
+|  [`p/d/q/rweibull`](#weibull-dist) | Weibull                      |
 
 ## Vector, Matrix, List, and DataFrame Classes {#vmld}
 
@@ -451,14 +501,153 @@ NumericMatrix G = clone(F);
 
 ### List {#list}
 
-- Generic Storage that is a `typedef` of `Vector` ...
+- The `List` data structure is a `typedef` of templated `Vector` class based
+  on the `RTYPE` of `VECSXP` that provides heterogenous storage class. As
+  a result, the `List` class acts as a generic storage object that can
+  simultaneously hold multiple different `RTYPE` structures.
+  
+- Constructors:
+    - `List()`
+    - `List(SEXP x)`
+    - `List(const int &size, const stored_type &u)`
+    - `List(const std::string &st)`
+    - `List(const char *st)`
+    - `List(const Vector &other)`
+    - `List(const int &size)`
+ 	- `List(const Dimension &dims)`
+    - `List(const Dimension &dims, const U &u)`
+    - `List(const Vector &other)`
+
+- Unlike the `Vector` class, the `List` constructed from dimensions will have a
+  `NULL` value set for each element unless a value is otherwise assigned.
+  
+- Examples:
+
+```{Rcpp rcpp_vector_ctor}
+SEXP A;
+List B(A); // from a SEXP
+
+// create an empty List of size 2 
+List C(2);
+// Output: 
+// [[1]]
+// NULL
+// [[2]]
+// NULL
+
+// construct List of size 3 with one element containing 2.0
+List D = List(3, 2.0); 
+// Output: 
+// [[1]]
+// [1] 2
+// [[2]]
+// [1] 2
+// [[3]]
+// [1] 2
+
+// initialize empty list of size 3
+List D2 = no_init(3);
+
+// fill list one element equal to 3.0
+D2.fill(3.0);
+// Output: 
+// [[1]]
+// [1] 3
+// [[2]]
+// [1] 3
+// [[3]]
+// [1] 3
+
+// cloning (deep copy)
+List E = clone(D);
+// Output: 
+// [[1]]
+// [1] 2
+// [[2]]
+// [1] 2
+// [[3]]
+// [1] 2
+
+
+// Create a named list
+NumericVector F = NumericVector::create(1.2, 3.5);
+CharacterVector G = CharacterVector::create("a", "b", "c");
+LogicalVector H = LogicalVector::create(true, false, false, true);
+
+// Create named list
+List F = List::create(Named("v1") = F,
+                      Named("v2") = G,
+                          _["v3"] = H); // Shorthand for Named("V3")
+// Output:
+// $v1
+// [1] 1.2 3.5
+// $v2
+// [1] "a" "b" "c"
+// $v3
+// [1]  TRUE FALSE FALSE  TRUE
+```
+
+- See also:
+    - [`Vector`](#vector)
+    - [Vector Class doxygen documentation](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1Vector.html)
+    - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
 
 ### DataFrame {#dataframe}
 
-- The `DataFrame` class is special type of a `List`, which are in turn a version of `Vector`.
+- The `DataFrame` data structure is a typedef of the `DataFrame_Impl` class,
+  which is a special extension of the templated `Vector` class
+  that allows for a collection of heterogenous `Vector`'s of the same length.
+  As the crux of the implementation of is
+  [policy-based design based](https://en.wikipedia.org/wiki/Policy-based_design), 
+  much of the behavior of `DataFrame` is determined by the policy classes it 
+  inherits from 
+  
+    - `RObjectMethods` 
+    - `StoragePolicy` 
+    - `SlotProxyPolicy` 
+    - `AttributeProxyPolicy` 
+    - `NamesProxyPolicy` 
+    
+    as well as the CRTP base class `VectorBase`.
 
+- Constructors:
 
-## Member Functions
+ 	- `DataFrame()`
+ 	- `DataFrame(SEXP x)`
+ 	- `DataFrame(const DataFrame &other)`
+ 	- `DataFrame(const T &obj)`
+
+- **Caveat:** All `DataFrame` columns _must_ be named. Failure to name the columns
+  will result in the run time error of:
+  
+  > not compatible with STRSXP
+  
+  since Rcpp uses an internal call to _R_ to create the `DataFrame`. 
+
+- Examples:
+
+```{Rcpp}
+SEXP A;
+DataFrame B(A); // from a SEXP
+
+// Create Data
+NumericVector C = NumericVector::create(5.8, 9.1, 3.2); 
+CharacterVector D = CharacterVector::create("a", "b", "c");
+LogicalVector E = LogicalVector::create(true, false, false);
+
+// Create a new dataframe
+DataFrame G = DataFrame::create(Named("C") = C,
+                                    _["D"] = D, // shorthand for Named("D")
+                                Named("E") = E);
+```
+
+- See also:
+    - [`Vector`](#vector)
+    - [DataFrame `typedef`](http://dirk.eddelbuettel.com/code/rcpp/html/DataFrame_8h.html)
+    - [`DataFrame_Impl` class](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1DataFrame__Impl.html)
+    - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
+
+## Member Functions {#member-functions}
 
 ### Operators {#ops}
 
@@ -546,6 +735,7 @@ NumericVector res = 3.0 * A - 1.0 / B + A + B + 5.0;
 | `.nrow()`,`.rows()`   | number of rows in a `Matrix`              |
 | `.ncol()`,`.cols()`   | number of columns in a `Matrix`           |
 | `.size()`,`.length()` | number of items in a `Matrix`, `Vector`   |
+| `.nrows()`            | number of rows in a `DataFrame`           |
 
 - Return type is that of an `int`, `unsigned int`, or `R_xlen_t`
 
@@ -571,7 +761,7 @@ Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::
 ```
 
 
-### Element Access {#elemaccess}
+### Element Access {#elem-access}
 
 - Described within this section is the ability to access elements using 
   the position, categorical, and logical indexing systems.
@@ -593,7 +783,7 @@ Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::
   the code has been thoroughly tested as undefined behavior (UB) may emerge. UB 
   is very problematic.
   
-#### Position Access
+#### Position Access {#position-access}
 
 - Access a single element or object using a positional index.
    - `(i)` provides the *i*th element or object in addition to performing a 
@@ -683,7 +873,7 @@ DataFrame G = DataFrame::create(Named("A") = A,
 NumericVector E = DF[0];
 ```
 
-#### Categorical Access
+#### Categorical Access {#categorical-access}
 
 - Access element by name within a `Vector`, `List`, or `DataFrame`.
    - `(NAME)` provides the element associated with the `NAME` in addition to 
@@ -696,7 +886,7 @@ NumericVector E = DF[0];
 // Create sample data
 NumericVector A = NumericVector::create(Named("Go") = 3,
                                         Named("To") = 4,
-                                            _["My"] = 5, // shorthand Named("C")
+                                            _["My"] = 5, // shorthand Named("My")
                                             _["Pi"] = 1);
 // Output: (names only printed in R!) 
 // Go To My Pi 
@@ -757,7 +947,7 @@ double val_lions = I["Lions"];
 // Output: 5
 ```
 
-#### Logical Access
+#### Logical Access {#logical-access}
 
 - Access element by boolean values within a `Vector`, `List`, or `DataFrame`.
    - `(BOOL)` provides only the elements associated `true` logical
@@ -792,17 +982,107 @@ A[B] = D;
 
 ### Subset Views {#subview}
 
-### Static Member Functions {#staticfunc}
+
+### Iterators {#iterators}
+
+- C++ Standard Template Library (STL) styled random access iterators exist underlying
+  the `Vector` and `Matrix` classes.
+
+- Iterator accessor:
+
+|              |                                     |
+|:-------------|:------------------------------------| 
+| `·begin()`   | pointer to the start of the vector  |
+| `·end()`     | pointer to one past end of vector   |
+
+
+- Kinds of Iterators:
+
+|                               |                                                             |
+|:------------------------------|:------------------------------------------------------------|
+| `NumericVector::iterator`     | allows for read/write access to elements (stored by column) |
+| `ComplexVector::iterator`     |                                                             |
+| `IntegerVector::iterator`     |                                                             |
+| `LogicalVector::iterator`     |                                                             |
+| `CharacterVector::iterator`   |                                                             |
+| `RawVector::iterator`         |                                                             |
+| `ExpressionVector::iterator`  |                                                             |
+| `GenericVector::iterator`     |                                                             |
+| `NumericMatrix::iterator`     |                                                             |
+| `ComplexMatrix::iterator`     |                                                             |
+| `IntegerMatrix::iterator`     |                                                             |
+| `RawMatrix::iterator`         |                                                             |
+| `LogicalMatrix::iterator`     |                                                             |
+| `CharacterMatrix::iterator`   |                                                             |
+| `StringMatrix::iterator`      |                                                             |
+| `ExpressionMatrix::iterator`  |                                                             |
+| `GenericMatrix::iterator`     |                                                             |
+| `ListMatrix::iterator`        |                                                             |
+
+
+|                                     |                                                       |
+|:------------------------------------|:------------------------------------------------------|
+| `NumericVector::const_iterator`     | allows for read access to elements (stored by column) |
+| `ComplexVector::const_iterator`     |                                                       |
+| `IntegerVector::const_iterator`     |                                                       |
+| `LogicalVector::const_iterator`     |                                                       |
+| `CharacterVector::const_iterator`   |                                                       |
+| `RawVector::const_iterator`         |                                                       |
+| `ExpressionVector::const_iterator`  |                                                       |
+| `GenericVector::const_iterator`     |                                                       |
+| `NumericMatrix::const_iterator`     |                                                       |
+| `ComplexMatrix::const_iterator`     |                                                       |
+| `IntegerMatrix::const_iterator`     |                                                       |
+| `RawMatrix::const_iterator`         |                                                       |
+| `LogicalMatrix::const_iterator`     |                                                       |
+| `CharacterMatrix::const_iterator`   |                                                       |
+| `StringMatrix::const_iterator`      |                                                       |
+| `ExpressionMatrix::const_iterator`  |                                                       |
+| `GenericMatrix::const_iterator`     |                                                       |
+| `ListMatrix::const_iterator`        |                                                       |
+
+### STL-style container functions {#stl-functions}
+
+- There exists a special class of member functions that mimic how C++ Standard
+  Template Library (STL) implement member functions for container architecture
+  such as `vector`, `deque`, and `list`. 
+
+- Member functions that do _not_ alter the **size** of the Rcpp object
+
+| Member                 | Description                                 |
+|:-----------------------|:--------------------------------------------|
+| `operator()`           | Access elements _with_ checking range       |
+| `operator[]`           | Access elements _without_ checking range    |
+| `.length()`, `.size()` | Amount of elements in the collection        |
+| `.fill(u)`             | Fill the collection with element `u`        |
+
+- Member functions that _do_ alter the **size** of the Rcpp object and result
+  in the object being recreated.
+
+| Member           | Description                                         |
+|:-----------------|:----------------------------------------------------|
+| `·push_back(x)`  | Insert `x` at end of vector, grows vector           |
+| `·push_front(x)` | Insert `x` at beginning of vector, grows vector     |
+| `·insert(i, x)`  | Insert `x` at the _i_^th^ position of, grows vector |
+| `·erase(i)`      | Remove element at _i_^th^ position, shrinks vector  |
+
+- **Warning:** Using any function to grow or shrink an Rcpp object results 
+  in the data being _copied_ from the original object into a new object. As a 
+  result, there will be a severe degregation of performance. Therefore, it is
+  highly recommended to convert the Rcpp object to an STL object that can easily
+  be grown or shrunk if the sample size is _not_ known in advance.
+
+### Static Member Functions {#static-members}
 
 #### create {#create}
 
-|                       |
-|:----------------------|
-| **create(X, Y)**      |
-| **create(X, Y, ...)** |
+|                         |
+|:------------------------|
+| **::create(X, Y)**      |
+| **::create(X, Y, ...)** |
 
 
-**create(X, Y, ...)**
+**::create(X, Y, ...)**
 
 - Initializes a `Vector`, `List`, or `DataFrame` by combining objects together
   sequentially in a manner similar to `c(1, 2)` in *R*.
@@ -882,7 +1162,7 @@ DataFrame F = DataFrame::create(Named("A") = A,
 
 ## S4 Classes
 
-## Sugar
+## Sugar {#sugar}
 
 - The objective behind _Rcpp sugar_ is to provide a subset of the
   high-level _R_ syntax in _C++_. For instance, part of the functionality 
@@ -894,7 +1174,7 @@ DataFrame F = DataFrame::create(Named("A") = A,
   will go R1C1, R2C1, R1C2, and R2C2 where _R_ stands for Row and
   _C_ for column.
 
-### Logical Operations {#sugar-logic}
+### Logical Operations {#sugar-logic-ops}
 
 - Boolean functions that provide a way to analyze the data are provided within.
 
@@ -933,13 +1213,13 @@ NumericVector D = ifelse(A > B, A, 2);
 |:------------------|:------------------|
 | **is_true( X )**  | **is_false( X )** |
 
-- Convert the result state of `any( Y )` and `all( Y )` from the
+- Convert the result state of `any( CONDITION )` and `all( CONDITION )` from the
   `SingleLogicalResult` template class to an atomic value `bool` evaluated
   as either `true` or `false` dependent on whether the call to `is_true( X )` or
   `is_false( X )` is matched. 
   
-- For example, if `any( Y )` evaluates to `false` than `is_true( X )` will return
-  `false` but `is_false( X )` will return `true`.
+- For example, if `any( CONDITION )` evaluates to `false` than `is_true( X )` 
+  will return `false` but `is_false( X )` will return `true`.
 
 - Examples:
 
@@ -1077,7 +1357,7 @@ Rcout
     - [is_false](#single-logical)
     - [is_na](#is-na)
 
-### Complex Operators {#sugar-complex}
+### Complex Operators {#sugar-complex-ops}
 
 #### Complex Components {#complex-number}
 
@@ -1215,10 +1495,10 @@ ComplexVector B = Conj(A);
     - [Im](#complex-number)
 
 
-### Data Operations {#sugardata}
+### Data Operations {#sugar-data}
 
 
-#### Preview Data {#prevdata}
+#### Preview Data {#prev-data}
 
 |                   |                   |
 |:------------------|:------------------|
@@ -1228,7 +1508,10 @@ ComplexVector B = Conj(A);
 
 #### abs( X ) {#abs}
 
-- Compute the absolute value of all elements in a Vector or Matrix. 
+- Obtain the absolute value of all elements.
+
+- Supported types to perform the operation are `Integer` or `Numeric` of 
+  a `Vector` or `Matrix`. 
 
 - Example:
 
@@ -1244,19 +1527,33 @@ NumericVector y = abs(x);
 
 #### sqrt( X ) {#sqrt}
 
+- Compute the square root of all elements in a `Vector` or `Matrix`.
+
+- Example:
+
+```{Rcpp}
+// Sample data
+NumericVector x = NumericVector::create(0.0, 1.0, 2.5, 5.0, 9.0);
+
+NumericVector y = sqrt(x);
+// Output: 0 1 1.58114 2.23607 3
+```
+
 ----
 
 #### sum( X ) {#sum}
 
-- Compute the overall summation of all elements in a `Vector` or `Matrix`. 
+- Calculate the overall summation of all elements in a `Vector` or `Matrix`. 
+
+- Definition: $$ \sum\limits_{i = 1}^n {{X_i}} $$
 
 - Examples:
 
 ```{Rcpp}
 // Sample data
-NumericVector x = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
+NumericVector A = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
 
-double y = sum(x);
+double val_summed = sum(A);
 // Output: 35.1
 ```
 
@@ -1267,6 +1564,23 @@ double y = sum(x);
 ----
 
 #### diff( X ) {#diff}
+
+- Obtain the difference between sucessive `Vector` elements by 
+  $(i+1)$^th^ and the _i_-^th^ element.
+  
+- Definition: $$ \nabla {X_i} = {X_{i + 1}} - {X_i} $$
+  
+- Supported types are `integer` and `numeric` of a `Vector` or `Matrix`.
+
+```{Rcpp}
+// Create some sample data
+NumericVector A = NumericVector::create(-2, 0, 0.5, -1, 2.5, 4.75);
+
+// --- Obtain difference
+
+NumericVector B = diff(A);
+// Output: 2.00  0.50 -1.50  3.50  2.25
+```
 
 ----
 
@@ -1377,12 +1691,13 @@ cs = NumericVector(cumsum(y));  // OK, but requires an additional Vector
 
 - Usage:
    - `vector_type Y = func(X)`
-   - `matrix_type Y = func(X)`
    - `X` and `Y` must be of the same `vector_type`/`matrix_type`.
    - where `func` is one of the following trigonmetric functions:
        - sin family: `sin(X)`, `asin(X)`, `sinh(X)`
        - cos family: `cos(X)`, `acos(X)`, `cosh(X)`
        - tan family: `tan(X)`, `atan(X)`, `tanh(X)`
+
+- Supported types are `Integer`, `Numeric`, or `Complex` of a `Vector` or `Matrix`. 
 
 - Examples:
 
@@ -1398,16 +1713,6 @@ NumericVector Y3 = cosh(X);
 
 ---
 
-#### Rounding of Numbers {#rounding}
-
-|                        |                         |
-|:-----------------------|:------------------------|
-| **ceiling( X )**       | **ceil( X )**           | 
-| **trunc( X )**         | **floor( X )**          | 
-| **round( X, digits )** | **signif( X, digits )** |
-
----
-
 #### Logarithms and Exponentials {#logexp}
 
 |              |                |                |
@@ -1415,10 +1720,37 @@ NumericVector Y3 = cosh(X);
 | **log( X )** | **log10( X )** | **log1p( X )** | 
 | **exp( X )** | **expm1( X )** |                |
 
+---
+
+### Rounding of Numbers {#sugar-rounding}
+
+#### Ceiling {#rounding}
+
+|                        |                         |
+|:-----------------------|:------------------------|
+| **ceiling( X )**       | **ceil( X )**           | 
+
+----
+
+#### floor( X ) {#floor}
+
+
+----
+
+#### trunc( X ) {#trunc}
+
+----
+
+#### round( X , digits ) {#round}
+
+----
+
+#### signif( X, digits ) {#signif}
+
 
 ---
 
-### Finite, Infinite, Missingness, and NaN Detection {#sugarnan}
+### Finite, Infinite, Missingness, and NaN Detection {#sugar-nan}
 
 - Finite numerical representations take the form of base 10 numbers like 1, 2,
   ..., 42, and so on. These values are able to be operated upon such that
@@ -1458,7 +1790,7 @@ NumericVector Y3 = cosh(X);
 - Note: The R/C API is highly inconsistent when detecting values.
 
 
-#### Setting Infinite, Missingness, and NaN Values {#sugarnanvalues}
+#### Setting Infinite, Missingness, and NaN Values {#nan-constants}
 
 - To indicate missingness or `NA` values, the following pre-defined constants 
   have been made available for specific Rcpp data types:
@@ -1547,7 +1879,7 @@ LogicalVector result_nan = is_nan( X );
 
 ---
 
-### The Apply Family {#apply}
+### The Apply Family {#sugar-apply}
 
 #### lapply {#lapply}
 
@@ -1561,7 +1893,7 @@ LogicalVector result_nan = is_nan( X );
 
 ---
 
-### Special Functions of Mathematics
+### Special Functions of Mathematics {#sugar-special-math}
 
 #### Beta {#beta}
 
@@ -1577,6 +1909,8 @@ LogicalVector result_nan = is_nan( X );
 |:--------------|:-----------------|
 | **gamma( X )** | **lgamma( X )** |
 
+#### Gamma Derivatives {#gamma-deriv}
+
 |                            |                     |
 |:---------------------------|:--------------------|
 | **psigamma( X , deriv )**  |                     |
@@ -1585,19 +1919,25 @@ LogicalVector result_nan = is_nan( X );
 
 ---
 
-### Combinatorics {#combs}
+### Factorials {#factorials}
 
 |                 |                  |
 |:----------------|:-----------------|
 | **factorial()** | **lfactorial()** |
+
+
+### Combinatorics {#combinatorics}
+
+|                 |                  |
+|:----------------|:-----------------|
 | **choose()**    | **lchoose()**    |
 
 
 ---
 
-### Statistical Summaries
+### Statistical Summaries {#sugar-stats}
 
-#### Minimum and Maximum {#minmax}
+#### Minimum and Maximum {#min-max}
 
 |              |              |
 |:-------------|:-------------|
@@ -1627,8 +1967,8 @@ double X_min = minx(X);
 
 - Computes the range or the minimum and maximum values of the sample.
 
-- If _X_ is a `Matrix`, then the values will be vectorized and the range computed.
-  
+- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
+
 ```{Rcpp}
 // Sample Data
 NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
@@ -1640,12 +1980,12 @@ NumericVector X_range = range(X);
 
 ---
 
-#### mean( X ) {#mean}
+#### mean( X, na_rm ) {#mean}
 
-- Computes the sample mean.
+- Computes the overall sample mean by summing each observation and dividing
+  by the total number of observations.
 
-- If _X_ is a `Matrix`, it will lump all values together and then compute the 
-  mean. To obtain means for each row or column use `rowMeans` or `colMeans`.
+- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
 
 ```{Rcpp}
 // Sample Data
@@ -1658,10 +1998,15 @@ double X_mean = mean(X);
 
 ---
 
-#### median( X , NA_RM) {#median}
+#### median( X , na_rm) {#median}
 
-- Computes the sample median of an `Numeric`, `Integer`, or `Logical` `Vector` 
-  or `Matrix`
+- Computes the sample median by ordering elements from largest to smallest and
+  then selecting the middle element. If an even number of elements is present,
+  then the median consists of an average between the two middle numbers.
+
+- All types of a `Vector` or `Matrix` are supported.
+
+- Examples:
 
 ```{Rcpp}
 // Sample Data
@@ -1687,9 +2032,24 @@ double X_median_na = median(X);
 
 ---
 
-### Special Operations
+### Special Operations {#sugar-special-ops}
 
 #### rev( X ) {#rev}
+
+- Reverse the position of the elements within the vector.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- Example:
+
+```{Rcpp}
+// Sample data
+NumericVector A = NumericVector::create(1, 10, 100, 1000, 10000);
+
+// --- Reverse the vector
+NumericVector B = rev(A);
+// Output: 10000  1000   100    10     1
+```
 
 ----
 
@@ -1704,36 +2064,58 @@ double X_median_na = median(X);
   
 - For instance, the parallel minimum of X = 0, 1 and Y = 2, -3 would be Z = 0, -3.
 
-- Examples
+- Examples:
 
 ```{Rcpp}
 // Sample Data
-NumericVector x = NumericVector::create(1,3,2,4,6,5);
-NumericVector y = NumericVector::create(2,1,3,5,4,6);
+NumericVector A = NumericVector::create(1,3,2,4,6,5);
+NumericVector B = NumericVector::create(2,1,3,5,4,6);
 
 // --- Parallel Maximum
 
 // Scalar and Vector
-NumericVector z = pmax(2, x);
+NumericVector C = pmax(2, A);
 // Output: 2 3 2 4 6 5
 
 // Two vectors
-NumericVector z2 = pmax(x, y);
+NumericVector D = pmax(A, B);
 // Output: 2 3 3 5 6 6
 
 // --- Parallel Minimum
 
 // Scalar and Vector
-NumericVector z = pmin(2, x);
+NumericVector E = pmin(2, A);
 // Output: 1 2 2 2 2 2
 
 // Two vectors
-NumericVector z2 = pmin(x, y);
+NumericVector F = pmin(A, B);
 // Output: 1 1 2 4 4 5
 ```
 
-#### clamp( X , A , B ) {#clamp}
+#### clamp( min , X , max ) {#clamp}
 
+- Bound elements of `X` between `min` and `max` by replacing the element by
+  the boundary if $X < min$ or $X > max$.
+  
+- An alternate version of this function can be obtained with 
+  `pmax(min, pmin(X, max) )`.
+
+- Example:
+
+```{Rcpp}
+// Sample Data
+NumericVector A = NumericVector::create(-3.4, 5.1, -8.1, 10.8, 2.9, 4.3, 15.5);
+
+// --- Clamp values
+
+// Remove negative values and any value above 10
+NumericVector C = clamp(0.0, A, 10.0);
+// Output: 0.0 5.1 0.0 10.0 2.9 4.3 10.0
+```
+
+- See also:
+   - [Rcpp Gallery: Using the Rcpp sugar function `clamp`](http://gallery.rcpp.org/articles/sugar-function-clamp/)
+   - [`pmax`, `pmin`](#pext)
 
 ----
 
@@ -1741,10 +2123,11 @@ NumericVector z2 = pmin(x, y);
 
 |                     |                    |
 |:--------------------|:-------------------|
-| **which_max( X )**  | **which_min( X )** |
+| **which_min( X )**  | **which_max( X )** |
 
-- Provides the position in the vector of the maximum or minimum value of a 
-  `NumericVector`.
+- Provides the position in the vector of the minimum or maximum value.
+
+- All types are supported of a `Vector` or a `Matrix`.
 
 - Examples:
 
@@ -1752,14 +2135,17 @@ NumericVector z2 = pmin(x, y);
 // Sample data
 NumericVector x = NumericVector::create(3.2, 5.2, -9.7, 4.3, 8.8);
 
-// Return index for max value
-int y = which_max(x);
-// Output: 4 (because C++ indices starts at 0!)
-
 // Return index for min value
-int y2 = which_min(x);
+int y = which_min(x);
 // Output: 2 (because C++ indices starts at 0!)
+
+// Return index for max value
+int y2 = which_max(x);
+// Output: 4 (because C++ indices starts at 0!)
 ```
+
+- See also:
+   - [`min`, `max`](#min-max)
 
 ----
 
@@ -1845,12 +2231,79 @@ IntegerVector z_out = table(z);
 
 ----
 
-#### setdiff(X, Y) {#setdiff}
+### Set Operations {#sugar-set-ops}
 
+#### setequal(X, Y) {#setequal}
 
 ----
 
-### Object Creation {#sugarobject}
+#### intersect(X, Y) {#intersect}
+
+----
+
+#### union_(X, Y) {#union}
+
+----
+
+#### setdiff(X, Y) {#setdiff}
+
+----
+
+
+### Matrix Operations {#sugar-matrix-ops}
+
+#### Row and Column Sums {#matrix-sum}
+
+|                          |                          |
+|:-------------------------|:-------------------------|
+| **colSums( X , na_rm)**  | **rowSums( X , na_rm )** |
+
+----
+
+#### Row and Column Means {#matrix-mean}
+
+|                           |                          |
+|:--------------------------|:-------------------------|
+| **colMeans( X , na_rm)**  | **rowMeans( X , na_rm)** |
+
+----
+
+#### outer( X , Y , operator) {#outer}
+
+----
+
+#### Triangle Matrix Views {#tri-mat}
+
+|                           |                           |
+|:--------------------------|:--------------------------|
+| **lower_tri( X , diag)**  | **upper_tri( X , diag )** |
+
+- Creates a `Matrix` of `Logical` values of the same dimensions as the supplied
+  `Matrix` with values in the lower or upper triangle portion being `true`.
+  
+- Supported types are `Numeric`, `Logical`, `Complex`, `Raw`, `Character`, 
+  `String`, and `Generic` of the `Matrix` class.
+
+- By default, the `diag` parameter is `false` and, therefore, does _not_ 
+  include the diagonal.
+
+- Examples:
+
+----
+
+#### diag( X ) {#diag}
+
+----
+
+#### Matrix Indexes {#idx-mat}
+
+|               |              |
+|:--------------|:-------------|
+| **row( X )**  | **col( X )** |
+
+----
+
+### Object Creation {#sugar-object-creation}
 
 #### cbind {#cbind}
 
@@ -1945,7 +2398,6 @@ IntegerVector B = seq_along(A);
 // Generates a vector of specified length
 IntegerVector C = seq_len(5);
 // Output: 1 2 3 4 5
-
 ```
 
 
@@ -1974,7 +2426,7 @@ NumericVector D = rep_len(A, 5);
 
 ----
 
-## Statistical Distributions {#statdist}
+## Statistical Distributions {#stat-dist}
 
 - There exists two approaches for working with statistical distribution functions
   within Rcpp. The approaches differ on how the result is returned. Specifically,
@@ -1993,9 +2445,9 @@ NumericVector D = rep_len(A, 5);
   each draw can be customized.
 
 
-### Discrete Distributions {#discretedist}
+### Discrete Distributions {#discrete-dist}
 
-#### Binomial Distribution {#bindist}
+#### Binomial Distribution {#bin-dist}
 
 |                                                 |
 |:------------------------------------------------|
@@ -2024,7 +2476,7 @@ int rdraw = R::rbinom(46, 100);
 ```
 
 
-#### Geometric Distribution {#geodist}
+#### Geometric Distribution {#geo-dist}
 
 |                                       |
 |:--------------------------------------|
@@ -2051,7 +2503,7 @@ int qval     = R::qgeom(0.578125, .25, true, false);
 int rdraw    = R::rgeom(.25);
 ```
 
-#### Hypergeometric Distribution {#hypergeodist}
+#### Hypergeometric Distribution {#hypergeo-dist}
 
 |                                            |
 |:-------------------------------------------|
@@ -2078,7 +2530,7 @@ int qval     = R::qhyper(0.4193747, 10, 7, 8, true, false);
 int rdraw    = R::rhyper(10, 7, 8);
 ```
 
-#### Negative Binomial Distribution {#negbindist}
+#### Negative Binomial Distribution {#negbin-dist}
 
 |                                                  |
 |:-------------------------------------------------|
@@ -2105,7 +2557,7 @@ double qval  = R::qnbinom(0.242, 100, .5, true, false);
 int rdraw    = R::rnbinom(46, 100);
 ```
 
-#### Poisson Distribution {#poisdist}
+#### Poisson Distribution {#pois-dist}
 
 |                                         |
 |:----------------------------------------|
@@ -2144,7 +2596,7 @@ double qval  = R::qpois(0.242, 4, true, false);
 int rdraw    = R::rpois(46);
 ```
 
-### Wilcox Distribution {#wilcoxdist}
+### Wilcox Distribution {#wilcox-dist}
 
 |                                          |
 |:-----------------------------------------|
@@ -2167,7 +2619,7 @@ int rdraw    = R::rpois(46);
 - Examples:
 
 
-### Wilcoxon Signed Rank Distribution {#signeddist}
+### Wilcoxon Signed Rank Distribution {#signed-dist}
 
 |                                         |
 |:----------------------------------------|
@@ -2177,9 +2629,9 @@ int rdraw    = R::rpois(46);
 | **rsignrank(NN, N)**                    |
 
 
-### Continuous Distributions {#contdist}
+### Continuous Distributions {#continuous-dist}
 
-#### Beta Distribution {#betadist}
+#### Beta Distribution {#beta-dist}
 
 |                                                 |
 |:------------------------------------------------|
@@ -2219,7 +2671,7 @@ double rdraw = R::rbeta(1.0, 1.0);
 ```
 
 
-#### Cauchy Distribution {#cauchydist}
+#### Cauchy Distribution {#cauchy-dist}
 
 |                                                    |
 |:---------------------------------------------------|
@@ -2259,7 +2711,7 @@ double rdraw = R::rcauchy(0.0, 1.0);
 ```
 
 
-#### Chi-square Distribution {#chisquaredist}
+#### Chi-square Distribution {#chisquare-dist}
 
 |                                      |
 |:-------------------------------------|
@@ -2298,7 +2750,7 @@ double qval  = R::qchisq(0.22, 2, true, false);
 double rdraw = R::rchisq(2);
 ```
 
-#### Non-central Chi-square Distribution {#nchisquaredist}
+#### Non-central Chi-square Distribution {#nchisquare-dist}
 
 |                                            |
 |:-------------------------------------------|
@@ -2335,7 +2787,7 @@ double pval  = R::pnchisq(0.5, 2, true, false);
 double qval  = R::qnchisq(0.22, 2, true, false);
 ```
 
-#### Exponential Distribution {#expdist}
+#### Exponential Distribution {#exp-dist}
 
 |                                      |
 |:-------------------------------------|
@@ -2377,7 +2829,7 @@ double rdraw = R::rexp(2);
 ```
 
 
-#### F Distribution {#fdist}
+#### F Distribution {#f-dist}
 
 |                                        |
 |:---------------------------------------|
@@ -2417,8 +2869,11 @@ double qval  = R::qf(0.49, 1.0, 5.0, true, false);
 double rdraw = R::rf(1.0, 5.0);
 ```
 
+#### Non-central F Distribution {#nf-dist}
 
-#### Gamma Distribution {#gammadist}
+
+
+#### Gamma Distribution {#gamma-dist}
 
 |                                               |
 |:----------------------------------------------|
@@ -2458,7 +2913,7 @@ double qval  = R::qgamma(0.393, 1.0, 1.0, true, false);
 double rdraw = R::rgamma(1.0, 1.0);
 ```
 
-### Normal Distribution {#normaldist}
+### Normal Distribution {#normal-dist}
 
 |                                           |
 |:------------------------------------------|
@@ -2500,7 +2955,7 @@ double rdraw = R::rnorm(0.0, 1.0);
 ```
 
 
-### Log Normal Distribution {#lognormaldist}
+### Log Normal Distribution {#lognormal-dist}
 
 |                                                  |
 |:-------------------------------------------------|
@@ -2541,7 +2996,7 @@ double qval  = R::qlnorm(0.0452, 0.0, 1.0, true, false);
 double rdraw = R::rlnorm(0.0, 1.0);
 ```
 
-### Logistic Distribution {#logisticdist}
+### Logistic Distribution {#logistic-dist}
 
 |                                                   |
 |:--------------------------------------------------|
@@ -2583,15 +3038,15 @@ double rdraw = R::rlogis(0.0, 1.0);
 ```
 
 
-### Student's T Distribution {#tdist}
+### Student's T Distribution {#t-dist}
 
 **rt()**
 
-### Uniform Distribution {#unifdist}
+### Uniform Distribution {#unif-dist}
 
 **runif()**
 
-### Weibull Distribution {#weibulldist}
+### Weibull Distribution {#weibull-dist}
 
 **rweibull()**
 
