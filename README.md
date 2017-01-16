@@ -21,25 +21,28 @@ Each section should contain:
 
 - Name of data type or function
 - Comment as to what arguments are accepted 
-- Notes related to any limitations (e.g. 20 parameters) or C++ specific difference. 
+- Notes related to any limitations or C++ specific difference (e.g. 20 parameters for `::create()`) 
 - Examples that are written as if they are embedded within a function or main 
-  alongside their expected output in comment form.
+  alongside their expected output in comment form
+    - Vectors or matrices should be written in _uppercase_ and
+      follow a logical alphabetic naming progression (e.g. `A`, `B = 2*A`)
+    - Scalar should be written in _lowercase_ (e.g. `summed`, `val_summed`)
 
 The following sample echoes the above tenets 
 
 ```
-## sum( X ) {#sum}
+### sum( X ) {#sum}
 
 - Compute the overall summation of all elements.
 
-- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
+- Supported types are `Numeric`, `Integer`, or `Logical` in a `Vector` or `Matrix`. 
 
 - Examples:
 
 // Sample data
-NumericVector x = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
+NumericVector X = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
 
-double y = sum(x);
+double val_sum = sum(X);
 // Output: 35.1
 
 - See also:
