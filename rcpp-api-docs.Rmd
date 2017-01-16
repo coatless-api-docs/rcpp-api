@@ -219,7 +219,7 @@ for maximum flexibility.
 | [`table`](#table)        | Create a frequency table of occurrences                        |
 
 
-**[Set Operations](#sugar-set-ops)
+**[Set Operations](#sugar-set-ops)**
 
 |                           |                                          |
 |:--------------------------|:-----------------------------------------|
@@ -229,7 +229,7 @@ for maximum flexibility.
 | [`setdiff`](#setdiff)     | Asymmetric Difference of Set Values      |
 
 
-**[Matrix Operations](#sugar-matrix-ops)
+**[Matrix Operations](#sugar-matrix-ops)**
 
 |                            |                                                |
 |:---------------------------|:-----------------------------------------------|
