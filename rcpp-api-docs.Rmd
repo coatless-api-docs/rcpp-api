@@ -72,6 +72,7 @@ for maximum flexibility.
 |  [Matrix<*RTYPE*>, NumericMatrix, IntegerMatrix, ...](#matrix)  | Matrix class       |
 |  [List](#list)                                                  | List typedef       |
 |  [DataFrame](#dataframe)                                        | Data frame class   |
+|  [RObject](#robject)                                            | RObject class      |
 
 ## Member functions
 
@@ -598,7 +599,7 @@ List F = List::create(Named("v1") = F,
   which is a special extension of the templated `Vector` class
   that allows for a collection of heterogenous `Vector`'s of the same length.
   As the crux of the implementation of is
-  [policy-based design based](https://en.wikipedia.org/wiki/Policy-based_design), 
+  [policy-based design](https://en.wikipedia.org/wiki/Policy-based_design) focused, 
   much of the behavior of `DataFrame` is determined by the policy classes it 
   inherits from 
   
@@ -645,6 +646,47 @@ DataFrame G = DataFrame::create(Named("C") = C,
     - [`Vector`](#vector)
     - [DataFrame `typedef`](http://dirk.eddelbuettel.com/code/rcpp/html/DataFrame_8h.html)
     - [`DataFrame_Impl` class](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1DataFrame__Impl.html)
+    - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
+
+
+### RObject {#robject}
+
+- The `RObject` data structure is a typedef of the `RObject_Impl` class. Principally,
+  the class can be viewed as the glue of Rcpp due to [policy-based design](https://en.wikipedia.org/wiki/Policy-based_design)
+  principles. In turn, the `RObject` class really acts as a "shell" that stores
+  properties of the following policies:
+
+    - `PreserveStorage`: Member functions that provide the `SEXP` _R_ object
+       alongside ways to modify and update the object.
+    - `SlotProxyPolicy`: Member functions related to _only_ manipulating S4 
+       objects.
+    - `AttributeProxyPolicy`: Member functions that modify attribute information
+       of the _R_ object.
+    - `RObjectMethods`: Member functions that provide descriptors of the _R_ 
+       object such as type, object oriented programming (S3/S4) system, and 
+       `NULL` status.
+    
+- Constructors:
+
+ 	- `RObject()`
+ 	- `RObject(const RObject &other)`
+ 	- `RObject(const GenericProxy<Proxy> &proxy)`
+
+- Examples:
+
+```{Rcpp}
+// Extract attribute information via AttributeProxyPolicy
+RObject A;
+RObject B = A.attr("dim");
+```
+
+- See also:
+    - [Modern C++ Design](http://en.wikipedia.org/wiki/Modern_C++_Design)
+    - [`RObject_Impl` class](http://dirk.eddelbuettel.com/code/rcpp/html/RObject_8h.html)
+    - [`RObjectMethods` class](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1RObjectMethods.html)
+    - [`StoragePolicy` class](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1StoragePolicy.html)
+    - [`SlotProxyPolicy` class](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1SlotProxyPolicy.html)
+    - [`AttributeProxyPolicy` class](http://dirk.eddelbuettel.com/code/rcpp/html/classRcpp_1_1AttributeProxyPolicy.html)
     - [`typedef` at cppreference.com](http://en.cppreference.com/w/cpp/language/typedef)
 
 ## Member Functions {#member-functions}
@@ -3050,4 +3092,40 @@ double rdraw = R::rlogis(0.0, 1.0);
 
 **rweibull()**
 
+# Appendix
+
+
+## RTYPES
+
+| RTYPE |  SEXPTYPE    |	Description                                              |
+|:------|:-------------|:----------------------------------------------------------|	
+| 0     | `NILSXP`     | `NULL`                                                    |
+| 1     | `SYMSXP`     | symbols                                                   |
+| 2     | `LISTSXP`    | pairlists                                                 |
+| 3     | `CLOSXP`     | closures                                                  |
+| 4     | `ENVSXP`     | environments                                              |
+| 5     | `PROMSXP`    | promises                                                  |
+| 6     | `LANGSXP`    | language objects                                          |
+| 7     | `SPECIALSXP` | special functions                                         |
+| 8     | `BUILTINSXP` | builtin functions                                         |
+| 9     | `CHARSXP`    | internal character strings                                |
+| 10    | `LGLSXP`     | `logical` vectors                                         |
+| 13    | `INTSXP`     | `integer` vectors                                         |
+| 14    | `REALSXP`    | `numeric` vectors                                         |
+| 15    | `CPLXSXP`    | `complex` vectors                                         |
+| 16    | `STRSXP`     | `character` vectors                                       |
+| 17    | `DOTSXP`     | dot-dot-dot object                                        |
+| 18    | `ANYSXP`     | make "any" args work                                      |
+| 19    | `VECSXP`     | `list` (`generic` vector)                                 |
+| 20    | `EXPRSXP`    | `expression` vector                                       |
+| 21    | `BCODESXP`   | byte code                                                 |
+| 22    | `EXTPTRSXP`  | external pointer                                          |
+| 23    | `WEAKREFSXP` | weak reference                                            |
+| 24    | `RAWSXP`     | `raw` vector                                              |
+| 25    | `S4SXP`      | `S4` classes not of simple type                           |
+| 99    | `FUNSXP`     | functions of type `CLOSXP`, `SPECIALSXP` and `BUILTINSXP` |
+
+- See also:
+    - [SEXPTYPEs on the official R Release documentation](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#SEXPTYPEs)
+    - [The data types explained on the official R Release documentation](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#The-_0027data_0027)
 
