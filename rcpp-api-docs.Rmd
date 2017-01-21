@@ -110,32 +110,32 @@ for maximum flexibility.
 
 **[Data Operations](#sugar-data-ops)**
 
-|                       |                               |
-|:----------------------|:------------------------------|
-| [`head`](#prev-data)  | View the first _n_ values     |
-| [`tail`](#prev-data)  | View the last _n_ values      |
-| [`abs`](#abs)         | Absolute Value                |
-| [`sqrt`](#sqrt)       | Square Root                   |
-| [`sum`](#sum)         | Summation                     |
-| [`diff`](#diff)       | Lagged Difference             |
-| [`cumsum`](#carth)    | Cumulative Sum                |
-| [`cumprod`](#carth)   | Cumulative Product            |
-| [`cummin`](#cext)     | Cumulative Minimum            |
-| [`cummax`](#cext)     | Cumulative Maximum            |
-| [`sin`](#trig)        | Sine                          |
-| [`cos`](#trig)        | Cosine                        |
-| [`tan`](#trig)        | Tangent                       |
-| [`asin`](#trig)       | Arc Sine                      |
-| [`acos`](#trig)       | Arc Cosine                    |
-| [`atan`](#trig)       | Arc Tangent                   |
-| [`sinh`](#trig)       | Hyperbolic Sine               |
-| [`cosh`](#trig)       | Hyperbolic Cosine             |
-| [`tanh`](#trig)       | Hyperbolic Tangent            |
-| [`log`](#logexp)      | Natural Logarithms            |
-| [`exp`](#logexp)      | Expoential                    |
-| [`log10`](#logexp)    | Base 10 Logarithm             |
-| [`log1p`](#logexp)    | Natural Logarithm $log(1+x)$  |
-| [`expm1`](#logexp)    | $\exp(x) - 1$                 |
+|                             |                               |
+|:----------------------------|:------------------------------|
+| [`head`](#first-last-elems) | View the first _n_ values     |
+| [`tail`](#first-last-elems) | View the last _n_ values      |
+| [`abs`](#abs)               | Absolute Value                |
+| [`sqrt`](#sqrt)             | Square Root                   |
+| [`sum`](#sum)               | Summation                     |
+| [`diff`](#diff)             | Lagged Difference             |
+| [`cumsum`](#carth)          | Cumulative Sum                |
+| [`cumprod`](#carth)         | Cumulative Product            |
+| [`cummin`](#cext)           | Cumulative Minimum            |
+| [`cummax`](#cext)           | Cumulative Maximum            |
+| [`sin`](#trig)              | Sine                          |
+| [`cos`](#trig)              | Cosine                        |
+| [`tan`](#trig)              | Tangent                       |
+| [`asin`](#trig)             | Arc Sine                      |
+| [`acos`](#trig)             | Arc Cosine                    |
+| [`atan`](#trig)             | Arc Tangent                   |
+| [`sinh`](#trig)             | Hyperbolic Sine               |
+| [`cosh`](#trig)             | Hyperbolic Cosine             |
+| [`tanh`](#trig)             | Hyperbolic Tangent            |
+| [`log`](#logexp)            | Natural Logarithms            |
+| [`exp`](#logexp)            | Expoential                    |
+| [`log10`](#logexp)          | Base 10 Logarithm             |
+| [`log1p`](#logexp)          | Natural Logarithm $log(1+x)$  |
+| [`expm1`](#logexp)          | $\exp(x) - 1$                 |
 
 
 **[Rounding of Numbers](#sugar-rounding)**
@@ -1540,11 +1540,29 @@ ComplexVector B = Conj(A);
 ### Data Operations {#sugar-data}
 
 
-#### Preview Data {#prev-data}
+#### First or Last Elements {#first-last-elems}
 
 |                   |                   |
 |:------------------|:------------------|
-| **head( X , N )** | **tail( X , N )** |
+| **head( X , n )** | **tail( X , n )** |
+
+- Obtain the first or last _n_ observations using `head` or `tail`.
+
+- All types of a `Vector` or `Matrix` are supported.
+
+- Example:
+
+```{Rcpp}
+NumericVector A = NumericVector::create(1,3,5,7,9,11);
+
+// Retrieve the first two elements
+NumericVector B = head(A, 2);
+// Output: 1 3
+
+// Retrieve the last two elements
+NumericVector C = tail(A, 2);
+// Output: 9 11
+```
 
 ----
 
