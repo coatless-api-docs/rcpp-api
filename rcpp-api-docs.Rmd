@@ -525,7 +525,7 @@ NumericMatrix G = clone(F);
   
 - Examples:
 
-```{Rcpp rcpp_vector_ctor}
+```{Rcpp rcpp_list_ctor}
 SEXP A;
 List B(A); // from a SEXP
 
@@ -628,7 +628,7 @@ List F = List::create(Named("v1") = F,
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp rcpp_dataframe_ctor}
 SEXP A;
 DataFrame B(A); // from a SEXP
 
@@ -675,7 +675,7 @@ DataFrame G = DataFrame::create(Named("C") = C,
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp robject_example}
 // Extract attribute information via AttributeProxyPolicy
 RObject A;
 RObject B = A.attr("dim");
@@ -721,7 +721,7 @@ RObject B = A.attr("dim");
 
 - Examples:
  
-```{Rcpp}
+```{Rcpp sugar_math_ops}
 // Sample data
 NumericVector A = NumericVector::create(1, 2, 3, 4);
 NumericVector B = NumericVector::create(2, 3, 4, 5);
@@ -784,7 +784,7 @@ NumericVector res = 3.0 * A - 1.0 / B + A + B + 5.0;
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp dimensional_info}
 // --- Vector Example
 NumericVector X(3);
 
@@ -853,7 +853,7 @@ Rcout << "Matrix Y has " << rows << " rows and " << cols << " columns." << std::
   
 - Examples:
 
-```{Rcpp}
+```{Rcpp position_access}
 // Create data 
 NumericVector A = NumericVector::create(1, 2, 3, 4);
 CharacterVector C = CharacterVector::create("B", "D", "E", "F");
@@ -925,7 +925,7 @@ NumericVector E = DF[0];
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp string_access}
 // Create sample data
 NumericVector A = NumericVector::create(Named("Go") = 3,
                                         Named("To") = 4,
@@ -1003,7 +1003,7 @@ double val_lions = I["Lions"];
 
 - Examples: 
 
-```{Rcpp}
+```{Rcpp logical_access}
 // Sample data
 NumericVector A = NumericVector::create(4, 3, 1, 2);
 // Output: 4 3 1 2
@@ -1147,7 +1147,7 @@ A[B] = D;
 
 - Examples: 
           
-```{Rcpp, cbind}
+```{Rcpp static_create}
 // Construct a vector
 NumericVector A = NumericVector::create(4.2, 1.9, 2, 3.5);
 // Output: 4.2 1.9 2.0 3.5
@@ -1236,7 +1236,7 @@ DataFrame F = DataFrame::create(Named("A") = A,
   the vectors are of different lengths. In said cases, an error will be raised
   at runtime indicating the length difference.
 
-```{Rcpp}
+```{Rcpp vectorized_ifelse}
 // Create data
 NumericVector A = NumericVector::create(5, 1, 8, 3);
 NumericVector B = NumericVector::create(2, 4, 6, 11);
@@ -1266,7 +1266,7 @@ NumericVector D = ifelse(A > B, A, 2);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp single_logical}
 IntegerVector A = seq_len(3);
 // Output: 1 2 3
 IntegerVector B = clone(A) - 1;
@@ -1299,7 +1299,7 @@ bool check_state_false = is_false( any(A > B) );
   
 - Examples: 
 
-```{Rcpp, all}
+```{Rcpp logical_all}
 NumericVector x = NumericVector::create(1.0, 2.0, 3.0, 4.0);
 
 Rcout
@@ -1354,7 +1354,7 @@ Rcout
   
 - Examples: 
 
-```{Rcpp, any}
+```{Rcpp logical_any}
 NumericVector x = NumericVector::create(1.0, 2.0, 3.0, 4.0);
 
 Rcout
@@ -1418,7 +1418,7 @@ Rcout
 
 - Example:
 
-```{Rcpp}
+```{Rcpp complex_components}
 // Create complex numbers
 Rcomplex x, y;
 
@@ -1454,7 +1454,7 @@ NumericVector C = Im(A);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp complex_modulus}
 // Create complex numbers
 Rcomplex x, y;
 
@@ -1479,7 +1479,7 @@ NumericVector B = Mod(A);
   of the real axis to the line segment connecting the origin and the point in 
   the complex plane (theta in polar coordinates).
 
-- Definition: $$\theta = \arctan\left({\frac{y}{x}}\right)$$
+- Definition: $$\theta = \arctan\left({\frac{y}{x} }\right)$$
 
 - *X* must be stored within a `Vector` or `Matrix` of type `Complex`. The 
   return type is a `NumericVector` regardless of whether a `Vector` or `Matrix`
@@ -1487,7 +1487,7 @@ NumericVector B = Mod(A);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp complex_arg}
 // Create complex numbers
 Rcomplex x, y;
 
@@ -1517,7 +1517,7 @@ NumericVector B = Arg(A);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp complex_conjugate}
 // Create complex numbers
 Rcomplex x, y;
 
@@ -1553,7 +1553,7 @@ ComplexVector B = Conj(A);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp pop_elements}
 NumericVector A = NumericVector::create(1, 3, 5, 7, 9, 11);
 
 // Retrieve the first two elements
@@ -1581,7 +1581,7 @@ X,  &\text{if} X \ge 0 \\
 
 - Example:
 
-```{Rcpp}
+```{Rcpp absolute_val}
 // Sample data
 NumericVector x = NumericVector::create(-2.8, 5.3, 7, -4, 0);
 
@@ -1602,7 +1602,7 @@ NumericVector y = abs(x);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp sqrt_val}
 // Sample data
 NumericVector x = NumericVector::create(0.0, 1.0, 2.5, 5.0, 9.0);
 
@@ -1616,14 +1616,14 @@ NumericVector y = sqrt(x);
 
 - Calculate the overall summation of all elements. 
 
-- Definition: $$Y = \sum\limits_{i = 1}^n {{X_i}} $$
+- Definition: $$Y = \sum\limits_{i = 1}^n { {X_i} } $$
 
 - Supported types to perform the operation are `Numeric` or `Integer`
   of a `Vector` or `Matrix`. 
 
 - Example:
 
-```{Rcpp}
+```{Rcpp sum_val}
 // Sample data
 NumericVector A = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
 
@@ -1652,7 +1652,7 @@ double val_summed = sum(A);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp sign_val}
 // Create some sample data
 NumericVector A = NumericVector::create(-1, 0, 1, -3.4, 42);
 
@@ -1669,13 +1669,13 @@ NumericVector B = sign(A);
 - Obtain the difference between sucessive `Vector` elements by 
   $(i+1)$^th^ and the _i_-^th^ element.
   
-- Definition: $$ \nabla {X_i} = {X_{i + 1}} - {X_i} $$
+- Definition: $$ \nabla {X_i} = {X_{i + 1} } - {X_i} $$
   
 - Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
 
 - Example:
 
-```{Rcpp}
+```{Rcpp diff_val}
 // Create some sample data
 NumericVector A = NumericVector::create(-2, 0, 0.5, -1, 2.5, 4.75);
 
@@ -1722,7 +1722,7 @@ NumericVector B = diff(A);
   
 - Examples: 
 
-```{Rcpp}
+```{Rcpp cumarith}
 NumericVector x = NumericVector::create(1, 2, 3, 4, 5);
 NumericVector cs = cumsum(x), cp = cumprod(x);
 
@@ -1832,7 +1832,7 @@ NumericVector Y3 = cosh(X);
 - Traditional use case:
    - `log( X )` computes the natural logarithm sometimes representated as $\ln(X)$
    - `log10( X )` computes the base 10 logarithm.
-   - `exp( X )` computes the exponential function given by: \[\exp \left( X \right) = \mathop {\lim }\limits_{n \to \infty } {\left( {1 + \frac{X}{n}} \right)^n} = \sum\limits_{k = 0}^\infty  {\frac{{{X^k}}}{{k!}}} \]
+   - `exp( X )` computes the exponential function given by: \[\exp \left( X \right) = \mathop {\lim }\limits_{n \to \infty } {\left( {1 + \frac{X}{n} } \right)^n} = \sum\limits_{k = 0}^\infty  {\frac{ { {X^k} } }{ {k!} } } \]
 
 - Special use cases:
    - `log1p( X )` computes $\log( 1 + X )$ accurately for $\left|X\right| << 1$.
@@ -1840,7 +1840,7 @@ NumericVector Y3 = cosh(X);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp rcpp_logs_and_exp}
 // Create some sample data
 NumericVector A = NumericVector::create(-1, 0, 1, 2.3);
 
@@ -1893,7 +1893,7 @@ colnames(I) = CharacterVector::create("X", "log(1+X)","log1p(X)", "exp(X)+1", "e
 
 ### Rounding of Numbers {#sugar-rounding}
 
-#### Ceiling {#rounding}
+#### Ceiling {#ceil}
 
 |                        |                         |
 |:-----------------------|:------------------------|
@@ -1909,7 +1909,7 @@ colnames(I) = CharacterVector::create("X", "log(1+X)","log1p(X)", "exp(X)+1", "e
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp ceil_val}
 // Create some sample data
 NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
 
@@ -2016,7 +2016,7 @@ NumericVector C = ceil(A);
 
 - Examples 
 
-```{Rcpp}
+```{Rcpp sample_nas}
 // Create an NA value for each type
 NumericVector A   = NumericVector::create(NA_REAL);
 IntegerVector B   = IntegerVector::create(NA_INTEGER);
@@ -2061,7 +2061,7 @@ List E = List::create(A, B, C, D);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp is_na_v_nan}
 NumericVector X = NumericVector::create(R_NaN, 1, NA_REAL, 3 ) ;
 
 LogicalVector result_na = is_na( X );
@@ -2142,7 +2142,7 @@ LogicalVector result_nan = is_nan( X );
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp min_v_max}
 // Sample Data
 NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
 
@@ -2163,7 +2163,7 @@ double X_min = minx(X);
 
 - Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
 
-```{Rcpp}
+```{Rcpp range_vals}
 // Sample Data
 NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
 
@@ -2181,7 +2181,7 @@ NumericVector X_range = range(X);
 
 - Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
 
-```{Rcpp}
+```{Rcpp mean_val}
 // Sample Data
 NumericVector X = NumericVector::create(3, 4, 9, 5, 1, 2);
 
@@ -2202,7 +2202,7 @@ double X_mean = mean(X);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp median_val}
 // Sample Data
 NumericVector X = NumericVector::create(3,4,9,5,NA_REAL,1,2);
 
@@ -2236,7 +2236,7 @@ double X_median_na = median(X);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp rev_vec}
 // Sample data
 NumericVector A = NumericVector::create(1, 10, 100, 1000, 10000);
 
@@ -2260,7 +2260,7 @@ NumericVector B = rev(A);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp parallel_ext}
 // Sample Data
 NumericVector A = NumericVector::create(1,3,2,4,6,5);
 NumericVector B = NumericVector::create(2,1,3,5,4,6);
@@ -2296,7 +2296,7 @@ NumericVector F = pmin(A, B);
 
 - Example:
 
-```{Rcpp}
+```{Rcpp clamp_val}
 // Sample Data
 NumericVector A = NumericVector::create(-3.4, 5.1, -8.1, 10.8, 2.9, 4.3, 15.5);
 
@@ -2325,7 +2325,7 @@ NumericVector C = clamp(0.0, A, 10.0);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp ids_min_v_max}
 // Sample data
 NumericVector x = NumericVector::create(3.2, 5.2, -9.7, 4.3, 8.8);
 
@@ -2371,7 +2371,7 @@ int y2 = which_max(x);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp unique_v_duplicates}
 // Sample data
 CharacterVector x = CharacterVector::create("a","b","c","a","b","c","a");
 
@@ -2394,7 +2394,7 @@ CharacterVector x_unique = unique(x);
 
 - Examples:
 
-```{Rcpp}
+```{Rcpp rcpp_table}
 // Needs to have a way to extract what value is represented at each position
 // names attribute? 
 
