@@ -112,11 +112,12 @@ for maximum flexibility.
 
 |                             |                               |
 |:----------------------------|:------------------------------|
-| [`head`](#first-last-elems) | View the first _n_ values     |
-| [`tail`](#first-last-elems) | View the last _n_ values      |
+| [`head`](#first-last-elems) | View the First _n_ Values     |
+| [`tail`](#first-last-elems) | View the Last _n_ Values      |
 | [`abs`](#abs)               | Absolute Value                |
 | [`sqrt`](#sqrt)             | Square Root                   |
 | [`sum`](#sum)               | Summation                     |
+| [`sign`](#sign)             | Extract the Sign of Values    |
 | [`diff`](#diff)             | Lagged Difference             |
 | [`cumsum`](#carth)          | Cumulative Sum                |
 | [`cumprod`](#carth)         | Cumulative Product            |
@@ -1553,7 +1554,7 @@ ComplexVector B = Conj(A);
 - Example:
 
 ```{Rcpp}
-NumericVector A = NumericVector::create(1,3,5,7,9,11);
+NumericVector A = NumericVector::create(1, 3, 5, 7, 9, 11);
 
 // Retrieve the first two elements
 NumericVector B = head(A, 2);
@@ -1570,8 +1571,13 @@ NumericVector C = tail(A, 2);
 
 - Obtain the absolute value of all elements.
 
-- Supported types to perform the operation are `Integer` or `Numeric` of 
-  a `Vector` or `Matrix`. 
+- Definition: \[ \left| X \right| = \begin{cases}
+X,  &\text{if} X \ge 0 \\
+-X, &\text{if} X < 0
+\end{cases}\]
+
+- Supported types to perform the operation are `Numeric` or `Integer`
+  of a `Vector` or `Matrix`. 
 
 - Example:
 
@@ -1587,7 +1593,12 @@ NumericVector y = abs(x);
 
 #### sqrt( X ) {#sqrt}
 
-- Compute the square root of all elements in a `Vector` or `Matrix`.
+- Compute the square root of all elements.
+
+- Definition: \[ \sqrt{X} = X^{1/2}\]
+
+- Supported types to perform the operation are `Numeric`, `Integer`, or `Complex`
+  of a `Vector` or `Matrix`. 
 
 - Example:
 
@@ -1603,11 +1614,14 @@ NumericVector y = sqrt(x);
 
 #### sum( X ) {#sum}
 
-- Calculate the overall summation of all elements in a `Vector` or `Matrix`. 
+- Calculate the overall summation of all elements. 
 
-- Definition: $$ \sum\limits_{i = 1}^n {{X_i}} $$
+- Definition: $$Y = \sum\limits_{i = 1}^n {{X_i}} $$
 
-- Examples:
+- Supported types to perform the operation are `Numeric` or `Integer`
+  of a `Vector` or `Matrix`. 
+
+- Example:
 
 ```{Rcpp}
 // Sample data
@@ -1623,6 +1637,33 @@ double val_summed = sum(A);
 
 ----
 
+#### sign( X ) {#sign}
+
+- Determine the sign of a number or whether a number is positive, negative, or
+  zero.
+  
+- Definition: \[\operatorname{sgn} \left( X \right) = \begin{cases}
+-1, &\text{if} x < 0 \\
+0, &\text{if} x = 0 \\
+1, &\text{if} x > 0 
+\end{cases}\]
+
+- Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
+
+- Example:
+
+```{Rcpp}
+// Create some sample data
+NumericVector A = NumericVector::create(-1, 0, 1, -3.4, 42);
+
+// --- Obtain values of the sign
+
+NumericVector B = sign(A);
+// Output: -1  0  1 -1  1
+```
+
+----
+
 #### diff( X ) {#diff}
 
 - Obtain the difference between sucessive `Vector` elements by 
@@ -1630,7 +1671,9 @@ double val_summed = sum(A);
   
 - Definition: $$ \nabla {X_i} = {X_{i + 1}} - {X_i} $$
   
-- Supported types are `integer` and `numeric` of a `Vector` or `Matrix`.
+- Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
+
+- Example:
 
 ```{Rcpp}
 // Create some sample data
@@ -1780,6 +1823,72 @@ NumericVector Y3 = cosh(X);
 | **log( X )** | **log10( X )** | **log1p( X )** | 
 | **exp( X )** | **expm1( X )** |                |
 
+- Apply a function to each element
+
+- Usage:
+   - `vector_type Y = func(X)`
+   - `X` and `Y` must be of the same `vector_type`/`matrix_type`.
+
+- Traditional use case:
+   - `log( X )` computes the natural logarithm sometimes representated as $\ln(X)$
+   - `log10( X )` computes the base 10 logarithm.
+   - `exp( X )` computes the exponential function given by: \[\exp \left( X \right) = \mathop {\lim }\limits_{n \to \infty } {\left( {1 + \frac{X}{n}} \right)^n} = \sum\limits_{k = 0}^\infty  {\frac{{{X^k}}}{{k!}}} \]
+
+- Special use cases:
+   - `log1p( X )` computes $\log( 1 + X )$ accurately for $\left|X\right| << 1$.
+   - `expm1( X )` computes $\exp( X ) - 1$ accurately for $\left|X\right| << 1$.
+
+- Examples:
+
+```{Rcpp}
+// Create some sample data
+NumericVector A = NumericVector::create(-1, 0, 1, 2.3);
+
+// --- Log and Exp Functions
+
+// Obtain the exponential
+
+NumericVector B = exp(A);
+// Output: 0.3678794 1.0000000 2.7182818 9.9741825
+
+// Obtain the natural log, which should recover the initial values
+
+NumericVector C = log(B);
+// Output: -1.0  0.0  1.0  2.3
+
+// --- Compare implementations of log1p and expm1 vs. generic
+
+// Create input vector
+NumericVector D = no_init(10);
+
+// Fill the vector
+for(int i = 0; i < D.length(); ++i){
+    D[i] = std::pow(10.0, -1.0*( 1.0 + 2.0*(i+1.0) ) );
+}
+
+// Compute values according to definition
+NumericVector E = log(1 + D), F = log1p(D), G = exp(D)-1, H = expm1(D);
+
+// Bound values together
+NumericMatrix I = cbind(D, E, F, G, H);
+
+// Label columns
+colnames(I) = CharacterVector::create("X", "log(1+X)","log1p(X)", "exp(X)+1", "expm1(X)");
+
+// Output:
+//           X     log(1+X)     log1p(X)     exp(X)+1     expm1(X)
+//  [1,] 1e-03 9.995003e-04 9.995003e-04 1.000500e-03 1.000500e-03
+//  [2,] 1e-05 9.999950e-06 9.999950e-06 1.000005e-05 1.000005e-05
+//  [3,] 1e-07 1.000000e-07 1.000000e-07 1.000000e-07 1.000000e-07
+//  [4,] 1e-09 1.000000e-09 1.000000e-09 1.000000e-09 1.000000e-09
+//  [5,] 1e-11 1.000000e-11 1.000000e-11 1.000000e-11 1.000000e-11
+//  [6,] 1e-13 9.992007e-14 1.000000e-13 9.992007e-14 1.000000e-13
+//  [7,] 1e-15 1.110223e-15 1.000000e-15 1.110223e-15 1.000000e-15
+//  [8,] 1e-17 0.000000e+00 1.000000e-17 0.000000e+00 1.000000e-17
+//  [9,] 1e-19 0.000000e+00 1.000000e-19 0.000000e+00 1.000000e-19
+// [10,] 1e-21 0.000000e+00 1.000000e-21 0.000000e+00 1.000000e-21
+```
+
 ---
 
 ### Rounding of Numbers {#sugar-rounding}
@@ -1789,6 +1898,31 @@ NumericVector Y3 = cosh(X);
 |                        |                         |
 |:-----------------------|:------------------------|
 | **ceiling( X )**       | **ceil( X )**           | 
+
+- Compute the smallest integer value not less than the corresponding element of X.
+
+- Definition: \[\left\lceil X \right\rceil  = \min \left[ {n \in \mathbb{Z}|n \ge X} \right]\]
+
+- Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
+
+- **Note:** `ceil` is a mapping to `ceiling`.
+
+- Examples:
+
+```{Rcpp}
+// Create some sample data
+NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
+
+// --- Obtain the ceiling
+
+NumericVector B = ceiling(A);
+// Output: -3  2  3  1  0 -1  5
+
+// Same result 
+NumericVector C = ceil(A);
+// Output: -3  2  3  1  0 -1  5
+
+```
 
 ----
 
