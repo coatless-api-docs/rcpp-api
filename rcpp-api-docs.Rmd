@@ -1949,6 +1949,33 @@ NumericVector B = floor(A);
 
 #### trunc( X ) {#trunc}
 
+- Obtain the integers formed by truncating the values in X toward 0.
+
+- Definition: \[\operatorname{trunc}\left( X \right) = \begin{cases}
+               \left\lfloor X \right\rfloor, &\text{if} X > 0 \\
+               \left\lceil X \right\rceil, &\text{if} X < 0
+               \end{cases}
+               \]
+               
+- Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
+
+- Examples:
+
+```{Rcpp ceil_val}
+// Create some sample data
+NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
+
+// --- Obtain the truncated value
+
+NumericVector B = trunc(A);
+// Output: -3  2  2  0  0 -1  4
+```
+
+- See also:
+   - [`ceil`](#ceil)
+   - [`floor`](#floor)
+   - [Truncation](https://en.wikipedia.org/wiki/Truncation)
+
 ----
 
 #### round( X , digits ) {#round}
