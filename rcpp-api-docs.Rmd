@@ -1935,7 +1935,7 @@ NumericVector C = ceil(A);
 
 - Examples:
 
-```{Rcpp ceil_val}
+```{Rcpp floor_val}
 // Create some sample data
 NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
 
@@ -1961,7 +1961,7 @@ NumericVector B = floor(A);
 
 - Examples:
 
-```{Rcpp ceil_val}
+```{Rcpp trunc_val}
 // Create some sample data
 NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
 
@@ -1979,6 +1979,28 @@ NumericVector B = trunc(A);
 ----
 
 #### round( X , digits ) {#round}
+
+- Obtain a rounded number to specified number of decimal places.
+
+- The default value for `digits` is 0.
+
+- Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
+
+- Examples:
+
+```{Rcpp round_val}
+// Create some sample data
+NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
+
+// --- Obtain the round values
+
+// Default rounds to no decimal places
+NumericVector B = round(A);
+// Output: -4  2  2  0  0 -1  5
+
+NumericVector C = round(A, 1);
+// Output: -3.5  2.0  2.2  0.1 -0.4 -1.0  4.8
+```
 
 ----
 
