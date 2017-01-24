@@ -773,14 +773,19 @@ NumericVector res = 3.0 * A - 1.0 / B + A + B + 5.0;
 
 ### Dimensional Information {#diminfo}
 
-|                       |                                           |
-|:----------------------|:------------------------------------------|
-| `.nrow()`,`.rows()`   | number of rows in a `Matrix`              |
-| `.ncol()`,`.cols()`   | number of columns in a `Matrix`           |
-| `.size()`,`.length()` | number of items in a `Matrix`, `Vector`   |
-| `.nrows()`            | number of rows in a `DataFrame`           |
+|                       |                                              |
+|:----------------------|:---------------------------------------------|
+| `.nrow()`,`.rows()`   | number of rows in a `Matrix`, `DataFrame`    |
+| `.ncol()`,`.cols()`   | number of columns in a `Matrix`, `DataFrame` |
+| `.size()`,`.length()` | number of items in a `Matrix`, `Vector`      |
 
 - Return type is that of an `int`, `unsigned int`, or `R_xlen_t`
+
+- Note: As of Rcpp 0.13.0, new size attribute accessors were added to the 
+  `DataFrame` class that mimick those available in `Matrix`. Previously, to
+   obtain the number of columns, one would have to use the `.size()` or `.length()`
+   member function. In addition, the number of observations previously had to
+   be obtained by `.nrows()`. 
 
 - Examples:
 
