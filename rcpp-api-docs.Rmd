@@ -1921,13 +1921,29 @@ NumericVector B = ceiling(A);
 // Same result 
 NumericVector C = ceil(A);
 // Output: -3  2  3  1  0 -1  5
-
 ```
 
 ----
 
 #### floor( X ) {#floor}
 
+- Compute the largest integer value not greater than the corresponding element of X.
+
+- Definition: \[\left\lfloor X \right\rfloor  = \max \left[ {n \in \mathbb{Z}|n \le X} \right]\]
+
+- Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
+
+- Examples:
+
+```{Rcpp ceil_val}
+// Create some sample data
+NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
+
+// --- Obtain the floor
+
+NumericVector B = floor(A);
+// Output: -4  2  2  0 -1 -1  4
+```
 
 ----
 
