@@ -2244,12 +2244,15 @@ NumericVector X_range = range(X);
 
 ---
 
-#### mean( X, na_rm ) {#mean}
+#### mean( X ) {#mean}
 
 - Computes the overall sample mean by summing each observation and dividing
   by the total number of observations.
+  
+- Definition: $$\bar{X} = \frac{1}{n}\sum\limits_{i = 1}^n { {X_i} } $$
 
-- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
+- Supported types are `Integer`, `Numeric`, `Complex`, or `Logical` of a
+  `Vector` or `Matrix`. 
 
 ```{Rcpp mean_val}
 // Sample Data
@@ -2293,6 +2296,35 @@ double X_median_na = median(X);
 |              |             |
 |:-------------|:------------|
 | **var( X )** | **sd( X )** |
+
+
+- Computes the _sample_ variance and standard deviation formula by taking the
+  corrected sum of squares and dividing it by $N-1$.
+  
+- Definition: $$\begin{align*}
+\operatorname{var}\left( X \right) &= \frac{1}{n-1}\sum\limits_{i = 1}^n {{{\left( {{X_i} - \bar X} \right)}^2}} \\
+\operatorname{sd}\left( X \right) &= \sqrt{\operatorname{var}\left( X \right)}
+\end{align*}$$
+
+- **Note:** No parameter support exists to switch between _population_ ($\frac{1}{n}$) 
+  and _sample_ ($\frac{1}{n-1}$) definitions. If necessary, multiple by the
+  multiplication by `double(n-1)/n` should provide the appropriate conversion.
+
+- Supported types are `Integer`, `Numeric`, `Complex`, or `Logical` of a
+  `Vector` or `Matrix`. 
+
+```{Rcpp}
+// Sample data
+NumericVector X = NumericVector::create(5.3, 1.9, 7.4, 4.5, 2.5);
+
+// --- Compute the Variance
+double var_val = var(X);
+// Output: 4.912
+
+// --- Compute the SD
+double sd_val = SD(X);
+// Output: 2.216303
+```
 
 ---
 
