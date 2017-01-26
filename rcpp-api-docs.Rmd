@@ -1306,31 +1306,31 @@ bool check_state_false = is_false( any(A > B) );
 - Examples: 
 
 ```{Rcpp logical_all}
-NumericVector x = NumericVector::create(1.0, 2.0, 3.0, 4.0);
+NumericVector A = NumericVector::create(1.0, 2.0, 3.0, 4.0);
 
 Rcout
     << std::boolalpha
-    << "all(x < 5): " << is_true(all(x < 5)) << "\n"
-    << "all(x < 4): " << is_true(all(x < 4)) << "\n"
-    << "all(!is_na(x)): " << is_true(all(!is_na(x))) 
+    << "all(A < 5): " << is_true(all(A < 5)) << "\n"
+    << "all(A < 4): " << is_true(all(A < 4)) << "\n"
+    << "all(!is_na(A)): " << is_true(all(!is_na(A))) 
     << "\n\n";
 // Output:
-// all(x < 5): true
-// all(x < 4): false
-// all(!is_na(x)): true
+// all(A < 5): true
+// all(A < 4): false
+// all(!is_na(A)): true
 
-NumericMatrix y(2, 2, x.begin());
+NumericMatrix B(2, 2, A.begin());
 
 Rcout
     << std::boolalpha
-    << "all(y < 5): " << is_true(all(y < 5)) << "\n"
-    << "all(y < 4): " << is_true(all(y < 4)) << "\n"
-    << "all(!is_na(y)): " << is_true(all(!is_na(y))) 
+    << "all(B < 5): " << is_true(all(B < 5)) << "\n"
+    << "all(B < 4): " << is_true(all(B < 4)) << "\n"
+    << "all(!is_na(B)): " << is_true(all(!is_na(B))) 
     << "\n\n";
 // Output:
-// all(y < 5): true
-// all(y < 4): false
-// all(!is_na(y)): true
+// all(B < 5): true
+// all(B < 4): false
+// all(!is_na(B)): true
 
 Rcout
     << std::boolalpha
@@ -1361,32 +1361,32 @@ Rcout
 - Examples: 
 
 ```{Rcpp logical_any}
-NumericVector x = NumericVector::create(1.0, 2.0, 3.0, 4.0);
+NumericVector A = NumericVector::create(1.0, 2.0, 3.0, 4.0);
 
 Rcout
     << std::boolalpha
-    << "any(x > 3): " << is_true(any(x > 3)) << "\n"
-    << "any(x > 4): " << is_true(any(x > 4)) << "\n"
-    << "any(is_na(x)): " << is_true(any(is_na(x))) 
+    << "any(A > 3): " << is_true(any(A > 3)) << "\n"
+    << "any(A > 4): " << is_true(any(A > 4)) << "\n"
+    << "any(is_na(A)): " << is_true(any(is_na(A))) 
     << "\n\n";
 // Output:    
 // any(x > 3): true
 // any(x > 4): false
 // any(is_na(x)): false
 
-NumericMatrix y(2, 2, x.begin());
-y[0] = NumericMatrix::get_na();
+NumericMatrix B(2, 2, A.begin());
+B[0] = NumericMatrix::get_na();
 
 Rcout
     << std::boolalpha
-    << "any(y > 3): " << is_true(any(y > 3)) << "\n"
-    << "any(y > 4): " << is_true(any(y > 4)) << "\n"
-    << "any(is_na(y)): " << is_true(any(is_na(y))) 
+    << "any(B > 3): " << is_true(any(B > 3)) << "\n"
+    << "any(B > 4): " << is_true(any(B > 4)) << "\n"
+    << "any(is_na(B)): " << is_true(any(is_na(B))) 
     << "\n\n";
 // Output:    
-// any(y > 3): true
-// any(y > 4): false
-// any(is_na(y)): true
+// any(B > 3): true
+// any(B > 4): false
+// any(is_na(B)): true
 
 Rcout
     << std::boolalpha
@@ -1589,9 +1589,9 @@ X,  &\text{if} X \ge 0 \\
 
 ```{Rcpp absolute_val}
 // Sample data
-NumericVector x = NumericVector::create(-2.8, 5.3, 7, -4, 0);
+NumericVector A = NumericVector::create(-2.8, 5.3, 7, -4, 0);
 
-NumericVector y = abs(x);
+NumericVector B = abs(A);
 // Output: 2.8, 5.3, 7, 4, 0
 ```
 
@@ -1610,9 +1610,9 @@ NumericVector y = abs(x);
 
 ```{Rcpp sqrt_val}
 // Sample data
-NumericVector x = NumericVector::create(0.0, 1.0, 2.5, 5.0, 9.0);
+NumericVector A = NumericVector::create(0.0, 1.0, 2.5, 5.0, 9.0);
 
-NumericVector y = sqrt(x);
+NumericVector B = sqrt(A);
 // Output: 0 1 1.58114 2.23607 3
 ```
 
@@ -2478,14 +2478,14 @@ NumericVector C = clamp(0.0, A, 10.0);
 
 ```{Rcpp ids_min_v_max}
 // Sample data
-NumericVector x = NumericVector::create(3.2, 5.2, -9.7, 4.3, 8.8);
+NumericVector A = NumericVector::create(3.2, 5.2, -9.7, 4.3, 8.8);
 
 // Return index for min value
-int y = which_min(x);
+int min_idx = which_min(A);
 // Output: 2 (because C++ indices starts at 0!)
 
 // Return index for max value
-int y2 = which_max(x);
+int max_idx = which_max(A);
 // Output: 4 (because C++ indices starts at 0!)
 ```
 
@@ -2524,14 +2524,14 @@ int y2 = which_max(x);
 
 ```{Rcpp unique_v_duplicates}
 // Sample data
-CharacterVector x = CharacterVector::create("a","b","c","a","b","c","a");
+CharacterVector A = CharacterVector::create("a","b","c","a","b","c","a");
 
 // Detect duplicates within a string
-LogicalVector x_dups = duplicated(x);
+LogicalVector B = duplicated(A);
 // Output: FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE
 
 // Obtain only unique values
-CharacterVector x_unique = unique(x);
+CharacterVector C = unique(A);
 // Output: "a", "b", "c"
 ```
 
@@ -2550,28 +2550,28 @@ CharacterVector x_unique = unique(x);
 // names attribute? 
 
 // Create Numerical Data
-NumericVector w = NumericVector::create(3.2, 1.2, -0.5, NA_REAL, 1.2, 2.0, NA_REAL);
+NumericVector A = NumericVector::create(3.2, 1.2, -0.5, NA_REAL, 1.2, 2.0, NA_REAL);
 
 // Tabulate
-IntegerVector w_out = table(x);
+IntegerVector B = table(A);
 
 // Create Integer Data
-IntegerVector x = IntegerVector::create(2, -2, NA_INTEGER, NA_INTEGER, 200, 2);
+IntegerVector C = IntegerVector::create(2, -2, NA_INTEGER, NA_INTEGER, 200, 2);
 
 // Tabulate the integer data
-IntegerVector x_out = table(y);
+IntegerVector D = table(C);
 
 // Create Character Data
-CharacterVector y = CharacterVector::create("a", "a", "b", NA_STRING, "c", NA_STRING);
+CharacterVector E = CharacterVector::create("a", "a", "b", NA_STRING, "c", NA_STRING);
 
 // Tabulate
-IntegerVector y_out = table(z);
+IntegerVector F = table(E);
 
 // Create Logical Data
-LogicalVector z = LogicalVector::create(true, NA_LOGICAL, false, true, NA_LOGICAL);
+LogicalVector G = LogicalVector::create(true, NA_LOGICAL, false, true, NA_LOGICAL);
 
 // Tabulate
-IntegerVector z_out = table(z);
+IntegerVector H = table(G);
 ```
 
 ----
