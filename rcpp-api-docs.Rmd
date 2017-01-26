@@ -116,6 +116,7 @@ for maximum flexibility.
 | [`tail`](#first-last-elems) | View the Last _n_ Values      |
 | [`abs`](#abs)               | Absolute Value                |
 | [`sqrt`](#sqrt)             | Square Root                   |
+| [`pow`](#pow)               | Raise to the _n_^th^ Power    |
 | [`sum`](#sum)               | Summation                     |
 | [`sign`](#sign)             | Extract the Sign of Values    |
 | [`diff`](#diff)             | Lagged Difference             |
@@ -1617,6 +1618,30 @@ NumericVector y = sqrt(x);
 
 ----
 
+#### pow( X , n) {#pow}
+
+- Obtain the power of the _i_^th^ element raised to the _n_ power.
+
+- Definition: \[ Y = X^{n}\]
+
+- Supported types to perform the operation are `Numeric` or `Integer`
+  of a `Vector` or `Matrix`. 
+
+- **Caveat:** Only _X_ is able to be vectorized. The value of _n_ must be
+  a scalar of `int` or `double` type.
+
+- Example:
+
+```{Rcpp pow_val}
+// Sample data
+NumericVector A = NumericVector::create(0.0, 1.0, 2.5, 5.0, 9.0);
+
+NumericVector B = pow( A , 3 );
+// Output: 0 1 15.625 125 729
+```
+
+----
+
 #### sum( X ) {#sum}
 
 - Calculate the overall summation of all elements. 
@@ -2035,7 +2060,6 @@ NumericVector B = signif(A, 2);
 NumericVector C = round(A, 3);
 // Output: 11300 59600   764 94500  4120
 ```
-
 
 ---
 
