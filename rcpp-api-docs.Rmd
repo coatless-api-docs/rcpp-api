@@ -1898,6 +1898,7 @@ colnames(I) = CharacterVector::create("X", "log(1+X)","log1p(X)", "exp(X)+1", "e
 
 ### Rounding of Numbers {#sugar-rounding}
 
+
 #### Ceiling {#ceil}
 
 |                        |                         |
@@ -1987,7 +1988,8 @@ NumericVector B = trunc(A);
 
 - Obtain a rounded number to specified number of decimal places.
 
-- The default value for `digits` is 0.
+- There is _no_ default value for `digits`. This parameter _must_ be specified
+  with an `int`.
 
 - Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
 
@@ -2000,7 +2002,7 @@ NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
 // --- Obtain the round values
 
 // Default rounds to no decimal places
-NumericVector B = round(A);
+NumericVector B = round(A, 0);
 // Output: -4  2  2  0  0 -1  5
 
 NumericVector C = round(A, 1);
@@ -2010,6 +2012,29 @@ NumericVector C = round(A, 1);
 ----
 
 #### signif( X, digits ) {#signif}
+
+- Round the number to the appropriate number of significant digits.
+
+- There is _no_ default value for `digits`. This parameter _must_ be specified
+  with an `int`.
+  
+- Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
+
+- Examples:
+
+```{Rcpp signif_val}
+// Create some sample data
+NumericVector A = NumericVector::create(11252, 59622, 764, 94512, 4121.5);
+
+// --- Obtain the significant digits
+
+// Default rounds to no decimal places
+NumericVector B = signif(A, 2);
+// Output: 11000 60000   760 95000  4100
+
+NumericVector C = round(A, 3);
+// Output: 11300 59600   764 94500  4120
+```
 
 
 ---
