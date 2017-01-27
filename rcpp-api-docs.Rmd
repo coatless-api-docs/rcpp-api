@@ -2102,7 +2102,6 @@ NumericVector C = round(A, 3);
 
 - Note: The R/C API is highly inconsistent when detecting values.
 
-
 #### Setting Infinite, Missingness, and NaN Values {#nan-constants}
 
 - To indicate missingness or `NA` values, the following pre-defined constants 
@@ -2147,6 +2146,10 @@ CharacterVector D = CharacterVector::create(NA_STRING);
 List E = List::create(A, B, C, D);
 ```
 
+- See also:
+    - [R Extensions: Missing and IEEE values](https://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Missing-and-IEEE-values)
+    - [R Extensions: Missing and special values](https://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Missing-and-special-values)
+
 ---
 
 #### Finiteness {#finite} 
@@ -2154,6 +2157,32 @@ List E = List::create(A, B, C, D);
 |                    |                      |
 |:-------------------|:---------------------|
 | **is_finite( X )** | **is_infinite( X )** |
+
+- Determines whether each element of _X_ are finite (`is_finite`) or infinite (`is_infinite`).
+
+- Support exisits for only the `Numeric` type of a `Vector` or `Matrix`.
+
+- **Note:** Infinite detection is only applicable to `Numeric` types as these 
+   values are only defined for `double` types.
+   
+- **Caveat:** Not a Number is _not_ considered to be a finite nor infinite
+   value. If this value exists within the object, it must be detected with 
+   `is_nan` or `is_na`.
+   
+- Examples:
+
+```{Rcpp is_infinite_v_finite}
+NumericVector A = NumericVector::create(R_NegInf, -5, 0, 12, R_PosInf, 42,  R_NaN) ;
+
+LogicalVector B = is_finite( A );
+// Output: FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE
+
+LogicalVector C = is_infinite( A );
+// Output: TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
+```
+
+- See also:
+    - [`is_na` / `is_nan`](#missingness)
 
 ---
 
@@ -2164,9 +2193,9 @@ List E = List::create(A, B, C, D);
 |    **is_na( X )**  |    **is_nan( X )**   |
 
 
-- Determines the missing values (`is_na`) or not a number (`is_nan`) 
-  of a `Vector` or `Matrix` *X*. 
+- Determines the missing values (`is_na`) or not a number (`is_nan`).
 
+- All types are supported of a `Vector` or `Matrix`.
 
 - Note: The difference between the two functions is explained by in the truth
   table
@@ -2350,10 +2379,10 @@ double X_median_na = median(X);
 - Computes the _sample_ variance and standard deviation formula by taking the
   corrected sum of squares and dividing it by $N-1$.
   
-- Definition: $$\begin{align*}
+- Definition: $$\begin{aligned}
 \operatorname{var}\left( X \right) &= \frac{1}{n-1}\sum\limits_{i = 1}^n {{{\left( {{X_i} - \bar X} \right)}^2}} \\
 \operatorname{sd}\left( X \right) &= \sqrt{\operatorname{var}\left( X \right)}
-\end{align*}$$
+\end{aligned}$$
 
 - **Note:** No parameter support exists to switch between _population_ ($\frac{1}{n}$) 
   and _sample_ ($\frac{1}{n-1}$) definitions. If necessary, multiple by the
