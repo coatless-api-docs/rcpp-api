@@ -1090,6 +1090,22 @@ A[B] = D;
 | `GenericMatrix::const_iterator`     |                                                       |
 | `ListMatrix::const_iterator`        |                                                       |
 
+
+```{Rcpp}
+// Sample Data
+NumericVector A = NumericVector::create(-1, 3.2, 0, 14.2, 38.6);
+    
+// --- Use iterators to compute sum
+double val_total = 0;
+
+for(NumericVector::iterator iter = A.begin(); iter != A.end(); ++iter) {
+  val_total += *iter;
+}
+
+Rcpp::Rcout << "Sum Value is " << val_total << std::endl;
+// Output: Sum Value is 55
+```
+
 ### STL-style container functions {#stl-functions}
 
 - There exists a special class of member functions that mimic how C++ Standard
