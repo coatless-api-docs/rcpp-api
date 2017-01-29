@@ -2797,8 +2797,16 @@ IntegerVector C = seq_len(5);
 
 |                     |                      |                      |
 |:--------------------|:---------------------|:---------------------|
-| **rep( X, N )**     | **rep_each( X, N )** | **rep_len( X, N )**  |
+| **rep( X, n )**     | **rep_each( X, n )** | **rep_len( X, n )**  |
 
+- Replicate elements in three flavors: 
+    - `rep`: duplicate the object _n_ times retaining the initial element order.
+    - `rep_each`: each element is repeated _n_ times consecutively.
+    - `rep_len`: duplicate object until the new object has length of _n_.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- Examples:
 
 ```{Rcpp}
 NumericVector A = NumericVector::create(-1, 0, 1);
@@ -2812,7 +2820,6 @@ NumericVector C = rep_each(A, 3);
 NumericVector D = rep_len(A, 5);
 // Output: -1 0 1 -1 0
 ```
-
 
 ----
 
