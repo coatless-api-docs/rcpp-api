@@ -2775,8 +2775,16 @@ Rcout
 
 |                     |                      |
 |:--------------------|:---------------------|
-| **seq_along( X )**  | **seq_len( N )**     |
+| **seq_along( X )**  | **seq_len( n )**     |
 
+- Generate an `Integer` sequence with the index beginning at 1 either based on 
+  an object (`seq_along`) or length (`seq_len`).
+  
+- All types are supported of a `Vector` or `Matrix`.
+
+- The return type is that of an `IntegerVector`.
+ 
+- Examples:
 
 ```{Rcpp}
 NumericVector A = NumericVector::create(-1, 0, 1);
