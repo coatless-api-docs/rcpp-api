@@ -2754,7 +2754,38 @@ NumericVector D = rowMeans(B);
 
 |               |              |
 |:--------------|:-------------|
-| **row( X )**  | **col( X )** |
+| **col( X )**  | **row( X )** |
+
+
+- Creates a `Matrix` where each element contains either a 1-based index for its
+  column (`col`) or row (`row`).
+  
+- All types of the `Matrix` class are supported.
+
+- The return type is an `IntegerMatrix`.
+
+- Examples:
+
+```{Rcpp}
+NumericVector A = NumericVector::create(1.0, 2.0, 3.0, 4.0);
+NumericMatrix B = NumericMatrix(2, 2, A.begin());
+// Output:
+// 1.00000 3.00000
+// 2.00000 4.00000
+
+// --- Various Matrix Indexes
+
+IntegerMatrix C = col(B);
+// Output:
+// 1 2
+// 1 2
+
+
+IntegerMatrix D = row(B);
+// Output:
+// 1 1
+// 2 2
+```
 
 ----
 
