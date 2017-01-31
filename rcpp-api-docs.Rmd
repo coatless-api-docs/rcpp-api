@@ -2356,6 +2356,9 @@ double X_mean = mean(X);
 // Output: 4
 ```
 
+- See also:
+    - [`colMeans` / `rowMeans`](#matrix-mean)
+
 ---
 
 #### median( X , na_rm) {#median}
@@ -2651,7 +2654,7 @@ IntegerVector H = table(G);
 - Computes the summation of elements either by column (`colSums`) or row (`rowSums`)
   of a `Matrix`.
   
-- Supported types are `Numeric`, `Logical` or `Complex` of the `Matrix` class.
+- Supported types are `Numeric`, `Integer` or `Complex` of the `Matrix` class.
 
 - The return type is the equivalent input type but of the `Vector` class.
 
@@ -2683,6 +2686,35 @@ NumericVector D = rowSums(B);
 |                           |                          |
 |:--------------------------|:-------------------------|
 | **colMeans( X , na_rm)**  | **rowMeans( X , na_rm)** |
+
+
+- Computes the means of elements either by column (`colSums`) or row (`rowSums`)
+  of a `Matrix`.
+  
+- Supported types are `Numeric`, `Integer` or `Complex` of the `Matrix` class.
+
+- The return type is the equivalent input type but of the `Vector` class.
+
+- Examples:
+
+```{Rcpp}
+NumericVector A = NumericVector::create(1.0, 2.0, 3.0, 4.0);
+NumericMatrix B = NumericMatrix(2, 2, A.begin());
+// Output:
+// 1.00000 3.00000
+// 2.00000 4.00000
+
+// --- Various matrix means
+
+NumericVector C = colMeans(B);
+// Output: 1.5 3.5
+
+NumericVector D = rowMeans(B);
+// Output: 2 3
+```
+
+- See also:
+    - [`mean`](#mean)
 
 ----
 
