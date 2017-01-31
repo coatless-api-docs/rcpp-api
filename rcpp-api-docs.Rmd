@@ -319,18 +319,21 @@ for maximum flexibility.
     - `LGLSXP` 
     - `STRSXP` 
     - `VECSXP`
+    - `RAWSXP`
     - `EXPRSXP`
 
 - For convenience, the following [`typedefs` have been defined](https://github.com/RcppCore/Rcpp/blob/6f81b4684481dbd9bb554dd95e66725fc3b63a8c/inst/include/Rcpp/vector/instantiation.h#L27-L38) in the `Rcpp` namespace: 
 
     - `NumericVector`    = `Vector<REALSXP>`
+    - `DoubleVector`     = `Vector<REALSXP>`
+    - `RawVector`        = `Vector<RAWSXP>`
     - `IntegerVector`    = `Vector<INTSXP>`
     - `ComplexVector`    = `Vector<CPLXSXP>`
     - `LogicalVector`    = `Vector<LGLSXP>`
     - `CharacterVector`  = `Vector<STRSXP>` 
     - `StringVector`     = `Vector<STRSXP>` 
     - `GenericVector`    = `Vector<VECSXP>` 
-    - `List`             = `Vector<VECSXP>` 
+    - `List`             = `Vector<VECSXP>`
     - `ExpressionVector` = `Vector<EXPRSXP>`
 
 - Within this documentation, the default type used will be `NumericVector` unless
@@ -410,6 +413,7 @@ NumericVector E = clone(D);
     - `LGLSXP` 
     - `STRSXP`
     - `VECSXP` 
+    - `RAWSXP`
     - `EXPRSXP`
 
 
@@ -417,6 +421,7 @@ NumericVector E = clone(D);
   namespace: 
   
     - `NumericMatrix`    = `Matrix<REALSXP>`
+    - `RawMatrix`        = `Matrix<RAWSXP>`
     - `IntegerMatrix`    = `Matrix<INTSXP>`
     - `ComplexMatrix`    = `Matrix<CPLXSXP>`
     - `LogicalMatrix`    = `Matrix<LGLSXP>`
