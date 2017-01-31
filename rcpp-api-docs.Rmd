@@ -1678,8 +1678,7 @@ double val_summed = sum(A);
 ```
 
 - See also:
-    - [rowSums](#rowSums)
-    - [colSums](#colSums)
+    - [`rowSums` / `colSums`](#matrix-sum)
 
 ----
 
@@ -2647,6 +2646,35 @@ IntegerVector H = table(G);
 |                          |                          |
 |:-------------------------|:-------------------------|
 | **colSums( X , na_rm)**  | **rowSums( X , na_rm )** |
+
+
+- Computes the summation of elements either by column (`colSums`) or row (`rowSums`)
+  of a `Matrix`.
+  
+- Supported types are `Numeric`, `Logical` or `Complex` of the `Matrix` class.
+
+- The return type is the equivalent input type but of the `Vector` class.
+
+- Examples:
+
+```{Rcpp}
+NumericVector A = NumericVector::create(1.0, 2.0, 3.0, 4.0);
+NumericMatrix B = NumericMatrix(2, 2, A.begin());
+// Output:
+// 1.00000 3.00000
+// 2.00000 4.00000
+
+// --- Various matrix sums
+
+NumericVector C = colSums(B);
+// Output: 3 7
+
+NumericVector D = rowSums(B);
+// Output: 4 6
+```
+
+- See also:
+    - [`sum`](#sum)
 
 ----
 
