@@ -2787,6 +2787,28 @@ LogicalMatrix D = upper_tri(B, true);
 
 #### diag( X ) {#diag}
 
+- Extracts the major diagonal going from the upper left to lower right of a
+  `Matrix`.
+  
+- All types of the `Matrix` class are supported.
+
+- The return type is a `Vector` of an equivalent type to the input `Matrix`.
+
+- Example:
+
+```{Rcpp}
+NumericVector A = NumericVector::create(1, 2, 3, 4, 5, 6, 7, 8, 9);
+NumericMatrix B = NumericMatrix(3, 3, A.begin());
+// Output:
+// 1.00000 4.00000 7.00000
+// 2.00000 5.00000 8.00000
+// 3.00000 6.00000 9.00000
+
+NumericVector C = diag(B);
+// Output: 1 5 9
+```
+
+
 ----
 
 #### Matrix Indexes {#idx-mat}
