@@ -1242,6 +1242,33 @@ A[3] = NumericVector::get_na();
     - [Setting Infinite, Missingness, and NaN Values](#nan-constants)
     - [Sugar: Finite, Infinite, Missingness, and NaN Detection](#sugar-nan)
 
+#### is_na() {#is_na_static}
+
+- Determine whether an element within the Rcpp data structure matches a missing
+  constant of the given _RTYPE_.
+
+- Examples: 
+          
+```{Rcpp}
+// Construct a vector
+NumericVector A = NumericVector::create(NA_REAL, -1, NumericVector::get_na(), 0);
+
+int n = A.size();
+LogicalVector B(n);
+  
+for (int i = 0; i < n; ++i) {
+    B[i] = NumericVector::is_na(A[i]);
+}
+
+Rcout << "NA Presence: " << B << std::endl;
+// Output: NA Presence 1 0 1 0
+```
+
+- See also:
+    - [Setting Infinite, Missingness, and NaN Values](#nan-constants)
+    - [Missing Values and NaN Detection](#missingness)
+
+
 ## Environment
 
 
