@@ -1261,13 +1261,58 @@ for (int i = 0; i < n; ++i) {
 }
 
 Rcout << "NA Presence: " << B << std::endl;
-// Output: NA Presence 1 0 1 0
+// Output: NA Presence: 1 0 1 0
 ```
 
 - See also:
     - [Setting Infinite, Missingness, and NaN Values](#nan-constants)
     - [Missing Values and NaN Detection](#missingness)
 
+#### import(InputIterator first, InputIterator last) {#import}
+
+
+#### import_transform(InputIterator first, InputIterator last, F f) {#import-transform}
+
+
+#### diag(int size, const U &diag_value) {#diag-static}
+
+- This method is available only for the `Matrix` class.
+
+- Examples:
+
+```{Rcpp diag_static}
+
+```
+
+#### eye(int n) {#eye}
+
+- This method is available only for the `Matrix` class.
+
+- Examples:
+
+```{Rcpp eye_static}
+
+```
+
+#### ones(int n) {#ones}
+
+- This method is available only for the `Matrix` class.
+
+- Examples:
+
+```{Rcpp ones_static}
+
+```
+
+#### zeros(int n) {#zeros}
+
+- This method is available only for the `Matrix` class.
+
+- Examples:
+
+```{Rcpp zeros_static}
+
+```
 
 ## Environment
 
