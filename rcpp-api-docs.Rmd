@@ -1221,6 +1221,27 @@ DataFrame F = DataFrame::create(Named("A") = A,
 ```
 
 
+
+#### get_na() {#get_na}
+
+- Obtain the correct missing value constant for the given _RTYPE_ associated
+  with the Rcpp data structure.
+
+- Examples: 
+          
+```{Rcpp static_get_na}
+// Construct a vector
+NumericVector A = NumericVector::create(NA_REAL, -1, NumericVector::get_na(), 0);
+// Output: NA -1 NA 0
+
+A[3] = NumericVector::get_na();
+// Output: NA -1 NA NA
+```
+
+- See also:
+    - [Setting Infinite, Missingness, and NaN Values](#nan-constants)
+    - [Sugar: Finite, Infinite, Missingness, and NaN Detection](#sugar-nan)
+
 ## Environment
 
 
