@@ -2352,9 +2352,49 @@ LogicalVector result_nan = is_nan( X );
 
 #### Beta {#beta}
 
-|               |                |
-|:--------------|:---------------|
-| **beta( X )** | **lbeta( X )** |
+|                  |                   |
+|:-----------------|:------------------|
+| **beta( A, B )** | **lbeta( A, B )** |
+
+
+- Compute value of the beta function, $B \left(a,b\right)$, and the natural 
+  logarithm of the beta function,
+  $\log \left( {B \left(a,b\right)} \right)$.
+
+- **Definition:**
+
+$$\begin{aligned}
+B\left( {a,b} \right) &= \frac{{\Gamma \left( a \right)\Gamma \left( b \right)}}{{\Gamma \left( {a + b} \right)}} \\
+& = \int\limits_0^1 {{t^{\left( {a - 1} \right)}}{{\left( {1 - t} \right)}^{\left( {b - 1} \right)}}dt} \\
+\log \left( { B\left( {a,b} \right) } \right) &=  \log \left( { \int\limits_0^1 {{t^{\left( {a - 1} \right)}}{{\left( {1 - t} \right)}^{\left( {b - 1} \right)}}dt} } \right)
+
+\end{aligned}$$
+
+- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
+
+- Examples:
+
+```{Rcpp}
+// Sample Data
+NumericVector A = NumericVector::create(10, 9, 8, 7, 6);
+NumericVector B = NumericVector::create(5, 4, 3, 2, 1);
+
+// --- Sample Vectorized Calls
+
+NumericVector C = beta(A, B);
+// Output: 9.99001e-005 0.000505051 0.00277778 0.0178571 0.166667
+
+NumericVector D = lbeta(A, B);
+// Output: -9.21134 -7.59085 -5.8861 -4.02535 -1.79176
+
+// --- Optional Scalar
+
+NumericVector E = beta(10, B);
+// Output: 9.99001e-005 0.00034965 0.00151515 0.00909091 0.1
+
+NumericVector F = beta(A, 5);
+// Output: 9.99001e-005 0.0001554 0.000252525 0.0004329 0.000793651
+```
 
 ---
 
