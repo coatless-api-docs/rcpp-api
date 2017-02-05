@@ -2360,9 +2360,37 @@ LogicalVector result_nan = is_nan( X );
 
 #### Gamma {#gamma}
 
-|               |                  |
-|:--------------|:-----------------|
-| **gamma( X )** | **lgamma( X )** |
+|                |                  |
+|:---------------|:-----------------|
+| **gamma( X )** | **lgamma( X )**  |
+
+- Compute value of the gamma function, $\Gamma \left(x\right)$, and the natural 
+  logarithm of the absolute value of the gamma function,
+  $\log \left( {\left| {\Gamma \left( x \right)} \right|} \right)$.
+
+- **Definition:**
+
+$$\begin{aligned}
+\Gamma \left( x \right) &= \int\limits_0^\infty  {{t^{\left( {x - 1} \right)}}\exp \left( { - t} \right)dt}  \\
+\log \left( {\left| {\Gamma \left( x \right)} \right|} \right) &=  \log \left( {\left| { \int\limits_0^\infty  {{t^{\left( {x - 1} \right)}}\exp \left( { - t} \right)dt} } \right|} \right)
+\end{aligned}$$
+
+- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
+
+- Examples:
+
+```{Rcpp}
+// Sample Data
+NumericVector A = NumericVector::create(1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5);
+
+NumericVector B = gamma(A);
+// Output: 1 0.886227 1 1.32934 2 3.32335 6 11.6317 24
+
+NumericVector C = lgamma(A);
+// Output: 0 -0.120782 0 0.284683 0.693147 1.20097 1.79176 2.45374 3.17805
+```
+
+
 
 #### Gamma Derivatives {#gamma-deriv}
 
