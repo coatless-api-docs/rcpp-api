@@ -2816,7 +2816,69 @@ NumericVector D = rowMeans(B);
 
 ----
 
-#### outer( X , Y , operator) {#outer}
+#### outer( X , Y , Function) {#outer}
+
+
+- Applies a `Function` to two `Vector` objects to obtain the outer product.
+  
+- All types of the `Vector` class are supported. However, the supplied `Function`
+  must have the correct parameter input types to receive values from each `Vector`.
+
+- The returned value is a `Matrix` class with its type given by the valued returned by the `Function`.
+
+- The `Function` parameter also accepts a C++ `functor` in place of an Rcpp `Function`.
+  In such cases, the underlying type _T_ must be defined. Select one of the following arguments for _T_:
+    - `int` 
+    - `double`
+    - `std::complex<double> / Rcomplex` 
+    - `bool`
+
+- `Numeric` Output
+| Functor                    | Meaning              |
+|:---------------------------|:---------------------|
+| `std::plus<T>()`           |   `x + y`            |
+| `std::minus<T>()`          |   `x - y`            |
+| `std::multiplies<T>()`     |   `x * y`            |
+| `std::divides<T>()`        |   `x / y`            |
+| `std::modulus<T>()`        |   `x % y`            |
+
+- `Logical` Output
+| Functor                    | Meaning              |
+|:---------------------------|:---------------------|
+| `std::equal_to<T>()`       |   `x == y`           |
+| `std::not_equal_to<T>()`   |   `x != y`           |
+| `std::greater<T>()`        |   `x > y`            |
+| `std::less<T>()`           |   `x < y`            |
+| `std::greater_equal<T>()`  |   `x >= y`           |
+| `std::less_equal<T>()`     |   `x <= y`           |
+
+
+- Examples:
+
+```{Rcpp}
+// Sample Data
+NumericVector A = NumericVector::create(0.5, 1.0, 1.5, 2.0);
+NumericVector B = NumericVector::create(0.0, 0.5, 1.0, 1.5);
+
+// --- Applying outer with functors
+
+NumericMatrix C = outer(A, B, std::plus<double>());
+// Output:
+//  0.5  1.0  1.5  2.0
+//  1.0  1.5  2.0  2.5
+//  1.5  2.0  2.5  3.0
+//  2.0  2.5  3.0  3.5
+
+LogicalMatrix D = outer(A, B, std::less<double>());
+// Output:
+// FALSE FALSE  TRUE  TRUE
+// FALSE FALSE FALSE  TRUE
+// FALSE FALSE FALSE FALSE
+// FALSE FALSE FALSE FALSE
+```
+
+- See also:
+    - [cppreference: Operator function objects](http://en.cppreference.com/w/cpp/utility/functional#Operator_function_objects)
 
 ----
 
