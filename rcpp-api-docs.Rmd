@@ -2429,8 +2429,6 @@ NumericVector C = lgamma(A);
 // Output: 0 -0.120782 0 0.284683 0.693147 1.20097 1.79176 2.45374 3.17805
 ```
 
-
-
 #### Gamma Derivatives {#gamma-deriv}
 
 |                            |                     |
@@ -2447,6 +2445,35 @@ NumericVector C = lgamma(A);
 |:----------------|:-----------------|
 | **factorial()** | **lfactorial()** |
 
+- Compute the product of all positive integers less than or equal to _n_ using
+  `factorial` and the natural logarithm of the absolute value of the factorial
+  with `lfactorial`.
+
+- **Definition**: 
+$$\begin{aligned}
+n! &= \prod\limits_{k = 1}^n {{k_i}}  = 1 \times 2 \times  \cdots  \times \left( {n - 1} \right) \times n \\
+&= \begin{cases}
+1, &\text{if } n = 0 \\
+n\left( {n - 1} \right)!, &\text{if } n > 0
+\end{cases} \\
+&= \Gamma\left(n+1\right) \\
+\log \left( {\left| {n!} \right|} \right) &= \log \left( {\left| {\Gamma \left( {n + 1} \right)} \right|} \right)
+\end{aligned}$$
+
+- Only the `Numeric` type of the `Vector` and `Matrix` class is supported.
+
+- Examples:
+
+```{Rcpp}
+// Sample Data
+NumericVector A = NumericVector::create(1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5);
+
+NumericVector B = factorial(A);
+// Output: 1 1.32934 2 3.32335 6 11.6317 24 52.3428 120
+
+NumericVector C = lfactorial(A);
+// Output: 0 0.284683 0.693147 1.20097 1.79176 2.45374 3.17805 3.95781 4.78749
+```
 
 ### Combinatorics {#combinatorics}
 
