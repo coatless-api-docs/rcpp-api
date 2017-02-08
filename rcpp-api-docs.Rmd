@@ -2819,6 +2819,29 @@ bool val_unequal_set = setequal(C, D);
 
 #### intersect(X, Y) {#intersect}
 
+- Find all elements two objects have in common.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- Examples:
+
+```{Rcpp set_intersect}
+// Sample Data for equal case
+CharacterVector A = CharacterVector::create("a", "b", "c");
+CharacterVector B = CharacterVector::create("c", "b", "d");
+
+// Sample Data for empty set
+CharacterVector C = CharacterVector::create("a", "b");
+CharacterVector D = CharacterVector::create("c");
+
+CharacterVector E = intersect(A, B);
+// Output: "b" "c"
+
+CharacterVector F = intersect(C, D);
+// Output: 
+// (Empty set/None)
+```
+
 ----
 
 #### union_(X, Y) {#union}
