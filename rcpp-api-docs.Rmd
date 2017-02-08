@@ -2793,6 +2793,28 @@ IntegerVector H = table(G);
 
 #### setequal(X, Y) {#setequal}
 
+- Determine if the values of two objects are equal.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- Examples:
+
+```{Rcpp set_equal}
+// Sample Data for equal case
+CharacterVector A = CharacterVector::create("a", "b", "c");
+CharacterVector B = CharacterVector::create("c", "b", "a");
+
+// Sample Data for unequal case
+CharacterVector C = CharacterVector::create("a", "b");
+CharacterVector D = CharacterVector::create("c");
+
+bool val_equal_set = setequal(A, B);
+// Output: TRUE
+
+bool val_unequal_set = setequal(C, D);
+// Output: FALSE
+```
+
 ----
 
 #### intersect(X, Y) {#intersect}
