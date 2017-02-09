@@ -2437,6 +2437,45 @@ NumericVector C = lgamma(A);
 | **digamma( X )**           | **trigamma( X )**   |
 | **tetragamma( X )**        | **pentagamma( X )** |
 
+- Obtain the _n_^th^ derivative of the logarithm of the gamma function using
+  `psigamma`. For convenience, derivatives of the second, `digamma`, through 
+  fifth, `pentagamma`, order have been defined.
+
+- **Definition:**
+$$\begin{aligned}
+  {\psi _n}\left( x \right) &= \frac{{{d^{n + 1}}}}{{d{x^{n + 1}}}}\ln \Gamma \left( x \right) \\
+   &= \frac{{{d^n}}}{{d{x^n}}}\frac{{\Gamma '\left( x \right)}}{{\Gamma \left( x \right)}}  \\ 
+\end{aligned}$$
+
+- The `deriv` parameter of the `psigamma` function specifies the derivative
+  to take of the logarithm of the gamma function.
+
+- For the `psigamma` function, only the `Numeric` type of the `Vector` and 
+  `Matrix` class is supported. The convenience derivative functions have support
+  for both `Integer` and `Numeric` type of the `Vector` and `Matrix` class.
+
+- Examples:
+
+```{Rcpp}
+NumericVector A = NumericVector::create(1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5);
+
+NumericVector B = digamma(A);
+// Output: -0.577216 0.03649 0.422784 0.703157 0.922784 1.10316 1.25612 1.38887 1.50612
+
+NumericVector C = trigamma(A);
+// Output: 1.64493 0.934802 0.644934 0.490358 0.394934 0.330358 0.283823 0.248725 0.221323
+
+NumericVector D = tetragamma(A);
+// Output: -2.40411 -0.828797 -0.404114 -0.236204 -0.154114 -0.108204 -0.0800397 -0.0615568 -0.0487897
+
+NumericVector E = pentagamma(A);
+// Output: 6.49394 1.40909 0.493939 0.223906 0.118939 0.0703058 0.0448653 0.0303225 0.0214278
+
+// --- Trigamma derivative
+NumericVector F = psigamma(A, 1.0);
+// Output: 1.64493 0.934802 0.644934 0.490358 0.394934 0.330358 0.283823 0.248725 0.221323
+```
+
 ---
 
 ### Factorials {#factorials}
