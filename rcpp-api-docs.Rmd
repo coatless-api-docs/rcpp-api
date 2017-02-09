@@ -2441,9 +2441,9 @@ NumericVector C = lgamma(A);
 
 ### Factorials {#factorials}
 
-|                 |                  |
-|:----------------|:-----------------|
-| **factorial()** | **lfactorial()** |
+|                    |                     |
+|:-------------------|:--------------------|
+| **factorial( X )** | **lfactorial( X )** |
 
 - Compute the product of all positive integers less than or equal to _n_ using
   `factorial` and the natural logarithm of the absolute value of the factorial
@@ -2477,10 +2477,45 @@ NumericVector C = lfactorial(A);
 
 ### Combinatorics {#combinatorics}
 
-|                 |                  |
-|:----------------|:-----------------|
-| **choose()**    | **lchoose()**    |
+|                        |                        |
+|:-----------------------|:-----------------------|
+| **choose( N , K )**    | **lchoose( N , K)**    |
 
+- Compute the binomial coefficients for all real numbers _n_ and integer _k_ using
+  `choose` and the natural logarithm of the absolute value of the binomial coefficients
+  with `lchoose`.
+
+- **Definition**: 
+$$\begin{aligned}
+{n \choose k} &= \frac{n!}{k!\left( {n - k} \right)!} = \frac{n\left( {n - 1} \right) \cdots \left( {n - k + 1} \right)}{k!} \\
+\log \left( {\left| {n \choose k} \right|} \right) &= \log \left( {\left| {\frac{n\left( {n - 1} \right) \cdots \left( {n - k + 1} \right)}{k!}} \right|} \right)
+\end{aligned}$$
+
+- Only the `Numeric` type of the `Vector` and `Matrix` class is supported.
+
+- Examples:
+
+```{Rcpp choose_sugar}
+// Sample Data
+NumericVector A = NumericVector::create(10, 9, 8, 7, 6);
+NumericVector B = NumericVector::create(5, 4, 3, 2, 1);
+
+// --- Vectorize Choose
+
+NumericVector C = choose(A, B);
+// Output: 252 126 56 21 6
+
+NumericVector D = lchoose(A, B);
+// Output: 5.52943 4.83628 4.02535 3.04452 1.79176
+
+// --- Scalar Choose
+
+NumericVector E = choose(10.0, B);
+// Output: 252 210 120 45 10
+
+NumericVector F = choose(A, 5.0);
+// Output: 252 126 56 21 6
+```
 
 ---
 
