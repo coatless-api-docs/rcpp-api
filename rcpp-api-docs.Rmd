@@ -153,13 +153,16 @@ for maximum flexibility.
 
 **[Finite, Infinite and NaN Detection](#sugar-nan)**
 
-|                                    |                                          |
-|:-----------------------------------|:-----------------------------------------|
-| [`pre-defined`](#nanconstants)     | Pre-defined NA/NaN/Inf Constants         |
-| [`is_na`](#missingness)            | Detects if values are missing            |
-| [`is_nan`](#missingness)           | Detects if values are not a number (NaN) |
-| [`is_finite`](#finite)             | Detects if value is finite               |
-| [`is_infinite`](#finite)           | Detects if value is infinite             |
+|                                    |                                            |
+|:-----------------------------------|:-------------------------------------------|
+| [`pre-defined`](#nanconstants)     | Pre-defined NA/NaN/Inf Constants           |
+| [`is_na`](#missingness)            | Detects if values are missing              |
+| [`is_nan`](#missingness)           | Detects if values are not a number (`NaN`) |
+| [`is_finite`](#finite)             | Detects if value is finite                 |
+| [`is_infinite`](#finite)           | Detects if value is infinite               |
+| [`na_omit`](#na-omit)              | Remove `NA` and `NaN` values               |
+| [`noNA`](#nona)                    | Assert that the object is `NA` free        |
+
 
 **[The Apply Family](#sugar-apply)**
 
@@ -2339,6 +2342,14 @@ LogicalVector result_na = is_na( X );
 LogicalVector result_nan = is_nan( X );
 // Output: TRUE, FALSE, FALSE, FALSE
 ```
+
+---
+
+### na_omit( X ) {#na-omit}
+
+---
+
+### noNA( X ) {#nona}
 
 ---
 
