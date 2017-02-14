@@ -2347,6 +2347,21 @@ LogicalVector result_nan = is_nan( X );
 
 ### na_omit( X ) {#na-omit}
 
+- Removes values that are either `NA` or `NaN`.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- Example:
+
+```{Rcpp is_na_v_nan}
+// Create some sample data
+NumericVector A = NumericVector::create(R_NaN, 1, NA_REAL, 3 , NA_REAL) ;
+
+// Remove NA and NaN Values
+NumericVector B = na_omit(A);
+// Output: 1 3
+```
+  
 ---
 
 ### noNA( X ) {#nona}
