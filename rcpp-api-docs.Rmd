@@ -2895,6 +2895,8 @@ IntegerVector H = table(G);
 
 - Determine if the values of two objects are equal.
 
+- **Definition:** \[A = B = \left\{ {\forall x:x \in A \wedge x \in B} \right\}\]
+
 - All types are supported of a `Vector` or `Matrix`.
 
 - Examples:
@@ -2920,6 +2922,8 @@ bool val_unequal_set = setequal(C, D);
 #### intersect(X, Y) {#intersect}
 
 - Find all elements two objects have in common.
+
+- **Definition:** \[A \cap B = \left\{ {x:x \in A \wedge x \in B} \right\}\]
 
 - All types are supported of a `Vector` or `Matrix`.
 
