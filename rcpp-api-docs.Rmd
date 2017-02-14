@@ -3033,6 +3033,22 @@ NumericVector D = rowMeans(B);
 
 
 - Applies a `Function` to two `Vector` objects to obtain the outer product.
+
+- **Definition:** \[\begin{aligned}
+  f\left( {\vec u \otimes \vec v} \right) &= f\left( {\vec u{ {\vec v}^T} } \right) = f\left( {\left[ {\begin{array}{*{20}{c} }
+  { {u_1} } \\ 
+   \vdots  \\ 
+  { {u_n} } 
+\end{array} } \right]\left[ {\begin{array}{*{20}{c} }
+  { {v_1} }& \cdots &{ {v_n} } 
+\end{array} } \right]} \right) \hfill \\
+   &= \left[ {\begin{array}{*{20}{c} }
+  {f\left( { {u_1}{v_1} } \right)}&{f\left( { {u_1}{v_2} } \right)}& \cdots &{f\left( { {u_1}{v_n} } \right)} \\ 
+  {f\left( { {u_2}{v_1} } \right)}&{f\left( { {u_2}{v_2} } \right)}&{}&{f\left( { {u_2}{v_n} } \right)} \\ 
+   \vdots &{}& \ddots & \vdots  \\ 
+  {f\left( { {u_n}{v_1} } \right)}&{f\left( { {u_n}{v_2} } \right)}&{}&{f\left( { {u_n}{v_n} } \right)} 
+\end{array} } \right] \hfill \\ 
+\end{aligned}\]
   
 - All types of the `Vector` class are supported. However, the supplied `Function`
   must have the correct parameter input types to receive values from each `Vector`.
