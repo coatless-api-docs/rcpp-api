@@ -2366,6 +2366,29 @@ NumericVector B = na_omit(A);
 
 ### noNA( X ) {#nona}
 
+- Assert the object is `NA`-free to avoid checking whether each value is not
+  missing.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- **Warning:** Using `noNA` with a `Matrix` defaults the underlying class 
+  from a `Matrix` to `VectorBase`! Thus, the matrix dimensional information is 
+  _lost_.
+
+- Example:
+
+```{Rcpp is_na_v_nan}
+// Create some sample data
+NumericVector A = NumericVector::create(1, 2, 3, 4) ;
+
+// Assert vector is NA-free
+NumericVector B = noNA(A);
+// Output: 1 2 3 4
+```
+  
+- See also:
+   - [StackOverflow: Nathan Russell's Remarks on `noNA`](http://stackoverflow.com/a/41874411/1345455)
+
 ---
 
 ### The Apply Family {#sugar-apply}
