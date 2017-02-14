@@ -2979,6 +2979,37 @@ CharacterVector F = union_(C, D);
 
 #### setdiff(X, Y) {#setdiff}
 
+- Obtain the elements in _A_ not in _B_ or the intersection of _A_ with the 
+  complement of _B_.
+
+- **Definition:** \[A\backslash B = A - B = A \cap {B^C} = \left\{ {x:x \in A \wedge x \notin B} \right\}\]
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- Examples:
+
+```{Rcpp set_diff}
+// Sample Data for overlapping elements
+CharacterVector A = CharacterVector::create("a", "b", "c");
+CharacterVector B = CharacterVector::create("c", "b", "d");
+
+// Sample Data for no shared elements
+CharacterVector C = CharacterVector::create("a", "b");
+CharacterVector D = CharacterVector::create("c");
+
+// --- Calling setdiff
+
+CharacterVector E = setdiff(A, B);
+// Output: "a"
+
+// Note order results in different values!
+CharacterVector F = setdiff(B, A);
+// Output: "d"
+
+CharacterVector G = setdiff(C, D);
+// Output: "a" "b"
+```
+
 ----
 
 
