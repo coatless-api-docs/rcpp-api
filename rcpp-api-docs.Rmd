@@ -216,13 +216,15 @@ for maximum flexibility.
 
 **[Uniqueness Operators](#sugar-unique-ops)**
 
-|                          |                                                                |
-|:-------------------------|:---------------------------------------------------------------|
-| [`match`](#match)        | Find indices of the first value in a separate vector           |
-| [`self_match`](#match)   | Find indices of the first occurrence of each value in a vector |
-| [`unique`](#unique)      | Obtain the unique values                                       |
-| [`duplicated`](#unique)  | Obtain a logical vector indicating the duplicate values        |
-| [`table`](#table)        | Create a frequency table of occurrences                        |
+|                               |                                                                |
+|:------------------------------|:---------------------------------------------------------------|
+| [`match`](#match)             | Find indices of the first value in a separate vector           |
+| [`in`](#match)                | Determine if a match was located for each element of _A_ in _B_|
+| [`self_match`](#match)        | Find indices of the first occurrence of each value in a vector |
+| [`unique`](#unique)           | Obtain the unique values                                       |
+| [`duplicated`](#unique)       | Obtain a logical vector indicating the duplicate values        |
+| [`sort_unique`](#sort-unique) | Obtain the unique values and sort them                         |
+| [`table`](#table)             | Create a frequency table of occurrences                        |
 
 
 **[Set Operations](#sugar-set-ops)**
@@ -2868,9 +2870,9 @@ int max_idx = which_max(A);
 
 #### Match {#match}
 
-|                     |                     |
-|:--------------------|:--------------------|
-| **match( X )**      | **self_match( X )** |
+|                     |                     |                     |
+|:--------------------|:--------------------|:--------------------|
+| **match( X )**      | **self_match( X )** |   **in( X, Y )**    |
 
 
 ----
@@ -2904,6 +2906,10 @@ LogicalVector B = duplicated(A);
 CharacterVector C = unique(A);
 // Output: "a", "b", "c"
 ```
+
+----
+
+### sort_unique( X ) {#sort_unique}
 
 ----
 
