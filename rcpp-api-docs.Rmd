@@ -259,6 +259,14 @@ for maximum flexibility.
 | [`rep_each`](#rep)  | Replicate each element in line $N$ times       |
 | [`rep_len`](#rep)   | Replicate values until vector is of length $N$ |
 
+**[String Operations](#sugar-string-ops)**
+
+|                         |                                                |
+|:------------------------|:-----------------------------------------------|
+| [`collapse`](#collapse) | Collapse multiple strings into one string      |
+
+
+
 
 **[Statistical Distributions](#stat-dist)**
 
@@ -3432,6 +3440,26 @@ NumericVector C = rep_each(A, 3);
 
 NumericVector D = rep_len(A, 5);
 // Output: -1 0 1 -1 0
+```
+
+### String Operations {#sugar-string-ops}
+
+#### collapse( X ) {#collapse}
+
+- Collapse multiple strings values into a single string.
+
+- Only the `Character` and `String` types of a `Vector` or `Matrix` are
+  supported.
+
+- **Note:** The function is equivalent to `paste(c('a', 'b'), collapse = "")`.
+
+- Example:
+
+```{Rcpp sugar_collapse}
+CharacterVector A = CharacterVector::create("w","o","r","l","d");
+
+std::string val_str = collapse(A);
+// Output: world
 ```
 
 ----
