@@ -2397,6 +2397,64 @@ NumericVector B = noNA(A);
 
 #### lapply {#lapply}
 
+- Apply a _C++_ function or functor to each element of an object and receive
+  a `List` back. 
+
+- All types are supported of a `Vector` or `Matrix`.
+
+```{Rcpp lapply_example}
+// --- C++ Function Approach
+template <typename T>
+T square( const T& x){
+    return x * x ;
+}
+
+List test_lapply_function() {
+  // Create sample data
+  IntegerVector A = seq_len(3);
+
+  // Call C++ Function
+  List B = sapply(A, square<int>);
+
+  return B;
+}
+
+test_lapply_function();
+// Output:
+// [[1]]
+// [1] 1
+// [[2]]
+// [1] 4
+// [[3]]
+// [1] 9
+
+// --- C++ Functor Approach
+template <typename T>
+struct square : std::unary_function<T,T> {
+  T operator()(const T& x) const { return x * x; }
+};
+// std::unary_function is deprecated in C++11
+
+IntegerVector test_lapply_functor() {
+  // Create sample data
+  IntegerVector A = seq_len(3);
+
+  // Call C++ Function
+  List C = lapply(A, square<int>());
+
+  return C;
+}
+
+test_lapply_functor();
+// Output: 
+// [[1]]
+// [1] 1
+// [[2]]
+// [1] 4
+// [[3]]
+// [1] 9
+```
+
 ---
 
 #### mapply {#mapply}
