@@ -2395,6 +2395,61 @@ NumericVector B = noNA(A);
 
 ### The Apply Family {#sugar-apply}
 
+
+#### sapply {#sapply}
+
+- Apply a _C++_ function or functor to each element of an object and receive
+  a `Vector` back.
+
+- The return type is automatically detected by the supplied _C++_
+  function or functor of the `Vector` class.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+```{Rcpp sapply_example}
+
+// --- C++ Function Approach
+template <typename T>
+T square( const T& x){
+    return x * x ;
+}
+
+IntegerVector test_sapply_function() {
+  // Create sample data
+  IntegerVector A = seq_len(10);
+
+  // Call C++ Function
+  IntegerVector B = sapply(A, square<int>);
+
+  return B;
+}
+
+test_sapply_function();
+// Output: 1   4   9  16  25  36  49  64  81 100
+
+
+// --- C++ Functor Approach
+template <typename T>
+struct square : std::unary_function<T,T> {
+  T operator()(const T& x) const { return x * x; }
+};
+// std::unary_function is deprecated in C++11
+
+IntegerVector test_sapply_functor() {
+  // Create sample data
+  IntegerVector A = seq_len(10);
+
+  // Call C++ Function
+  IntegerVector C = sapply(A, square<int>());
+
+  return C;
+}
+
+test_sapply_functor();
+// Output: 1   4   9  16  25  36  49  64  81 100
+```
+---
+
 #### lapply {#lapply}
 
 - Apply a _C++_ function or functor to each element of an object and receive
@@ -2458,10 +2513,6 @@ test_lapply_functor();
 ---
 
 #### mapply {#mapply}
-
----
-
-#### sapply {#sapply}
 
 ---
 
