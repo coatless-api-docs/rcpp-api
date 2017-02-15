@@ -2514,6 +2514,35 @@ test_lapply_functor();
 
 #### mapply {#mapply}
 
+- Apply a _C++_ function or functor on up to three input objects and receive
+  a `Vector`.
+
+- The return type is automatically detected by the supplied _C++_
+  function or functor of the `Vector` class.
+  
+- All types are supported of a `Vector` or `Matrix`.
+
+- Example:
+
+```{Rcpp mapply_example}
+// --- C++ Function Example
+template <typename T>
+T sum_val(T x, T y, T z) {
+     return x + y + z ;
+}
+
+// Sample Data
+NumericVector A = NumericVector::create(1, 2, 3);
+NumericVector B = NumericVector::create(2, 3, 4);
+NumericVector C = NumericVector::create(3, 4, 5);
+
+NumericVector D = mapply(A, B, C, sum_val<double>);
+// Output: 6 9 12
+```
+
+- See also:
+   - [`sapply`](#sapply)
+   
 ---
 
 ### Special Functions of Mathematics {#sugar-special-math}
