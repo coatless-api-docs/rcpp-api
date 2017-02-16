@@ -3031,6 +3031,21 @@ IntegerVector B = self_match(A);
 
 #### in( X, Y ) {#in}
 
+- Determine whether elements in _X_ are found in _Y_.
+
+- All types are supported of a `Vector` or a `Matrix`.
+
+- Example:
+
+```{Rcpp in_operator}
+CharacterVector A = CharacterVector::create("a", "b", "c", "c", "e", "b", "d");
+
+CharacterVector B = CharacterVector::create("a", "b");
+
+LogicalVector C = in(A, B);
+// Output: TRUE TRUE FALSE FALSE FALSE TRUE FALSE
+```
+
 ----
 
 #### Unique {#unique}
