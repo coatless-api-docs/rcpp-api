@@ -105,7 +105,7 @@ for maximum flexibility.
 | [`Re`](#complex-number)       | Real Values of Complex Number      |
 | [`Im`](#complex-number)       | Imaginary Values of Complex Number |
 | [`Mod`](#complex-modulus)     | Modulus (r)                        |
-| [`Arg`](#complex-argument)    | Arg (theta)                        |
+| [`Arg`](#complex-arg)         | Arg (theta)                        |
 | [`Conj`](#complex-conjugate)  | Complex Conjugate                  |
 
 **[Data Operations](#sugar-data-ops)**
@@ -166,11 +166,11 @@ for maximum flexibility.
 
 **[The Apply Family](#sugar-apply)**
 
-|                       |                                                               |
-|:----------------------|:--------------------------------------------------------------|
-| [`sapply`](#sapply)   | Apply a function to one input and store results in vector     |
-| [`lapply`](#lapply)   | Apply a function to one input and store results in list       |
-| [`mapply`](#mapply)   | Apply a function to multiple inputs and store results in list |
+|                       |                                                                 |
+|:----------------------|:----------------------------------------------------------------|
+| [`sapply`](#sapply)   | Apply a function to one input and store results in vector       |
+| [`lapply`](#lapply)   | Apply a function to one input and store results in list         |
+| [`mapply`](#mapply)   | Apply a function to multiple inputs and store results in vector |
 
 **[Special Functions of Mathematics](#sugar-special-math)**
 
@@ -2355,7 +2355,7 @@ LogicalVector result_nan = is_nan( X );
 
 - Example:
 
-```{Rcpp is_na_v_nan}
+```{Rcpp na_omit}
 // Create some sample data
 NumericVector A = NumericVector::create(R_NaN, 1, NA_REAL, 3 , NA_REAL) ;
 
@@ -2379,7 +2379,7 @@ NumericVector B = na_omit(A);
 
 - Example:
 
-```{Rcpp is_na_v_nan}
+```{Rcpp noNA}
 // Create some sample data
 NumericVector A = NumericVector::create(1, 2, 3, 4) ;
 
