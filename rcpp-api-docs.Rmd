@@ -3012,6 +3012,21 @@ int max_idx = which_max(A);
 
 #### self_match( X ) {#self-match}
 
+- Obtain the locations of where each element occurs in the object.
+
+- All types are supported of a `Vector` or a `Matrix`.
+
+- **Note:** This operation is similar to the _R_ command `match(x, unique(x))`.
+
+- Example:
+
+```{Rcpp self_match}
+CharacterVector A = CharacterVector::create("a", "b", "c", "c", "e", "b", "d");
+
+IntegerVector B = self_match(A);
+// Output: 1 2 3 3 4 2 5
+```
+
 ----
 
 #### in( X, Y ) {#in}
