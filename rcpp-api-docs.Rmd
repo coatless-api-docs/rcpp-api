@@ -3045,6 +3045,9 @@ IntegerVector B = self_match(A);
 // Output: 1 2 3 3 4 2 5
 ```
 
+- See also:
+   - [`match`](#match)
+   
 ----
 
 #### in( X , Y ) {#in}
@@ -3063,6 +3066,10 @@ CharacterVector B = CharacterVector::create("a", "b");
 LogicalVector C = in(A, B);
 // Output: TRUE TRUE FALSE FALSE FALSE TRUE FALSE
 ```
+
+- See also:
+   - [`match`](#match)
+   - [`self_match`](#self-match)
 
 ----
 
