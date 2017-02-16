@@ -219,8 +219,8 @@ for maximum flexibility.
 |                               |                                                                |
 |:------------------------------|:---------------------------------------------------------------|
 | [`match`](#match)             | Find indices of the first value in a separate vector           |
-| [`in`](#match)                | Determine if a match was located for each element of _A_ in _B_|
-| [`self_match`](#match)        | Find indices of the first occurrence of each value in a vector |
+| [`self_match`](#self-match)   | Find indices of the first occurrence of each value in a vector |
+| [`in`](#in)                   | Determine if a match was located for each element of _A_ in _B_|
 | [`unique`](#unique)           | Obtain the unique values                                       |
 | [`duplicated`](#unique)       | Obtain a logical vector indicating the duplicate values        |
 | [`sort_unique`](#sort-unique) | Obtain the unique values and sort them                         |
@@ -3006,12 +3006,15 @@ int max_idx = which_max(A);
 
 ### Uniqueness Operators {#sugarunique}
 
-#### Match {#match}
+#### match( X ) {#match}
 
-|                     |                     |                     |
-|:--------------------|:--------------------|:--------------------|
-| **match( X )**      | **self_match( X )** |   **in( X, Y )**    |
+----
 
+#### self_match( X ) {#self-match}
+
+----
+
+#### in( X, Y ) {#in}
 
 ----
 
