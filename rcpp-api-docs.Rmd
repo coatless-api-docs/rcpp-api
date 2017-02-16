@@ -3328,6 +3328,7 @@ NumericVector D = rowMeans(B);
     - `bool`
 
 - `Numeric` Output
+
 | Functor                    | Meaning              |
 |:---------------------------|:---------------------|
 | `std::plus<T>()`           |   `x + y`            |
@@ -3337,6 +3338,7 @@ NumericVector D = rowMeans(B);
 | `std::modulus<T>()`        |   `x % y`            |
 
 - `Logical` Output
+
 | Functor                    | Meaning              |
 |:---------------------------|:---------------------|
 | `std::equal_to<T>()`       |   `x == y`           |
@@ -3428,7 +3430,7 @@ LogicalMatrix C = upper_tri(B);
 LogicalMatrix D = upper_tri(B, true);
 // Output:
 //  TRUE  TRUE  TRUE
-// FALSE FALSE  TRUE
+// FALSE  TRUE  TRUE
 // FALSE FALSE  TRUE
 ```
 
