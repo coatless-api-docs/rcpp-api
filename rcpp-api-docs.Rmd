@@ -3226,10 +3226,16 @@ CharacterVector G = setdiff(C, D);
 |:-------------------------|:-------------------------|
 | **colSums( X , na_rm)**  | **rowSums( X , na_rm )** |
 
-
 - Computes the summation of elements either by column (`colSums`) or row (`rowSums`)
   of a `Matrix`.
-  
+
+- **Definition:**
+
+\[\begin{aligned}
+  \text{(Row) } { {X}_{i} } &= \sum\limits_{j = 1}^J { {X_{i,j} }} \\
+  \text{(Column) } { {X}_{j} } &= \sum\limits_{i = 1}^I { {X_{i,j} }} \\ 
+\end{aligned} \]
+
 - Supported types are `Numeric`, `Integer` or `Complex` of the `Matrix` class.
 
 - The return type is the equivalent input type but of the `Vector` class.
@@ -3264,8 +3270,15 @@ NumericVector D = rowSums(B);
 | **colMeans( X , na_rm)**  | **rowMeans( X , na_rm)** |
 
 
-- Computes the means of elements either by column (`colSums`) or row (`rowSums`)
+- Computes the means of elements either by column (`colMeans`) or row (`rowMeans`)
   of a `Matrix`.
+  
+- **Definition:**
+
+\[\begin{aligned}
+  \text{(Row) } { {\bar X}_{i} } &= \frac{1}{J}\sum\limits_{j = 1}^J { {X_{i,j} }} \\
+  \text{(Column) }{ {\bar X}_{j} } &= \frac{1}{I}\sum\limits_{i = 1}^I { {X_{i,j} }} \\ 
+\end{aligned} \]
   
 - Supported types are `Numeric`, `Integer` or `Complex` of the `Matrix` class.
 
