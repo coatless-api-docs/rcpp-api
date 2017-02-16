@@ -3006,8 +3006,26 @@ int max_idx = which_max(A);
 
 ### Uniqueness Operators {#sugarunique}
 
-#### match( X ) {#match}
+#### match( X , Y ) {#match}
 
+- Obtain the first locations of a match between elements in _X_ and _Y_.
+
+- All types are supported of a `Vector` or a `Matrix`.
+
+- Example:
+
+```{Rcpp match}
+CharacterVector A = CharacterVector::create("a", "b");
+CharacterVector B = CharacterVector::create("c", "a", "b", "c", "e", "a", "b", "d");
+
+IntegerVector C = match(A, B);
+// Output: 2 3
+```
+
+- See also:
+   - [`in`](#in)
+   - [`self_match`](#self-match)
+   
 ----
 
 #### self_match( X ) {#self-match}
@@ -3029,7 +3047,7 @@ IntegerVector B = self_match(A);
 
 ----
 
-#### in( X, Y ) {#in}
+#### in( X , Y ) {#in}
 
 - Determine whether elements in _X_ are found in _Y_.
 
