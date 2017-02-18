@@ -3107,6 +3107,26 @@ CharacterVector C = unique(A);
 
 ### sort_unique( X ) {#sort_unique}
 
+- Determine the unique elements within an object and sort them in increasing order.
+
+- All types are supported of a `Vector` or a `Matrix`.
+
+- Examples:
+
+```{Rcpp sort_unique}
+// Sample data
+CharacterVector A = CharacterVector::create("a","b","c","a","b","c","a");
+NumericVector B = NumericVector::create(1.1, 1, 1, 2.5, 2.5, 3, 3);
+
+// --- Find unique values and sort them
+
+CharacterVector C = sort_unique(A);
+// Output: "a" "b" "c"
+
+NumericVector D = sort_unique(B);
+// Output: 1 1.1 2.5 3
+```
+
 ----
 
 ### table( X ) {#table}
