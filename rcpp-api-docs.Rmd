@@ -2910,6 +2910,7 @@ NumericVector B = rev(A);
 
 
 #### Parallel Extremum {#pext}
+
 |                   |                    |
 |:------------------|:-------------------|
 | **pmax( X, Y )**  | **pmin( X, Y )**   |
