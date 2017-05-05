@@ -58,6 +58,12 @@ for maximum flexibility.
     - [Static Member Functions](#static-members)
 - [Sugar](#sugar)
     - [Statistical Distributions](#stat-dist)
+- [Exception Handling](#exception-handling)
+    - [External Exception Classes](#external-exception-clasess)
+    - [Internal Exception Classes](#internal-exception-clasess)
+        - [Simple Exceptions](#simple-exception)
+        - [Exceptions](#exception)
+        - [Advanced exceptions](#advanced-exception)
 - Environment, Function, Language
 - XPtr
 - S4 classes / modules
@@ -85,6 +91,56 @@ for maximum flexibility.
 |  [Iterators](#iterators)                         | Random access iterators                                            |
 |  [STL-style Container Functions](#stl-functions) | Standard Library styled functions                                  |
 |  [Static Member Functions](#static-members)      | Set of member functions persistant across instances                |
+
+## Exception Handling
+
+**[External Exception Classes](#external-exception-clasess)**
+
+|                                    |                              |
+|------------------------------------|------------------------------|
+| [`stop`](#stop)                    | Stop execution               |
+| [`warning`](#warning)              | Send Warning to console      |
+| [`Rcout<<`](#rcout)                | Write message to console     |
+
+**[Internal Exception Classes](#internal-exception-clasess)**
+
+_[Simple Exceptions](#simple-exception)_
+
+|                                               |                                |
+|-----------------------------------------------|--------------------------------|
+| [`not_a_matrix`](#simple-exception)           | Object is not a matrix         |
+| [`parse_error`](#simple-exception)            | Unable to parse values         |
+| [`not_s4`](#simple-exception)                 | Not a valid S4 class           |
+| [`not_reference`](#simple-exception)          | Object not a reference         |
+| [`not_initialized`](#simple-exception)        | Object not initialized         |
+| [`no_such_slot`](#simple-exception)           | S4 Object lacks slot           |
+| [`no_such_field`](#simple-exception)          | Exception not used             |
+| [`not_a_closure`](#simple-exception)          | Object not a closure           |
+| [`no_such_function`](#simple-exception)       | No such function               |
+| [`unevaluated_promise`](#simple-exception)    | Promise not yet evaluated      |
+
+
+_[Exceptions](#exception)_
+
+|                                               |                                   |
+|-----------------------------------------------|-----------------------------------|
+| [`S4_creation_error`](#exception)             | Error creating object of S4 class |
+| [`reference_creation_error`](#exception)      | Exception not used                |
+| [`no_such_binding`](#exception)               | No such binding                   |
+| [`binding_not_found`](#exception)             | Binding not found                 |
+| [`binding_is_locked`](#exception)             | Binding is locked                 |
+| [`no_such_namespace`](#exception)             | No such namespace                 |
+| [`function_not_exported`](#exception)         | Function not exported             |
+| [`eval_error`](#exception)                    | Evaluation error                  |
+
+
+_[Advanced exceptions_](#advanced-exception)_
+
+|                                               |                                 |
+|-----------------------------------------------|---------------------------------|
+| [`not_compatible`](#adv-exception)            | Not a compatible transformation |
+| [`index_out_of_bounds`](#adv-exception)       | Request index is out of bounds  |
+
 
 ## Sugar
 
@@ -1337,6 +1393,21 @@ Rcout << "NA Presence: " << B << std::endl;
 ## XPtr
 
 ## S4 Classes
+
+## Exception Handling {#exception-handling}
+
+### External Exception Classes {#external-exception-clasess}
+
+### Internal Exception Classes {#internal-exception-clasess}
+
+#### Simple Exceptions {#simple-exception}
+
+#### Exceptions {#exception}
+
+#### Advanced exceptions {#advanced-exception}
+
+
+
 
 ## Sugar {#sugar}
 
