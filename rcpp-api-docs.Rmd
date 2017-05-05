@@ -3835,18 +3835,19 @@ std::string val_str = collapse(A);
   `Matrix` depending on the supplied parameter.
   
 - Definition: **Whitespace** in the context of this function is considered to
-  be either: space (`\s`), horizontal tab (`\t`), line feed (`\n`), or
+  be either: space (` `), horizontal tab (`\t`), line feed (`\n`), or
   carriage return (`\r`).
 
 - **Note:** The function is equivalent to matching the following
   regular expression (regex) patterns:
-    - `^[ \t\r\n]+|[ \t\r\n]+$` (both)
     - `^[ \t\r\n]+` (left/leading)
     - `[ \t\r\n]+$` (right/trailing)
+    - `^[ \t\r\n]+|[ \t\r\n]+$` (both)
 
 - Example:
 
 ```{Rcpp sugar_trimws}
+// -- Example Data
 CharacterVector A = CharacterVector::create("  a b c", "a b c  ", "  a b c  ");
 
 Rcpp::String B =  "  \t\r\na b c\t\r\n  ";
