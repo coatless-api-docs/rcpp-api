@@ -322,10 +322,10 @@ _[Advanced exceptions_](#advanced-exception)_
 
 **[String Operations](#sugar-string-ops)**
 
-|                         |                                                |
-|:------------------------|:-----------------------------------------------|
-| [`collapse`](#collapse) | Collapse multiple strings into one string      |
-
+|                         |                                                      |
+|:------------------------|:-----------------------------------------------------|
+| [`collapse`](#collapse) | Collapse multiple strings into one string            |
+| [`trimws`](#trimws)     | Trim leading and/or trailing whitespace from strings |
 
 
 
@@ -3818,6 +3818,66 @@ CharacterVector A = CharacterVector::create("w","o","r","l","d");
 
 std::string val_str = collapse(A);
 // Output: world
+```
+
+#### trimws( X, which ) {#trimws}
+
+- Trim leading and/or trailing whitespace from strings.
+
+- The `which` argument controls how the trimming is performed. 
+  This is **required** and can be specified with either
+  `"l"` (leading), `"r"` (trailing), or `"b"` (both).
+
+- Only the `Character` and `String` types of a `Vector` or `Matrix` are
+  supported.
+  
+- This function provides support for returning either a `String`, `Vector`, or
+  `Matrix` depending on the supplied parameter.
+  
+- Definition: **Whitespace** in the context of this function is considered to
+  be either: space (`\s`), horizontal tab (`\t`), line feed (`\n`), or
+  carriage return (`\r`).
+
+- **Note:** The function is equivalent to matching the following
+  regular expression (regex) patterns:
+    - `^[ \t\r\n]+|[ \t\r\n]+$` (both)
+    - `^[ \t\r\n]+` (left/leading)
+    - `[ \t\r\n]+$` (right/trailing)
+
+- Example:
+
+```{Rcpp sugar_trimws}
+CharacterVector A = CharacterVector::create("  a b c", "a b c  ", "  a b c  ");
+
+Rcpp::String B =  "  \t\r\na b c\t\r\n  ";
+
+CharacterMatrix C = cbind(A, B);
+
+// -- Vectors 
+
+CharacterVector D = trimws(A, "r");
+// Output: "  a b c" "a b c" "  a b c"
+
+CharacterVector E = trimws(A, "l");
+// Output: "a b c" "a b c  " "a b c  "
+
+CharacterVector F = trimws(A, "b");
+// Output: "a b c" "a b c" "a b c"
+
+// -- Single Rcpp String object
+
+Rcpp::String G = trimws(B, "b");
+// Output: "a b c"
+
+
+// -- Matrix
+
+CharacterMatrix H = trimws(C, "b");
+// Output:
+//      [,1]    [,2]   
+// [1,] "a b c" "a b c"
+// [2,] "a b c" "a b c"
+// [3,] "a b c" "a b c
 ```
 
 ----
