@@ -3907,10 +3907,10 @@ CharacterMatrix H = trimws(C, "b");
 
 |                                                 |
 |:------------------------------------------------|
-| **dbinomial(X, SIZE, PROB, LOG_P)**             |
-| **pbinomial(Q, SIZE, PROB, LOWER_TAIL, LOG_P)** |
-| **qbinomial(P, SIZE, PROB, LOWER_TAIL, LOG_P)** |
-| **rbinomial(N, SIZE, PROB)**                    |
+| **dbinomial(X, size, prob, log_p)**             |
+| **pbinomial(Q, size, prob, lower_tail, log_p)** |
+| **qbinomial(P, size, prob, lower_tail, log_p)** |
+| **rbinomial(n, size, prob)**                    |
 
 
 ```{Rcpp rcpp_bin_dist}
@@ -3936,10 +3936,10 @@ int rdraw = R::rbinom(46, 100);
 
 |                                       |
 |:--------------------------------------|
-| **dgeom(X, PROB, LOG_P)**             |
-| **pgeom(Q, PROB, LOWER_TAIL, LOG_P)** |
-| **qgeom(P, PROB, LOWER_TAIL, LOG_P)** |
-| **rgeom(N, PROB)**                    |
+| **dgeom(X, prob, log_p)**             |
+| **pgeom(Q, prob, lower_tail, log_p)** |
+| **qgeom(P, prob, lower_tail, log_p)** |
+| **rgeom(n, prob)**                    |
 
 
 ```{Rcpp rcpp_geo_dist}
@@ -3963,10 +3963,10 @@ int rdraw    = R::rgeom(.25);
 
 |                                            |
 |:-------------------------------------------|
-| **dhyper( X, M, N, K, LOG_P)**             |
-| **phyper( Q, M, N, K, LOWER_TAIL, LOG_P)** |
-| **qhyper( P, M, N, K, LOWER_TAIL, LOG_P)** |
-| **rhyper(NN, M, N, K)**                    |
+| **dhyper( X, m, n, k, log_p)**             |
+| **phyper( Q, m, n, k, lower_tail, log_p)** |
+| **qhyper( P, m, n, k, lower_tail, log_p)** |
+| **rhyper(nn, m, n, k)**                    |
 
 
 ```{Rcpp rcpp_hypergeo_dist}
@@ -3990,10 +3990,10 @@ int rdraw    = R::rhyper(10, 7, 8);
 
 |                                                  |
 |:-------------------------------------------------|
-| **dnbinomial(X, SIZE, PROB, LOG_P)**             |
-| **pnbinomial(Q, SIZE, PROB, LOWER_TAIL, LOG_P)** |
-| **qnbinomial(P, SIZE, PROB, LOWER_TAIL, LOG_P)** |
-| **rnbinomial(N, SIZE, PROB)**                    |
+| **dnbinomial(X, size, prob, log_p)**             |
+| **pnbinomial(Q, size, prob, lower_tail, log_p)** |
+| **qnbinomial(P, size, prob, lower_tail, log_p)** |
+| **rnbinomial(n, size, prob)**                    |
 
 
 ```{Rcpp rcpp_nbin_dist}
@@ -4017,10 +4017,10 @@ int rdraw    = R::rnbinom(46, 100);
 
 |                                         |
 |:----------------------------------------|
-| **dpois(X, LAMBDA, LOG_P)**             |
-| **ppois(Q, LAMBDA, LOWER_TAIL, LOG_P)** |
-| **qpois(P, LAMBDA, LOWER_TAIL, LOG_P)** |
-| **rpois(N, LAMBDA)**                    |
+| **dpois(X, lambda, log_p)**             |
+| **ppois(Q, lambda, lower_tail, log_p)** |
+| **qpois(P, lambda, lower_tail, log_p)** |
+| **rpois(n, lambda)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Poisson distribution.
@@ -4030,8 +4030,8 @@ int rdraw    = R::rnbinom(46, 100);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -4056,10 +4056,10 @@ int rdraw    = R::rpois(46);
 
 |                                          |
 |:-----------------------------------------|
-| **dwilcox( X, M, N, LOG_P)**             |
-| **pwilcox( Q, M, N, LOWER_TAIL, LOG_P)** |
-| **qwilcox( P, M, N, LOWER_TAIL, LOG_P)** |
-| **rwilcox(NN, M, N)**                    |
+| **dwilcox( X, m, n, log_p)**             |
+| **pwilcox( Q, m, n, lower_tail, log_p)** |
+| **qwilcox( P, m, n, lower_tail, log_p)** |
+| **rwilcox(nn, m, n)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Wilcox distribution.
@@ -4069,8 +4069,8 @@ int rdraw    = R::rpois(46);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -4079,10 +4079,10 @@ int rdraw    = R::rpois(46);
 
 |                                         |
 |:----------------------------------------|
-| **dsignrank( X, N, LOG_P)**             |
-| **psignrank( Q, N, LOWER_TAIL, LOG_P)** |
-| **qsignrank( P, N, LOWER_TAIL, LOG_P)** |
-| **rsignrank(NN, N)**                    |
+| **dsignrank( X, n, log_p)**             |
+| **psignrank( Q, n, lower_tail, log_p)** |
+| **qsignrank( P, n, lower_tail, log_p)** |
+| **rsignrank(nn, n)**                    |
 
 
 ### Continuous Distributions {#continuous-dist}
@@ -4091,10 +4091,10 @@ int rdraw    = R::rpois(46);
 
 |                                                 |
 |:------------------------------------------------|
-| **dbeta(X, SHAPE1, SHAPE2, LOG_P)**             |
-| **pbeta(Q, SHAPE1, SHAPE2, LOWER_TAIL, LOG_P)** |
-| **qbeta(P, SHAPE1, SHAPE2, LOWER_TAIL, LOG_P)** |
-| **rbeta(N, SHAPE1, SHAPE2)**                    |
+| **dbeta(X, shape1, shape2, log_p)**             |
+| **pbeta(Q, shape1, shape2, lower_tail, log_p)** |
+| **qbeta(P, shape1, shape2, lower_tail, log_p)** |
+| **rbeta(n, shape1, shape2)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Beta distribution.
@@ -4104,8 +4104,8 @@ int rdraw    = R::rpois(46);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -4131,10 +4131,10 @@ double rdraw = R::rbeta(1.0, 1.0);
 
 |                                                    |
 |:---------------------------------------------------|
-| **dcauchy(X, LOCATION, SCALE, LOG_P)**             |
-| **pcauchy(Q, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
-| **qcauchy(P, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
-| **rcauchy(N, LOCATION, SCALE)**                    |
+| **dcauchy(X, location, scale, log_p)**             |
+| **pcauchy(Q, location, scale, lower_tail, log_p)** |
+| **qcauchy(P, location, scale, lower_tail, log_p)** |
+| **rcauchy(n, location, scale)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Cauchy distribution.
@@ -4144,13 +4144,13 @@ double rdraw = R::rbeta(1.0, 1.0);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
 ```{Rcpp rcpp_cauchy_dist}
-// Consider X ~ Cauchy(loc = 0, SCALE = 1)
+// Consider X ~ Cauchy(loc = 0, scale = 1)
 NumericVector xx = NumericVector::create(0.0, 0.25, 0.5, 0.75, 1.0);
 
 // Vector returns
@@ -4171,10 +4171,10 @@ double rdraw = R::rcauchy(0.0, 1.0);
 
 |                                      |
 |:-------------------------------------|
-| **dchisq(X, DF, LOG)**               |
-| **pchisq(Q, DF, LOWER_TAIL, LOG_P)** |
-| **qchisq(P, DF, LOWER_TAIL, LOG_P)** |
-| **rchisq(N, DF)**                    |
+| **dchisq(X, df, log)**               |
+| **pchisq(Q, df, lower_tail, log_p)** |
+| **qchisq(P, df, lower_tail, log_p)** |
+| **rchisq(n, df)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Chi-squared distribution.
@@ -4184,8 +4184,8 @@ double rdraw = R::rcauchy(0.0, 1.0);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOG_P = FALSE`, probabilities, densities are returned as log(p).
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
+    - `log_p = FALSE`, probabilities, densities are returned as log(p).
+    - `lower_tail = TRUE`, probabilities are calculated by P(X <= x) instead of P(X > x).
 
 - Examples:
 
@@ -4210,9 +4210,9 @@ double rdraw = R::rchisq(2);
 
 |                                            |
 |:-------------------------------------------|
-| **dnchisq(X, DF, NCP, LOG_P)**             |
-| **pnchisq(Q, DF, NCP, LOWER_TAIL, LOG_P)** |
-| **qnchisq(P, DF, NCP, LOWER_TAIL, LOG_P)** |
+| **dnchisq(X, df, ncp, log_p)**             |
+| **pnchisq(Q, df, ncp, lower_tail, log_p)** |
+| **qnchisq(P, df, ncp, lower_tail, log_p)** |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Non-central Chi-squared
@@ -4223,8 +4223,8 @@ double rdraw = R::rchisq(2);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -4247,10 +4247,10 @@ double qval  = R::qnchisq(0.22, 2, true, false);
 
 |                                      |
 |:-------------------------------------|
-| **dexp(X, RATE, LOG_P)**             |
-| **pexp(Q, RATE, LOWER_TAIL, LOG_P)** |
-| **qexp(P, RATE, LOWER_TAIL, LOG_P)** |
-| **rexp(N, RATE)**                    |
+| **dexp(X, rate, log_p)**             |
+| **pexp(Q, rate, lower_tail, log_p)** |
+| **qexp(P, rate, lower_tail, log_p)** |
+| **rexp(n, rate)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from an Exponential distribution under
@@ -4261,9 +4261,9 @@ double qval  = R::qnchisq(0.22, 2, true, false);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `RATE = 1`, rate refers to the lambda parameter within an exponential
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `rate = 1`, rate refers to the lambda parameter within an exponential
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -4289,10 +4289,10 @@ double rdraw = R::rexp(2);
 
 |                                        |
 |:---------------------------------------|
-| **df(X, DF1, DF2, LOG_P)**             |
-| **pf(Q, DF1, DF2, LOWER_TAIL, LOG_P)** |
-| **qf(P, DF1, DF2, LOWER_TAIL, LOG_P)** |
-| **rf(N, DF1, DF2)**                    |
+| **df(X, df1, df2, log_p)**             |
+| **pf(Q, df1, df2, lower_tail, log_p)** |
+| **qf(P, df1, df2, lower_tail, log_p)** |
+| **rf(n, df1, df2)**                    |
 
 
 - Computes either the density (d), probability (p), quantile (q), or
@@ -4303,8 +4303,8 @@ double rdraw = R::rexp(2);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
 
@@ -4333,10 +4333,10 @@ double rdraw = R::rf(1.0, 5.0);
 
 |                                               |
 |:----------------------------------------------|
-| **dgamma(X, SHAPE, RATE, LOG_P)**             |
-| **pgamma(Q, SHAPE, RATE, LOWER_TAIL, LOG_P)** |
-| **qgamma(P, SHAPE, RATE, LOWER_TAIL, LOG_P)** |
-| **rgamma(N, SHAPE, RATE)**                    |
+| **dgamma(X, shape, rate, log_p)**             |
+| **pgamma(Q, shape, rate, lower_tail, log_p)** |
+| **qgamma(P, shape, rate, lower_tail, log_p)** |
+| **rgamma(n, shape, rate)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Gamma distribution.
@@ -4346,9 +4346,9 @@ double rdraw = R::rf(1.0, 5.0);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `RATE = 1`,
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `rate = 1`,
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
  
@@ -4373,10 +4373,10 @@ double rdraw = R::rgamma(1.0, 1.0);
 
 |                                           |
 |:------------------------------------------|
-| **dnorm(X, MEAN, SD, LOG_P)**             |
-| **pnorm(Q, MEAN, SD, LOWER_TAIL, LOG_P)** |
-| **qnorm(P, MEAN, SD, LOWER_TAIL, LOG_P)** |
-| **rnorm(N, MEAN, SD)**                    |
+| **dnorm(X, mean, sd, log_p)**             |
+| **pnorm(Q, mean, sd, lower_tail, log_p)** |
+| **qnorm(P, mean, sd, lower_tail, log_p)** |
+| **rnorm(n, mean, sd)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Normal distribution.
@@ -4388,8 +4388,8 @@ double rdraw = R::rgamma(1.0, 1.0);
   as follows:
     - `MEAN = 0`, the mean of the distribution
     - `SD = 1`, the standard derivation of the distribution
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
  
@@ -4415,10 +4415,10 @@ double rdraw = R::rnorm(0.0, 1.0);
 
 |                                                  |
 |:-------------------------------------------------|
-| **dlnorm(X, MEANLOG, SDLOG, LOG_P)**             |
-| **plnorm(Q, MEANLOG, SDLOG, LOWER_TAIL, LOG_P)** |
-| **qlnorm(P, MEANLOG, SDLOG, LOWER_TAIL, LOG_P)** |
-| **rlnorm(N, MEANLOG, SDLOG)**                    |
+| **dlnorm(X, meanlog, sdlog, log_p)**             |
+| **plnorm(Q, meanlog, sdlog, lower_tail, log_p)** |
+| **qlnorm(P, meanlog, sdlog, lower_tail, log_p)** |
+| **rlnorm(n, meanlog, sdlog)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Log Normal distribution.
@@ -4428,10 +4428,10 @@ double rdraw = R::rnorm(0.0, 1.0);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `MEANLOG = 0`, the log mean of the distribution
-    - `SDLOG = 1`, the log standard derivation of the distribution
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `meanlog = 0`, the log mean of the distribution
+    - `sdlog = 1`, the log standard derivation of the distribution
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
  
@@ -4456,10 +4456,10 @@ double rdraw = R::rlnorm(0.0, 1.0);
 
 |                                                   |
 |:--------------------------------------------------|
-| **dlogis(X, LOCATION, SCALE, LOG_P)**             |
-| **plogis(Q, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
-| **qlogis(P, LOCATION, SCALE, LOWER_TAIL, LOG_P)** |
-| **rlogis(N, LOCATION, SCALE)**                    |
+| **dlogis(X, location, scale, log_p)**             |
+| **plogis(Q, location, scale, lower_tail, log_p)** |
+| **qlogis(P, location, scale, lower_tail, log_p)** |
+| **rlogis(n, location, scale)**                    |
 
 - Computes either the density (d), probability (p), quantile (q), or
   a random (r) sample of a vector or scalar from a Logistic distribution.
@@ -4469,10 +4469,10 @@ double rdraw = R::rlnorm(0.0, 1.0);
 
 - Under vectorization, e.g. `Rcpp::`, the default distribution parameters are
   as follows:
-    - `LOCATION = 0`, the shift component of the distribution
-    - `SCALE = 1`, the dispersion parameter of the distribution that changes the spread e.g. if the SCALE is small, then the distribution is concentrated.
-    - `LOG_P = FALSE`, probabilities, densities are returned as $\log(p)$.
-    - `LOWER_TAIL = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
+    - `location = 0`, the shift component of the distribution
+    - `scale = 1`, the dispersion parameter of the distribution that changes the spread e.g. if the scale is small, then the distribution is concentrated.
+    - `log_p = FALSE`, probabilities, densities are returned as $\log(p)$.
+    - `lower_tail = TRUE`, probabilities are calculated by $P(X \le x)$ instead of $P(X > x)$.
 
 - Examples:
  
