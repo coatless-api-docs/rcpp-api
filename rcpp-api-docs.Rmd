@@ -194,7 +194,7 @@ _[Advanced exceptions_](#advanced-exception)_
 | [`log10`](#logexp)          | Base 10 Logarithm             |
 | [`log1p`](#logexp)          | Natural Logarithm $log(1+x)$  |
 | [`expm1`](#logexp)          | $\exp(x) - 1$                 |
-
+| [`sample`](#sample)         | Randomly sample values        |
 
 **[Rounding of Numbers](#sugar-rounding)**
 
@@ -2116,6 +2116,46 @@ colnames(I) = CharacterVector::create("X", "log(1+X)","log1p(X)", "exp(X)+1", "e
 // [10,] 1e-21 0.000000e+00 1.000000e-21 0.000000e+00 1.000000e-21
 ```
 
+---
+
+#### sample {#sample}
+
+|                                                |
+|:-----------------------------------------------|
+| **sample( n , size , replace , probs )**       |
+| **sample( X , size , replace , probs )**       | 
+
+- Obtain a random sampling of elements from either a positive number of elements
+  ranging from 1 to _n_ or data contained with _X_.
+
+- All types are supported of a `Vector` or `Matrix`.
+
+- The parameters available for `sample` are defined as:
+    - `size`, the number of items to sample
+    - `replace = false`, allow replacement or elements to be added back in if picked. 
+    - `probs = R_NilValue`, vector containing probability weights
+    
+- Examples:
+
+```{Rcpp ceil_val}
+/*** R
+# in R set a seed for reproducibility
+set.seed(111)
+*/
+
+// Create some sample data
+NumericVector A = NumericVector::create(-3.5, 2, 2.2, 0.1, -.4, -1, 4.75);
+
+// --- Sampling approaches
+
+// Using a positive number
+IntegerVector C = sample(10, 4);
+// Output: 6 4 9 1
+
+// Sample from a vector
+NumericVector B = sample(A, 3);
+// Output: -0.4 4.75 2
+```
 ---
 
 ### Rounding of Numbers {#sugar-rounding}
