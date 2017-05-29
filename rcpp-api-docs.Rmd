@@ -2209,7 +2209,7 @@ colnames(I) = CharacterVector::create("X", "log(1+X)","log1p(X)", "exp(X)+1", "e
     
 - Examples:
 
-```{Rcpp ceil_val}
+```{Rcpp sugar_sample}
 /*** R
 # in R set a seed for reproducibility
 set.seed(111)
