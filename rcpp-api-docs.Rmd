@@ -1775,10 +1775,10 @@ NumericVector C = tail(A, 2);
 
 - Obtain the absolute value of all elements.
 
-- Definition: \[ \left| X \right| = \begin{cases}
+- Definition: $$ \left| X \right| = \begin{cases}
 X,  &\text{if} X \ge 0 \\
 -X, &\text{if} X < 0
-\end{cases}\]
+\end{cases}$$
 
 - Supported types to perform the operation are `Numeric` or `Integer`
   of a `Vector` or `Matrix`. 
@@ -1799,7 +1799,7 @@ NumericVector B = abs(A);
 
 - Compute the square root of all elements.
 
-- Definition: \[ \sqrt{X} = X^{1/2}\]
+- Definition: $$ \sqrt{X} = X^{1/2}$$
 
 - Supported types to perform the operation are `Numeric`, `Integer`, or `Complex`
   of a `Vector` or `Matrix`. 
@@ -1820,7 +1820,7 @@ NumericVector B = sqrt(A);
 
 - Obtain the power of the _i_^th^ element raised to the _n_ power.
 
-- Definition: \[ Y = X^{n}\]
+- Definition: $$ Y = X^{n}$$
 
 - Supported types to perform the operation are `Numeric` or `Integer`
   of a `Vector` or `Matrix`. 
@@ -1869,11 +1869,11 @@ double val_summed = sum(A);
 - Determine the sign of a number or whether a number is positive, negative, or
   zero.
   
-- Definition: \[\operatorname{sgn} \left( X \right) = \begin{cases}
+- Definition: $$\operatorname{sgn} \left( X \right) = \begin{cases}
 -1, &\text{if} x < 0 \\
 0, &\text{if} x = 0 \\
 1, &\text{if} x > 0 
-\end{cases}\]
+\end{cases}$$
 
 - Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
 
@@ -2131,7 +2131,7 @@ NumericVector Y3 = cosh(X);
 - Traditional use case:
    - `log( X )` computes the natural logarithm sometimes representated as $\ln(X)$
    - `log10( X )` computes the base 10 logarithm.
-   - `exp( X )` computes the exponential function given by: \[\exp \left( X \right) = \mathop {\lim }\limits_{n \to \infty } {\left( {1 + \frac{X}{n} } \right)^n} = \sum\limits_{k = 0}^\infty  {\frac{ { {X^k} } }{ {k!} } } \]
+   - `exp( X )` computes the exponential function given by: $$\exp \left( X \right) = \mathop {\lim }\limits_{n \to \infty } {\left( {1 + \frac{X}{n} } \right)^n} = \sum\limits_{k = 0}^\infty  {\frac{ { {X^k} } }{ {k!} } } $$
 
 - Special use cases:
    - `log1p( X )` computes $\log( 1 + X )$ accurately for $\left|X\right| << 1$.
@@ -2241,7 +2241,7 @@ NumericVector B = sample(A, 3);
 
 - Compute the smallest integer value not less than the corresponding element of X.
 
-- Definition: \[\left\lceil X \right\rceil  = \min \left[ {n \in \mathbb{Z}|n \ge X} \right]\]
+- Definition: $$\left\lceil X \right\rceil  = \min \left[ {n \in \mathbb{Z}|n \ge X} \right]$$
 
 - Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
 
@@ -2269,7 +2269,7 @@ NumericVector C = ceil(A);
 
 - Compute the largest integer value not greater than the corresponding element of X.
 
-- Definition: \[\left\lfloor X \right\rfloor  = \max \left[ {n \in \mathbb{Z}|n \le X} \right]\]
+- Definition: $$\left\lfloor X \right\rfloor  = \max \left[ {n \in \mathbb{Z}|n \le X} \right]$$
 
 - Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
 
@@ -2291,11 +2291,11 @@ NumericVector B = floor(A);
 
 - Obtain the integers formed by truncating the values in X toward 0.
 
-- Definition: \[\operatorname{trunc}\left( X \right) = \begin{cases}
+- Definition: $$\operatorname{trunc}\left( X \right) = \begin{cases}
                \left\lfloor X \right\rfloor, &\text{if} X > 0 \\
                \left\lceil X \right\rceil, &\text{if} X < 0
                \end{cases}
-               \]
+               $$
                
 - Supported types are `Numeric` or `Integer` of a `Vector` or `Matrix`.
 
@@ -3358,7 +3358,7 @@ IntegerVector H = table(G);
 
 - Determine if the values of two objects are equal.
 
-- **Definition:** \[A = B = \left\{ {\forall x:x \in A \wedge x \in B} \right\}\]
+- **Definition:** $$A = B = \left\{ {\forall x:x \in A \wedge x \in B} \right\}$$
 
 - All types are supported of a `Vector` or `Matrix`.
 
@@ -3386,7 +3386,7 @@ bool val_unequal_set = setequal(C, D);
 
 - Find all elements two objects have in common.
 
-- **Definition:** \[A \cap B = \left\{ {x:x \in A \wedge x \in B} \right\}\]
+- **Definition:** $$A \cap B = \left\{ {x:x \in A \wedge x \in B} \right\}$$
 
 - All types are supported of a `Vector` or `Matrix`.
 
@@ -3415,7 +3415,7 @@ CharacterVector F = intersect(C, D);
 
 - Obtaining only one copy of all elements that exist in both sets.
 
-- **Definition:** \[A \cup B = \left\{ {x:x \in A \vee x \in B} \right\}\]
+- **Definition:** $$A \cup B = \left\{ {x:x \in A \vee x \in B} \right\}$$
 
 - All types are supported of a `Vector` or `Matrix`.
 
@@ -3449,7 +3449,7 @@ CharacterVector F = union_(C, D);
 - Obtain the elements in _A_ not in _B_ or the intersection of _A_ with the 
   complement of _B_.
 
-- **Definition:** \[A\backslash B = A - B = A \cap {B^C} = \left\{ {x:x \in A \wedge x \notin B} \right\}\]
+- **Definition:** $$A\backslash B = A - B = A \cap {B^C} = \left\{ {x:x \in A \wedge x \notin B} \right\}$$
 
 - All types are supported of a `Vector` or `Matrix`.
 
@@ -3493,10 +3493,10 @@ CharacterVector G = setdiff(C, D);
 
 - **Definition:**
 
-\[\begin{aligned}
+$$\begin{aligned}
   \text{(Row) } { {X}_{i} } &= \sum\limits_{j = 1}^J { {X_{i,j} }} \\
   \text{(Column) } { {X}_{j} } &= \sum\limits_{i = 1}^I { {X_{i,j} }} \\ 
-\end{aligned} \]
+\end{aligned} $$
 
 - Supported types are `Numeric`, `Integer` or `Complex` of the `Matrix` class.
 
@@ -3537,10 +3537,10 @@ NumericVector D = rowSums(B);
   
 - **Definition:**
 
-\[\begin{aligned}
+$$\begin{aligned}
   \text{(Row) } { {\bar X}_{i} } &= \frac{1}{J}\sum\limits_{j = 1}^J { {X_{i,j} }} \\
   \text{(Column) }{ {\bar X}_{j} } &= \frac{1}{I}\sum\limits_{i = 1}^I { {X_{i,j} }} \\ 
-\end{aligned} \]
+\end{aligned} $$
   
 - Supported types are `Numeric`, `Integer` or `Complex` of the `Matrix` class.
 
@@ -3574,7 +3574,7 @@ NumericVector D = rowMeans(B);
 
 - Applies a `Function` to two `Vector` objects to obtain the outer product.
 
-- **Definition:** \[\begin{aligned}
+- **Definition:** $$\begin{aligned}
   f\left( {\vec u \otimes \vec v} \right) &= f\left( {\vec u{ {\vec v}^T} } \right) = f\left( {\left[ {\begin{array}{*{20}{c} }
   { {u_1} } \\ 
    \vdots  \\ 
@@ -3588,7 +3588,7 @@ NumericVector D = rowMeans(B);
    \vdots &{}& \ddots & \vdots  \\ 
   {f\left( { {u_n}{v_1} } \right)}&{f\left( { {u_n}{v_2} } \right)}&{}&{f\left( { {u_n}{v_n} } \right)} 
 \end{array} } \right] \hfill \\ 
-\end{aligned}\]
+\end{aligned}$$
   
 - All types of the `Vector` class are supported. However, the supplied `Function`
   must have the correct parameter input types to receive values from each `Vector`.
