@@ -1934,7 +1934,7 @@ NumericVector B = diff(A);
 - In either case, the return type is a `Vector` of the same underlying `SEXPTYPE` 
   as the input. 
   
-- Caveat: at the time of writing (Rcpp version 0.12.8.2), not all Sugar expressions 
+- Caveat: at the time of writing (Rcpp version 0.12.11), not all Sugar expressions 
   are directly compatible with `Vector::operator=`, as many of these functions 
   return intermediate template classes which require an explicit conversion to   
   `Vector`, rather than directly returning a `Vector`. In such cases the user 
@@ -2004,6 +2004,78 @@ cs = NumericVector(cumsum(y));  // OK, but requires an additional Vector
 |                 |                  |
 |:----------------|:-----------------|
 | **cummax( X )** | **cummin( X )**  |
+
+
+- Calculates the cumulative maximum (`cummax`) or cumulative minimum (`cummin`) 
+  of a `Vector` or `Matrix` *X*. 
+  
+- If an `NA` value is encountered, it will be propagated throughout the 
+  remaining elements in the result vector. 
+
+- Supported types are `Integer` or `Numeric` of a `Vector` or `Matrix`. 
+
+- Caveat: at the time of writing (Rcpp version 0.12.11), not all Sugar expressions 
+  are directly compatible with `Vector::operator=`, as many of these functions 
+  return intermediate template classes which require an explicit conversion to   
+  `Vector`, rather than directly returning a `Vector`. In such cases the user 
+  may need to "help" the compiler with the conversion by 
+  
+    - Constructing a `Vector` from the result, and assigning that to the 
+      target `Vector`; or
+    - Calling an explicit conversion member function of the Sugar class, if 
+      such a function exists.
+      
+    See the examples below for a demonstration. 
+  
+- Examples: 
+
+```{Rcpp cumextrema}
+NumericVector x = NumericVector::create(1, -2, 5, 10, -4);
+NumericVector cmax = cummax(x), cmin = cummin(x);
+
+Rcout
+    << "cummax(x): \n" << cmax << "\n\n"
+    << "cummin(x): \n" << cmin << "\n\n";
+// Output:
+// cummax(x): 
+// 1 1 5 10 10
+// 
+// cummin(x): 
+// 1 -2 -2 -2 -4
+
+x[3] = NumericVector::get_na();
+
+cmax = cummax(x).get();
+cmin = cummin(x).get();
+
+// These print as `nan`, but are actually `NA` values
+Rcout
+    << "cummax(x): \n" << cmax << "\n\n"
+    << "cummin(x): \n" << cmin 
+    << std::endl;
+// Output: 
+// cummax(x): 
+// 1 1 5 nan nan
+// 
+// cummin(x): 
+// 1 -2 -2 nan nan
+
+// As noted above: 
+NumericVector y = NumericVector::create(1, 2, 3, 4, 5);
+
+NumericVector cmax = cummax(y);   // OK, calls copy *constructor*, not 
+                                  // copy assignment operator
+
+// cmax = cummax(y);      compiler error: no viable conversion from 
+//                        'const Rcpp::sugar::cummax<14, true, Rcpp::Vector<14, PreserveStorage> >' 
+//                        to 'SEXP' (aka 'SEXPREC *')
+
+cmax = cummax(y).get();           // OK, `get()` returns a VectorBase, which is 
+                                  // assignable to Vector
+                                
+cmax = NumericVector(cummax(y));  // OK, but requires an additional Vector 
+                                  // to be created
+```
 
 
 ----
