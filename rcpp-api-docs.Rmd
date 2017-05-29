@@ -26,7 +26,7 @@ project so that a docs subdomain could hopefully be added to <http://rcpp.org>.
 Please note: The post is written using [RMarkdown](http://rmarkdown.rstudio.com)
 for maximum flexibility.
 
-# API Documentation for Rcpp 0.12.9
+# API Documentation for Rcpp 0.12.11
 
 ## Preamble
 
