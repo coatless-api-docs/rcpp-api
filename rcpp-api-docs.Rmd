@@ -1205,11 +1205,14 @@ Rcpp::Rcout << "Sum Value is " << val_total << std::endl;
 | `·insert(i, x)`  | Insert `x` at the _i_^th^ position of, grows vector |
 | `·erase(i)`      | Remove element at _i_^th^ position, shrinks vector  |
 
-- **Warning:** Using any function to grow or shrink an Rcpp object results 
-  in the data being _copied_ from the original object into a new object. As a 
-  result, there will be a severe degregation of performance. Therefore, it is
-  highly recommended to convert the Rcpp object to an STL object that can easily
-  be grown or shrunk if the sample size is _not_ known in advance.
+- **Warning:** Using any of the above member functions to grow or shrink 
+  an Rcpp object will result in a severe degregation of performance. The 
+  reason why is because Rcpp objects are proxy models that serve as shallow 
+  wrappers around R objects.  Thus, when an Rcpp object is expanded or shrunk,
+  the data must be _copied_ from the original object into a new object. 
+  Therefore, it is highly recommended to convert the Rcpp object to an STL
+  object that can easily be grown or shrunk if the sample size is _not_ known 
+  in advance.
 
 ### Static Member Functions {#static-members}
 
