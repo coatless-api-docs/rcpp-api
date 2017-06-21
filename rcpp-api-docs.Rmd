@@ -100,7 +100,6 @@ for maximum flexibility.
 |------------------------------------|------------------------------|
 | [`stop`](#stop)                    | Stop execution               |
 | [`warning`](#warning)              | Send Warning to console      |
-| [`Rcout<<`](#rcout)                | Write message to console     |
 
 **[Internal Exception Classes](#internal-exception-clasess)**
 
@@ -134,7 +133,7 @@ _[Exceptions](#exception)_
 | [`eval_error`](#exception)                    | Evaluation error                  |
 
 
-_[Advanced exceptions_](#advanced-exception)_
+_[Advanced exceptions](#advanced-exception)_
 
 |                                               |                                 |
 |-----------------------------------------------|---------------------------------|
@@ -1401,7 +1400,70 @@ Rcout << "NA Presence: " << B << std::endl;
 
 ### External Exception Classes {#external-exception-clasess}
 
+- Rcpp provides support for static and dynamic error messages.
+  - Static error messages rely upon only a `string` being passed into the function.
+  - Dynamic error messages must have a `string` with  `printf`-like format 
+    identifiers (see table for a list of common specifiers) followed by an 
+    appropriate number of parameters (e.g `param1`, `param2`, ...).
+    - **Note:** Under C++98, there is a limit of 10 parameters for constructing
+      a dynamic error message whereas C++11 or greater lacks this limitation.
+
+- Error messages are sent over standard error (`STDERR`) stream
+  instead of standard input (`STDIN`) stream like `Rcout<<`. This is beneficial
+  as scripts that are not run interactively (e.g. over a distributed computing
+  node) will typically report to a different log directory customized to
+  warn the developer of an error regarding their job.
+    
+- Common `printf` identifiers
+
+| specifier	   | Input                          |   Example   |
+|:------------:|:------------------------------:|:-----------:|
+| `%i` or `%d` | Signed integer	                | -42, 10     |
+| `%u`         | Unsigned integer	            | 10          |
+| `%f`         | Decimal floating point         | 3.14        |
+| `%e`         | Scientific notation, lowercase	| 1.5379e+6   |
+| `%E`         | Scientific notation, uppercase	| 1.5379E+6   |
+| `%c`         | Character	                    | x           |
+| `%s`         | String	                        | James  	  |
+
+
+#### `stop(...)` {#stop}
+
+- End the present execution of _C++_ code, return control to _R_ session,
+  and print an error message to the _R_ console.
+
+```{Rcpp stop_ex}
+// Static stop message
+stop("Uh oh, we ran into an error.");
+
+// Dynamic stop message
+int index = 100;
+std::string vec_name = "toad";
+stop("Whoops, the index %i is bad at %s", index, vec_name);
+```
+
+#### `warning(...)` {#warning}
+
+- Triggers a warning message to be displayed in the _R_ console while **not**
+  aborting the _C++_ execution.
+
+
+```{Rcpp stop_ex}
+// Static warning
+warning("Hey, was that supposed to do that?");
+
+// Dynamic warning
+std::string vec_name = "toad";
+warning("Houston, I think we have a problem at %s. Do you copy?", vec_name);
+```
+
+
+**[Internal Exception Classes](#internal-exception-clasess)**
+
+
+
 ### Internal Exception Classes {#internal-exception-clasess}
+
 
 #### Simple Exceptions {#simple-exception}
 
