@@ -516,7 +516,7 @@ another data type is required to show a specific feature.
 
 - For the majority of cases, the interface being used is that of the R to C++
   interface that relies upon the `Matrix(SEXP x)` constructor, which establishes
-  a **pointer** to the underlying data. That is, the `Vector` object _points_ to
+  a **pointer** to the underlying data. That is, the `Matrix` object _points_ to
   the memory location of the `SEXP` R object in order to avoid copying the data
   into _C++_. The only exception to this rule is if the data passed is of a
   different type in which case a deep copy is performed _before_ a pointer is
