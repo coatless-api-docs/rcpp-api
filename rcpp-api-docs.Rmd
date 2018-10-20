@@ -32,12 +32,12 @@ for maximum flexibility.
 
 - The goal of the API documentations are to provide a public facing concise 
   view of Rcpp features. As a result, the documentation will be somewhat long.
-  To help navigate the documentation, it has been split into different section.
+  To help navigate the documentation, it has been split into different sections.
   Furthermore, one should use the built in search functionality to search text
-  for keywords using either `CNTRL` + `F` on Windows and Linux or `CMD` + `F` on
+  for keywords using either `CTRL` + `F` on Windows and Linux or `CMD` + `F` on
   macOS. 
 
-- Presently, any contribution to this document may be down by a [pull request
+- Presently, any contribution to this document can be made by a [pull request
   (PRs)](https://github.com/coatless/rcpp-api/pulls) on GitHub.
 
 - Please report any bugs to the [Rcpp Core Team](https://github.com/rcppcore/rcpp/issues).
@@ -2442,7 +2442,7 @@ NumericVector C = round(A, 3);
 - Finite numerical representations take the form of base 10 numbers like 1, 2,
   ..., 42, and so on. These values are able to be operated upon such that
   a collection of numerical values can provide a statistical summary.
-  However, when working with values that hold special meanings the representation,
+  However, when working with values that hold special meanings the representation
   is not necessarily ideal. Therefore, a set of tools exists to detect when 
   values with special meanings exist.
 
@@ -2469,10 +2469,10 @@ NumericVector C = round(A, 3);
 
 | Function   | `NaN` | `NA`|
 |:-----------|:-----:|:---:|
-| `ISNAN`    |  `T`  | `T` |
-| `R_IsNaN`  |  `T`  | `F` |
 | `ISNA`     |  `F`  | `T` |
 | `R_IsNA`   |  `F`  | `T` |
+| `ISNAN`    |  `T`  | `T` |
+| `R_IsNaN`  |  `T`  | `F` |
 
 - Note: The R/C API is highly inconsistent when detecting values.
 
@@ -4720,4 +4720,3 @@ double rdraw = R::rlogis(0.0, 1.0);
 - See also:
     - [SEXPTYPEs on the official R Release documentation](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#SEXPTYPEs)
     - [The data types explained on the official R Release documentation](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#The-_0027data_0027)
-
