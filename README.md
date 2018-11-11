@@ -8,8 +8,8 @@ popular ways to augment _R_ with _C++_.
 
 Provide documentation that lists, describes, and provides an example of each 
 known Rcpp data type and function alongside best practices. The documentation 
-should be ready for inclusion within Rcpp 0.13.0 scheduled for release in 
-Feburary 2017.
+should be ready for inclusion within Rcpp 1.x.0 scheduled for release in 
+January 2018.
 
 ## Style
 
@@ -30,6 +30,7 @@ Each section should contain:
 
 The following sample echoes the above tenets 
 
+````
 ```
 ### sum( X ) {#sum}
 
@@ -39,16 +40,18 @@ The following sample echoes the above tenets
 
 - Examples:
 
+```cpp
 // Sample data
 NumericVector X = NumericVector::create(3.2, 8.1, 9.5, 8.6, 5.7);
 
 double val_sum = sum(X);
 // Output: 35.1
+```
 
 - See also:
     - [rowSums](#rowSums)
     - [colSums](#colSums)
-```
+````
 
 Functions that share common features such as the trigonometric and probability
 distribution functions should be grouped together under a common banner to
